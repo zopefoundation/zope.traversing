@@ -49,6 +49,10 @@ def traverse(place, path, default=_marker, request=None):
     else:
         return traverser.traverse(path, default=default, request=request)
 
+# XXX This should have an additional optional argument where you
+#     can pass an ITraversable to use, otherwise it should get
+#     an adapter for ITraversable from the object and use that to
+#     traverse one step.
 def traverseName(obj, name, default=_marker):
     """Traverse a single step 'name' relative to 'place'
     

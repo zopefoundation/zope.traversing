@@ -14,14 +14,13 @@
 """
 Convenience functions for traversing the object tree.
 
-$Id: __init__.py,v 1.22 2003/06/03 19:43:45 jim Exp $
+$Id: __init__.py,v 1.23 2003/06/13 17:41:20 stevea Exp $
 """
 
 from zope.interface import moduleProvides
 from zope.component import getAdapter
-from zope.app.interfaces.traversing import IObjectName, IContainmentRoot
+from zope.app.interfaces.traversing import IContainmentRoot, ITraversalAPI
 from zope.app.interfaces.traversing import ITraverser, IPhysicallyLocatable
-from zope.app.interfaces.traversing import ITraversalAPI
 from zope.context import getWrapperContainer, isWrapper
 
 moduleProvides(ITraversalAPI)
@@ -120,12 +119,10 @@ def traverseName(obj, name, default=_marker, traversable=None, request=None):
     else:
         return obj
 
-def objectName(obj):
+def getName(obj):
     """Get the name an object was traversed via
-
-    Raises TypeError if the object is not context-wrapped
     """
-    return getAdapter(obj, IObjectName)()
+    return getAdapter(obj, IPhysicallyLocatable).getName()
 
 def getParent(obj):
     """Returns the container the object was traversed via.

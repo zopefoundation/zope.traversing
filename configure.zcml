@@ -12,20 +12,6 @@
          factory="zope.app.traversing.adapters.DefaultTraversable"
          provides="zope.app.interfaces.traversing.ITraversable" />
 
-<adapter
-    for="*"
-    factory="zope.app.traversing.adapters.ObjectName"
-    provides="zope.app.interfaces.traversing.IObjectName"
-    permission='zope.Public'
-    />
-
-<adapter
-    factory="zope.app.traversing.adapters.SiteObjectName"
-    provides="zope.app.interfaces.traversing.IObjectName"
-    for="zope.app.interfaces.content.folder.IRootFolder"
-    permission='zope.Public'
-    />
-
 <adapter 
     for="*"
     provides="zope.app.interfaces.traversing.IPhysicallyLocatable"

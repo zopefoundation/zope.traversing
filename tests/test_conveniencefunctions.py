@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: test_conveniencefunctions.py,v 1.18 2003/06/01 15:59:38 jim Exp $
+$Id: test_conveniencefunctions.py,v 1.19 2003/06/13 17:41:21 stevea Exp $
 """
 from unittest import TestCase, main, makeSuite
 from zope.interface import directlyProvides
@@ -24,8 +24,7 @@ from zope.app.traversing.adapters import Traverser
 from zope.component import getService
 from zope.app.services.servicenames import Adapters
 from zope.app.interfaces.traversing import ITraverser, ITraversable
-from zope.app.interfaces.traversing import IObjectName
-from zope.app.traversing.adapters import DefaultTraversable, ObjectName
+from zope.app.traversing.adapters import DefaultTraversable
 
 from zope.app.interfaces.traversing import IPhysicallyLocatable
 from zope.app.interfaces.traversing import IContainmentRoot
@@ -73,12 +72,9 @@ class Test(PlacefulSetup, TestCase):
         getService(None, Adapters).provideAdapter(
               None, ITraversable, DefaultTraversable)
         getService(None, Adapters).provideAdapter(
-              None, IObjectName, ObjectName)
-        getService(None, Adapters).provideAdapter(
               None, IPhysicallyLocatable, WrapperPhysicallyLocatable)
         getService(None, Adapters).provideAdapter(
               IContainmentRoot, IPhysicallyLocatable, RootPhysicallyLocatable)
-
 
     def testTraverse(self):
         from zope.app.traversing import traverse
@@ -130,18 +126,18 @@ class Test(PlacefulSetup, TestCase):
             self.folder, './item'
             )
 
-    def testObjectName(self):
-        from zope.app.traversing import objectName
+    def testGetName(self):
+        from zope.app.traversing import getName
         self.assertEqual(
-            objectName(self.item),
+            getName(self.item),
             'item'
             )
 
-    def testObjectNameFromUnwrapped(self):
-        from zope.app.traversing import objectName
+    def testGetNameFromUnwrapped(self):
+        from zope.app.traversing import getName
         self.assertRaises(
             TypeError,
-            objectName,
+            getName,
             self.unwrapped_item
             )
 
@@ -214,21 +210,28 @@ class Test(PlacefulSetup, TestCase):
             self.unwrapped_item
             )
 
-    def testGetPhysicalPathString(self):
+    def testGetPath(self):
         from zope.app.traversing import getPath
         self.assertEqual(
             getPath(self.item),
             u'/folder/item'
             )
 
-    def testGetPhysicalPathStringOfRoot(self):
+    def testGetPathOfRoot(self):
         from zope.app.traversing import getPath
         self.assertEqual(
             getPath(self.root),
             u'/',
             )
 
-    def testGetPhysicalRoot(self):
+    def testGetNameOfRoot(self):
+        from zope.app.traversing import getName
+        self.assertEqual(
+            getName(self.root),
+            u'',
+            )
+
+    def testGetRoot(self):
         from zope.app.traversing import getRoot
         self.assertEqual(
             getRoot(self.item),

@@ -12,12 +12,12 @@
 #
 ##############################################################################
 """
-$Id: adapters.py,v 1.10 2003/06/04 08:46:33 stevea Exp $
+$Id: adapters.py,v 1.11 2003/06/13 17:41:20 stevea Exp $
 """
 
 from zope.exceptions import NotFoundError
 
-from zope.app.interfaces.traversing import IObjectName, IPhysicallyLocatable
+from zope.app.interfaces.traversing import IPhysicallyLocatable
 from zope.app.interfaces.traversing import IContainmentRoot
 from zope.app.interfaces.traversing import ITraverser, ITraversable
 
@@ -58,36 +58,6 @@ class DefaultTraversable:
         else:
             raise NotFoundError(subject, name)
 
-class ObjectName(object):
-
-    implements(IObjectName)
-
-    def __init__(self, context):
-        self.context = context
-
-    def __str__(self):
-        dict = getInnerWrapperData(self.context)
-        name = dict and dict.get('name') or None
-        if name is None:
-            raise TypeError, \
-                  'Not enough context information to get an object name'
-        return name
-
-    __call__ = __str__
-
-
-class SiteObjectName(object):
-
-    implements(IObjectName)
-
-    def __init__(self, context):
-        pass
-
-    def __str__(self):
-        return ''
-
-    __call__ = __str__
-
 class WrapperPhysicallyLocatable:
     __doc__ = IPhysicallyLocatable.__doc__
 
@@ -123,6 +93,10 @@ class WrapperPhysicallyLocatable:
         else:
             return container_path + u'/' + name
 
+    def getName(self):
+        "See IPhysicallyLocatable"
+        return getInnerWrapperData(self.context)['name']
+
 class RootPhysicallyLocatable:
     __doc__ = IPhysicallyLocatable.__doc__
 
@@ -140,6 +114,10 @@ class RootPhysicallyLocatable:
     def getRoot(self):
         "See IPhysicallyLocatable"
         return self.context
+
+    def getName(self):
+        "See IPhysicallyLocatable"
+        return u''
 
 class Traverser:
     """Provide traverse features"""

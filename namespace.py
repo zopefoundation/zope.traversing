@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: namespace.py,v 1.6 2003/02/12 02:17:37 seanb Exp $
+$Id: namespace.py,v 1.7 2003/03/06 22:13:29 jim Exp $
 """
 
 from zope.interface import Interface
@@ -22,7 +22,7 @@ from zope.proxy.context import ContextWrapper, getWrapperObject
 from zope.proxy.context import getWrapperContext
 from zope.configuration.action import Action
 from zope.component import queryAdapter, getAdapter, getServiceManager
-from zope.component import queryDefaultViewName, getView, getService
+from zope.component import queryDefaultViewName, queryView, getService
 from zope.app.services.servicenames import Resources
 
 from zope.app.interfaces.traversing import ITraversable
@@ -225,7 +225,11 @@ def view(name, parameters, pname, ob, request):
         raise UnexpectedParameters(parameters)
     if not request:
         raise NoRequest(pname)
-    return getView(ob, name, request)
+    view = queryView(ob, name, request)
+    if view is None:
+        raise NotFoundError(ob, name)
+
+    return view
 
 def resource(name, parameters, pname, ob, request):
     if parameters:

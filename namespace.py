@@ -69,7 +69,7 @@ def namespaceLookup(ns, name, object, request=None):
          >>> namespaceLookup('fiz', 'bar', C())
          Traceback (most recent call last):
          ...
-         NotFoundError: ++fiz++bar
+         NotFoundError: '++fiz++bar'
 
        We'll get the same thing if we provide a request:
 
@@ -78,7 +78,7 @@ def namespaceLookup(ns, name, object, request=None):
          >>> namespaceLookup('foo', 'bar', C(), request)
          Traceback (most recent call last):
          ...
-         NotFoundError: ++foo++bar
+         NotFoundError: '++foo++bar'
 
        We need to provide a view:
 

@@ -14,13 +14,14 @@
 """Test the ObjectName adapter
 
 Revision information:
-$Id: test_objectname.py,v 1.3 2002/12/28 17:49:34 stevea Exp $
+$Id: test_objectname.py,v 1.4 2003/02/06 06:50:04 seanb Exp $
 """
 from unittest import TestCase, TestSuite, main, makeSuite
 from zope.interface import Interface
 
 from zope.app.tests.placelesssetup import PlacelessSetup
 from zope.component import getService, getAdapter
+from zope.component.servicenames import Adapters
 
 from zope.proxy.context import ContextWrapper
 from zope.app.interfaces.traversing import IObjectName
@@ -39,7 +40,7 @@ class Test(PlacelessSetup, TestCase):
     def setUp(self):
         PlacelessSetup.setUp(self)
 
-        provideAdapter = getService(None, "Adapters").provideAdapter
+        provideAdapter = getService(None, Adapters).provideAdapter
         provideAdapter(None, IObjectName, [ObjectName])
         provideAdapter(IRoot, IObjectName, [ObjectName])
 

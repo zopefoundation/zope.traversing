@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: namespace.py,v 1.3 2003/01/07 12:27:55 srichter Exp $
+$Id: namespace.py,v 1.4 2003/02/06 06:50:02 seanb Exp $
 """
 
 from zope.interface import Interface
@@ -23,6 +23,7 @@ from zope.proxy.context import getWrapperContext
 from zope.configuration.action import Action
 from zope.component import queryAdapter, getAdapter, getServiceManager
 from zope.component import queryDefaultViewName, getView, getService
+from zope.component.servicenames import ResourceService
 
 from zope.app.interfaces.traversing import ITraversable
 from zope.app.interfaces.services.service import INameResolver
@@ -126,7 +127,7 @@ def getResourceInContext(ob, name, request):
     return resource
 
 def queryResourceInContext(ob, name, request, default=None):
-    resource_service = getService(ob, 'Resources')
+    resource_service = getService(ob, ResourceService)
     resource = resource_service.queryResource(ob, name, request)
     if resource is None:
         return default

@@ -13,13 +13,14 @@
 ##############################################################################
 """
 
-$Id: test_conveniencefunctions.py,v 1.5 2002/12/28 17:49:34 stevea Exp $
+$Id: test_conveniencefunctions.py,v 1.6 2003/02/06 06:50:04 seanb Exp $
 """
 from unittest import TestCase, main, makeSuite
 from zope.app.services.tests.placefulsetup import PlacefulSetup
 from zope.proxy.context import ContextWrapper
 from zope.app.traversing.adapters import Traverser
 from zope.component import getService
+from zope.component.servicenames import Adapters
 from zope.app.interfaces.traversing import ITraverser, ITraversable
 from zope.app.interfaces.traversing import IObjectName
 from zope.app.traversing.adapters import DefaultTraversable, ObjectName
@@ -65,15 +66,15 @@ class Test(PlacefulSetup, TestCase):
         folder.item = item
 
         self.tr = Traverser(root)
-        getService(None, "Adapters").provideAdapter(
+        getService(None, Adapters).provideAdapter(
               None, ITraverser, Traverser)
-        getService(None, "Adapters").provideAdapter(
+        getService(None, Adapters).provideAdapter(
               None, ITraversable, DefaultTraversable)
-        getService(None, "Adapters").provideAdapter(
+        getService(None, Adapters).provideAdapter(
               None, IObjectName, ObjectName)
-        getService(None, "Adapters").provideAdapter(
+        getService(None, Adapters).provideAdapter(
               None, IPhysicallyLocatable, WrapperPhysicallyLocatable)
-        getService(None, "Adapters").provideAdapter(
+        getService(None, Adapters).provideAdapter(
               IContainmentRoot, IPhysicallyLocatable, RootPhysicallyLocatable)
 
 

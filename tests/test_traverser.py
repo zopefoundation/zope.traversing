@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: test_traverser.py,v 1.5 2002/12/31 03:35:13 jim Exp $
+$Id: test_traverser.py,v 1.6 2003/02/06 06:50:04 seanb Exp $
 """
 
 import unittest
@@ -28,6 +28,7 @@ from zope.app.traversing.adapters import RootPhysicallyLocatable
 from zope.proxy.context import ContextWrapper
 from zope.exceptions import NotFoundError, Unauthorized
 from zope.component import getService
+from zope.component.servicenames import Adapters
 
 from zope.interface.verify import verifyClass
 from zope.interface.implements import instancesOfObjectImplements
@@ -78,11 +79,11 @@ class UnrestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
         PlacefulSetup.setUp(self)
         # Build up a wrapper chain
 
-        getService(None, "Adapters").provideAdapter(
+        getService(None, Adapters).provideAdapter(
               None, ITraversable, DefaultTraversable)
-        getService(None, "Adapters").provideAdapter(
+        getService(None, Adapters).provideAdapter(
               None, IPhysicallyLocatable, WrapperPhysicallyLocatable)
-        getService(None, "Adapters").provideAdapter(
+        getService(None, Adapters).provideAdapter(
               IContainmentRoot, IPhysicallyLocatable, RootPhysicallyLocatable)
 
         self.root = root = C('root')
@@ -152,11 +153,11 @@ class RestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
     def setUp(self):
         PlacefulSetup.setUp(self)
 
-        getService(None,"Adapters").provideAdapter(
+        getService(None,Adapters).provideAdapter(
              None, ITraversable, DefaultTraversable)
-        getService(None, "Adapters").provideAdapter(
+        getService(None, Adapters).provideAdapter(
               None, IPhysicallyLocatable, WrapperPhysicallyLocatable)
-        getService(None, "Adapters").provideAdapter(
+        getService(None, Adapters).provideAdapter(
               IContainmentRoot, IPhysicallyLocatable, RootPhysicallyLocatable)
 
         self.root = root = C('root')

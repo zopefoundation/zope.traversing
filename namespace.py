@@ -12,13 +12,11 @@
 #
 ##############################################################################
 """
-$Id: namespace.py,v 1.21 2003/10/06 22:08:53 sidnei Exp $
+$Id: namespace.py,v 1.22 2003/11/21 17:09:36 jim Exp $
 """
 
+from zope.app import zapi
 from zope.exceptions import NotFoundError
-from zope.component import queryAdapter
-from zope.component import queryDefaultViewName, queryView, getService
-from zope.app.services.servicenames import Resources
 from zope.app.interfaces.traversing import ITraversable
 from zope.proxy import removeAllProxies
 import re
@@ -91,8 +89,8 @@ def getResourceInContext(ob, name, request):
     return resource
 
 def queryResourceInContext(ob, name, request, default=None):
-    resource_service = getService(ob, Resources)
-    resource = resource_service.queryResource(ob, name, request)
+    resource_service = zapi.getService(ob, zapi.servicenames.Presentation)
+    resource = resource_service.queryResource(name, request)
     if resource is None:
         return default
 
@@ -116,7 +114,7 @@ def acquire(name, parameters, pname, ob, request):
     origOb = ob
     while i < 200:
         i += 1
-        traversable = queryAdapter(ob, ITraversable, None)
+        traversable = zapi.queryAdapter(ob, ITraversable, None)
         if traversable is not None:
 
             try:
@@ -181,14 +179,14 @@ def etc(name, parameters, pname, ob, request):
 
 def help(name, parameters, pname, ob, request):
     """Used to traverse to an online help topic."""
-    return getService(ob, 'OnlineHelp')
+    return zapi.getService(ob, 'OnlineHelp')
 
 def view(name, parameters, pname, ob, request):
     if parameters:
         raise UnexpectedParameters(parameters)
     if not request:
         raise NoRequest(pname)
-    view = queryView(ob, name, request)
+    view = zapi.queryView(ob, name, request)
     if view is None:
         raise NotFoundError(ob, name)
 

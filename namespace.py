@@ -445,7 +445,7 @@ class debug(view):
             >>> ob = object()
             >>> adapter = debug(ob, request)
 
-        ++debug++source enables source annotations
+        in debug mode, ++debug++source enables source annotations
 
             >>> request.debug.sourceAnnotations
             False
@@ -504,3 +504,53 @@ class debug(view):
         else:
             raise ValueError("Debug flags only allowed in debug mode")
 
+    if not __debug__:
+        # If not in debug mode, we should get an error:
+        traverse.__doc__ = """Disabled debug traversal adapter
+
+        This adapter allows debugging flags to be set in the request,
+        but it is disabled because Python was run with -O.
+
+        Setup for demonstration:
+
+            >>> from zope.publisher.browser import TestRequest
+            >>> request = TestRequest()
+            >>> ob = object()
+            >>> adapter = debug(ob, request)
+
+        in debug mode, ++debug++source enables source annotations
+
+            >>> request.debug.sourceAnnotations
+            False
+            >>> adapter.traverse('source', ()) is ob
+            Traceback (most recent call last):
+            ...
+            ValueError: Debug flags only allowed in debug mode
+
+        ++debug++tal enables TAL markup in output
+
+            >>> request.debug.showTAL
+            False
+            >>> adapter.traverse('tal', ()) is ob
+            Traceback (most recent call last):
+            ...
+            ValueError: Debug flags only allowed in debug mode
+
+        ++debug++errors enables tracebacks (by switching to debug skin)
+
+            >>> request.getPresentationSkin()
+            'default'
+            >>> adapter.traverse('errors', ()) is ob
+            Traceback (most recent call last):
+            ...
+            ValueError: Debug flags only allowed in debug mode
+
+        You can specify several flags separated by commas
+
+            >>> adapter.traverse('source,tal', ()) is ob
+            Traceback (most recent call last):
+            ...
+            ValueError: Debug flags only allowed in debug mode
+        """
+
+        

@@ -11,10 +11,9 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
-"""
+"""Browser traversal interfaces
 
-Revision information:
-$Id: interfaces.py,v 1.1 2004/03/14 03:44:08 srichter Exp $
+$Id: interfaces.py,v 1.2 2004/03/17 18:24:59 philikon Exp $
 """
 from zope.interface import Interface
 

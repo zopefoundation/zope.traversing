@@ -13,32 +13,28 @@
 ##############################################################################
 """
 
-$Id: test_traverser.py,v 1.2 2002/12/25 14:13:27 jim Exp $
+$Id: test_traverser.py,v 1.3 2002/12/28 14:13:29 stevea Exp $
 """
 
 import unittest
-from zope.app.interfaces.traversing.traverser import ITraverser
-from zope.app.interfaces.traversing.traversable import ITraversable
+from zope.app.interfaces.traversing import ITraverser, ITraversable
 from zope.app.traversing.traverser import Traverser
 from zope.app.traversing.defaulttraversable import DefaultTraversable
 
-from zope.app.interfaces.traversing.physicallylocatable import IPhysicallyLocatable
-from zope.app.interfaces.traversing.containmentroot import IContainmentRoot
+from zope.app.interfaces.traversing import IPhysicallyLocatable
+from zope.app.interfaces.traversing import IContainmentRoot
 from zope.app.traversing.physicallocationadapters \
      import WrapperPhysicallyLocatable, RootPhysicallyLocatable
 
 from zope.proxy.context import ContextWrapper
 from zope.exceptions import NotFoundError, Unauthorized
 from zope.component import getService
-from zope.security.securitymanagement \
-    import setSecurityPolicy, noSecurityManager
 
 from zope.interface.verify import verifyClass
 from zope.interface.implements import instancesOfObjectImplements
-from zope.app.services.tests.placefulsetup \
-    import PlacefulSetup
+from zope.app.services.tests.placefulsetup import PlacefulSetup
 from zope.security.checker \
-    import ProxyFactory, defineChecker, NamesChecker, CheckerPublic, Checker
+    import ProxyFactory, defineChecker, CheckerPublic, Checker
 from zope.security.securitymanagement import newSecurityManager
 
 class C:

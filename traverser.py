@@ -13,7 +13,7 @@
 ##############################################################################
 """Default implementation of ITraverser.
 
-$Id: traverser.py,v 1.2 2002/12/25 14:13:26 jim Exp $
+$Id: traverser.py,v 1.3 2002/12/28 14:13:28 stevea Exp $
 """
 
 from zope.component import getAdapter
@@ -24,9 +24,8 @@ from zope.exceptions import NotFoundError
 from zope.app.traversing.namespaces import namespaceLookup
 from zope.app.traversing.parameterparsing import parameterizedNameParse
 
-from zope.app.interfaces.traversing.physicallylocatable import IPhysicallyLocatable
-from zope.app.interfaces.traversing.traverser import ITraverser
-from zope.app.interfaces.traversing.traversable import ITraversable
+from zope.app.interfaces.traversing import IPhysicallyLocatable
+from zope.app.interfaces.traversing import ITraverser, ITraversable
 
 from types import StringTypes
 

@@ -15,12 +15,12 @@
 
 XXX longer description goes here.
 
-$Id: physicallocationadapters.py,v 1.2 2002/12/25 14:13:26 jim Exp $
+$Id: physicallocationadapters.py,v 1.3 2002/12/28 14:13:28 stevea Exp $
 """
 __metaclass__ = type
 
-from zope.app.interfaces.traversing.physicallylocatable import IPhysicallyLocatable
-from zope.app.interfaces.traversing.containmentroot import IContainmentRoot
+from zope.app.interfaces.traversing import IPhysicallyLocatable
+from zope.app.interfaces.traversing import IContainmentRoot
 from zope.component import getAdapter
 from zope.proxy.context import getInnerWrapperData, getWrapperContainer
 

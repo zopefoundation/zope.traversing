@@ -1,3 +1,4 @@
+##############################################################################
 #
 # Copyright (c) 2001, 2002 Zope Corporation and Contributors.
 # All Rights Reserved.
@@ -13,17 +14,17 @@
 """
 Traversing the object tree.
 """
-# being careful not to pollute the namespace unnecessarily...
-from zope.component import getAdapter as _getAdapter
-from objectname import IObjectName as _IObjectName
-from zope.app.interfaces.traversing.traverser import ITraverser as _ITraverser
-from zope.app.interfaces.traversing.physicallylocatable \
-     import IPhysicallyLocatable as _IPhysicallyLocatable
-from traverser import WrapperChain as _WrapperChain
-from traverser import Traverser as _Traverser
-from zope.proxy.context import getWrapperContext as _getWrapperContext
-from zope.proxy.context import isWrapper as _isWrapper
+from zope.component import getAdapter
+from zope.app.interfaces.traversing import IObjectName
+from zope.app.interfaces.traversing import ITraverser, IPhysicallyLocatable
+from zope.app.traversing.traverser import WrapperChain, Traverser
+from zope.proxy.context import getWrapperContext, isWrapper
 from types import StringTypes
+
+__all__ = ['traverse', 'traverseName', 'objectName', 'getParent',
+           'getParents', 'getPhysicalPath', 'getPhysicalPathString',
+           'getPhysicalRoot', 'locationAsTuple', 'locationAsUnicode']
+
 _marker = object()
 
 # XXX: this probably shouldn't have "request" in its signature, nor
@@ -43,7 +44,7 @@ def traverse(place, path, default=_marker, request=None):
           code unexpectedly.
           Consider using traverseName instead.
     """
-    traverser = _Traverser(place)
+    traverser = Traverser(place)
     if default is _marker:
         return traverser.traverse(path, request=request)
     else:
@@ -72,26 +73,24 @@ def objectName(obj):
 
     Raises TypeError if the object is not context-wrapped
     """
-    return _getAdapter(obj, _IObjectName)()
+    return getAdapter(obj, IObjectName)()
 
 def getParent(obj):
     """Returns the container the object was traversed via.
 
     Raises TypeError if the given object is not context wrapped
     """
-    if not _isWrapper(obj):
+    if not isWrapper(obj):
         raise TypeError, "Not enough context information to traverse"
-    return _getWrapperContext(obj)
+    return getWrapperContext(obj)
 
 def getParents(obj):
     """Returns a list starting with the given object's parent followed by
     each of its parents.
-
-    Raises TypeError if the given object is not context wrapped
     """
-    if not _isWrapper(obj):
+    if not isWrapper(obj):
         raise TypeError, "Not enough context information to traverse"
-    iterator = _WrapperChain(obj)
+    iterator = WrapperChain(obj)
     iterator.next()  # send head of chain (current object) to /dev/null
     return [p for p in iterator]
 
@@ -100,14 +99,14 @@ def getPhysicalPath(obj):
 
     Raises TypeError if the given object is not context wrapped
     """
-    return _getAdapter(obj, _IPhysicallyLocatable).getPhysicalPath()
+    return getAdapter(obj, IPhysicallyLocatable).getPhysicalPath()
 
 def getPhysicalPathString(obj):
     """Returns a string representing the physical path to the object.
 
     Raises TypeError if the given object is not context wrapped
     """
-    path = _getAdapter(obj, _IPhysicallyLocatable).getPhysicalPath()
+    path = getAdapter(obj, IPhysicallyLocatable).getPhysicalPath()
     return locationAsUnicode(path)
 
 
@@ -116,7 +115,7 @@ def getPhysicalRoot(obj):
 
     Raises TypeError if the given object is not context wrapped
     """
-    return _getAdapter(obj, _IPhysicallyLocatable).getPhysicalRoot()
+    return getAdapter(obj, IPhysicallyLocatable).getPhysicalRoot()
 
 def locationAsTuple(location):
     """Given a location as a unicode or ascii string or as a tuple of
@@ -169,3 +168,4 @@ def locationAsUnicode(location):
     # don't usually need this, so just an assertion rather than a value error
     assert u.find(u'//') == -1
     return u
+

@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: acquirenamespace.py,v 1.2 2002/12/25 14:13:26 jim Exp $
+$Id: acquirenamespace.py,v 1.3 2002/12/28 14:13:28 stevea Exp $
 """
 
 from zope.app.traversing.namespaces import provideNamespaceHandler
@@ -21,7 +21,7 @@ from zope.app.traversing.exceptions import UnexpectedParameters
 from zope.exceptions import NotFoundError
 from zope.component import queryAdapter
 from zope.proxy.context import ContextWrapper, getWrapperContext
-from zope.app.interfaces.traversing.traversable import ITraversable
+from zope.app.interfaces.traversing import ITraversable
 
 class ExcessiveWrapping(NotFoundError):
     """Too many levels of acquisition wrapping. We don't believe them."""

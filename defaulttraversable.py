@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2001, 2002 Zope Corporation and Contributors.
+# Copyright (c) 2002 Zope Corporation and Contributors.
 # All Rights Reserved.
 #
 # This software is subject to the provisions of the Zope Public License,
@@ -11,7 +11,11 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-from zope.app.interfaces.traversing.traversable import ITraversable
+"""
+$Id: defaulttraversable.py,v 1.3 2002/12/28 14:13:28 stevea Exp $
+"""
+
+from zope.app.interfaces.traversing import ITraversable
 from zope.exceptions import NotFoundError
 from zope.app.traversing.exceptions import UnexpectedParameters
 

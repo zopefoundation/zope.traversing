@@ -13,22 +13,21 @@
 ##############################################################################
 """
 
-$Id: test_conveniencefunctions.py,v 1.2 2002/12/25 14:13:27 jim Exp $
+$Id: test_conveniencefunctions.py,v 1.3 2002/12/28 14:13:29 stevea Exp $
 """
 from unittest import TestCase, TestSuite, main, makeSuite
-from zope.app.services.tests.placefulsetup \
-    import PlacefulSetup
+from zope.app.services.tests.placefulsetup import PlacefulSetup
 from zope.proxy.context import ContextWrapper
 from zope.app.traversing.traverser import Traverser
 from zope.component import getService
 
-from zope.app.interfaces.traversing.traverser import ITraverser
-from zope.app.interfaces.traversing.traversable import ITraversable
+from zope.app.interfaces.traversing import ITraverser
+from zope.app.interfaces.traversing import ITraversable
 from zope.app.traversing.defaulttraversable import DefaultTraversable
 from zope.app.traversing.objectname import IObjectName, ObjectName
 
-from zope.app.interfaces.traversing.physicallylocatable import IPhysicallyLocatable
-from zope.app.interfaces.traversing.containmentroot import IContainmentRoot
+from zope.app.interfaces.traversing import IPhysicallyLocatable
+from zope.app.interfaces.traversing import IContainmentRoot
 from zope.app.traversing.physicallocationadapters \
      import WrapperPhysicallyLocatable, RootPhysicallyLocatable
 

@@ -14,10 +14,10 @@
 """
 
 Revision information:
-$Id: objectname.py,v 1.2 2002/12/25 14:13:26 jim Exp $
+$Id: objectname.py,v 1.3 2002/12/28 14:13:28 stevea Exp $
 """
 from zope.proxy.context import getInnerWrapperData
-from zope.app.interfaces.traversing.objectname import IObjectName
+from zope.app.interfaces.traversing import IObjectName
 
 class ObjectName(object):
 

@@ -144,15 +144,6 @@ class UnrestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
     def testNotFoundNoDefault(self):
         self.assertRaises(NotFoundError, self.tr.traverse, 'foo')
 
-def Denied(*names):
-
-    def check(name):
-        if name in names:
-            return 'Waaaa'
-        return CheckerPublic
-
-    return Checker(check)
-
 class RestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
     _oldPolicy = None
     _deniedNames = ()
@@ -178,7 +169,9 @@ class RestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
         self.tr = Traverser(ProxyFactory(root))
 
     def testAllAllowed(self):
-        defineChecker(C, Checker(lambda name: CheckerPublic))
+        defineChecker(C, Checker({'folder': CheckerPublic,
+                                  'item': CheckerPublic,
+                                  }))
         tr = Traverser(ProxyFactory(self.root))
         item = self.item
 
@@ -187,7 +180,7 @@ class RestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
 
     def testItemDenied(self):
         newInteraction(ParticipationStub('no one'))
-        defineChecker(C, Denied('item'))
+        defineChecker(C, Checker({'item': 'Waaaa', 'folder': CheckerPublic}))
         tr = Traverser(ProxyFactory(self.root))
         folder = self.folder
 

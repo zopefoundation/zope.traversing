@@ -15,11 +15,14 @@
 
 $Id$
 """
+from unittest import main
+from zope.testing.doctestunit import DocTestSuite
+
+from zope.app.tests.placelesssetup import setUp, tearDown
 
 def test_suite():
-    from doctest import DocTestSuite
-    return DocTestSuite('zope.app.traversing.namespace')
+    return DocTestSuite('zope.app.traversing.namespace',
+                        setUp=setUp, tearDown=tearDown)
 
 if __name__ == '__main__':
-    from unittest import main
     main(defaultTest='test_suite')

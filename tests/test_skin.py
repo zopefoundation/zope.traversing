@@ -16,24 +16,37 @@
 $Id$
 """
 from unittest import TestCase, main, makeSuite
+from zope.interface import Interface, directlyProvides
 
-class Test(TestCase):
+from zope.publisher.interfaces.browser import ISkin
+from zope.app.tests import ztapi
+from zope.app.tests.placelesssetup import PlacelessSetup
+
+
+class FauxRequest(object):
+    def shiftNameToApplication(self):
+        self.shifted = 1
+
+class IFoo(Interface):
+    pass
+directlyProvides(IFoo, ISkin)
+
+
+class Test(PlacelessSetup, TestCase):
+
+    def setUp(self):
+        super(Test, self).setUp()
+        ztapi.provideUtility(ISkin, IFoo, 'foo')
 
     def test(self):
         from zope.app.traversing.namespace import skin
 
-        class FauxRequest(object):
-            def shiftNameToApplication(self):
-                self.shifted = 1
-            skin = ''
-            def setPresentationSkin(self, skin):
-                self.skin = skin
 
         request = FauxRequest()
         ob = object()
         ob2 = skin(ob, request).traverse('foo', ())
         self.assertEqual(ob, ob2)
-        self.assertEqual(request.skin, 'foo')
+        self.assert_(IFoo.providedBy(request))
         self.assertEqual(request.shifted, 1)
 
 def test_suite():

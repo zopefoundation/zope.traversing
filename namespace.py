@@ -16,13 +16,15 @@
 $Id$
 """
 import re
+
 import zope.interface
+from zope.interface import providedBy, directlyProvides, directlyProvidedBy
 from zope import component
-from zope.component.servicenames import Presentation
 from zope.exceptions import NotFoundError
+from zope.publisher.interfaces.browser import ISkin
+from zope.security.proxy import removeSecurityProxy
 
 from zope.app.traversing.interfaces import ITraversable, IPathAdapter
-from zope.security.proxy import removeSecurityProxy
 
 class UnexpectedParameters(NotFoundError):
     "Unexpected namespace parameters were provided."
@@ -348,8 +350,14 @@ class skin(view):
 
     def traverse(self, name, ignored):
         self.request.shiftNameToApplication()
-        self.request.setPresentationSkin(name)
-
+        skin = component.getUtility(ISkin, name)
+        # Remove all existing skin declarations (commonly the default skin).
+        ifaces = [iface
+                  for iface in directlyProvidedBy(self.request)
+                  if not ISkin.providedBy(iface)]
+        # Add the new skin.
+        ifaces.append(skin)
+        directlyProvides(self.request, *ifaces)
         return self.context
 
 class vh(view):
@@ -465,12 +473,20 @@ class debug(view):
 
         ++debug++errors enables tracebacks (by switching to debug skin)
 
-            >>> request.getPresentationSkin()
-            'default'
+            >>> from zope.app.tests import ztapi
+            >>> from zope.publisher.interfaces.browser import IBrowserRequest
+
+            >>> class Debug(IBrowserRequest):
+            ...     pass
+            >>> directlyProvides(Debug, ISkin)
+            >>> ztapi.provideUtility(ISkin, Debug, 'Debug')
+
+            >>> Debug.providedBy(request)
+            False
             >>> adapter.traverse('errors', ()) is ob
             True
-            >>> request.getPresentationSkin()
-            'Debug'
+            >>> Debug.providedBy(request)
+            True
 
         You can specify several flags separated by commas
 
@@ -497,7 +513,8 @@ class debug(view):
                     # TODO: I am not sure this is the best solution.  What
                     # if we want to enable tracebacks when also trying to
                     # debug a different skin?
-                    request.setPresentationSkin('Debug')
+                    skin = component.getUtility(ISkin, 'Debug')
+                    directlyProvides(request, providedBy(request)+skin)
                 else:
                     raise ValueError("Unknown debug flag: %s" % flag)
             return self.context
@@ -538,8 +555,8 @@ class debug(view):
 
         ++debug++errors enables tracebacks (by switching to debug skin)
 
-            >>> request.getPresentationSkin()
-            'default'
+            >>> Debug.providedBy(request)
+            False
             >>> adapter.traverse('errors', ()) is ob
             Traceback (most recent call last):
             ...

@@ -28,7 +28,7 @@ from zope.app.traversing.adapters import Traverser, DefaultTraversable
 
 from zope.app.traversing.interfaces import IPhysicallyLocatable
 from zope.app.traversing.interfaces import IContainmentRoot
-from zope.app.location import LocationPhysicallyLocatable
+from zope.app.location.traversing import LocationPhysicallyLocatable
 from zope.app.traversing.adapters import RootPhysicallyLocatable
 from zope.app.container.contained import contained
 

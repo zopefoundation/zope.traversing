@@ -11,8 +11,7 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""
-Convenience functions for traversing the object tree.
+"""Convenience functions for traversing the object tree.
 
 $Id$
 """

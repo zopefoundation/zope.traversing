@@ -13,7 +13,7 @@
 ##############################################################################
 import Interface
 
-class ITraversable(Interface.Base):
+class ITraversable(Interface.Interface):
     """To traverse an object, this interface must be provided"""
 
     def traverse(name, parameters, pname, furtherPath):

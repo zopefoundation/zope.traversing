@@ -14,7 +14,7 @@
 """
 
 Revision information:
-$Id: test_atteritem.py,v 1.2 2002/12/25 14:13:27 jim Exp $
+$Id: test_atteritem.py,v 1.3 2002/12/28 17:49:34 stevea Exp $
 """
 
 from unittest import TestCase, TestSuite, main, makeSuite
@@ -30,11 +30,11 @@ c=C()
 class Test(CleanUp, TestCase):
 
     def testAttr(self):
-        from zope.app.traversing.attritemnamespaces import attr
+        from zope.app.traversing.namespace import attr
         self.assertEqual(attr('a', (), 'a;attribute', c, None), 1)
 
     def testItem(self):
-        from zope.app.traversing.attritemnamespaces import item
+        from zope.app.traversing.namespace import item
         self.assertEqual(item('a', (), 'a;item', c, None), 'avalue')
 
 

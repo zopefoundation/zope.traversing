@@ -12,13 +12,15 @@
 #
 ##############################################################################
 """
-Traversing the object tree.
+Convenience functions for traversing the object tree.
 """
 from zope.component import getAdapter
 from zope.app.interfaces.traversing import IObjectName, IContainmentRoot
 from zope.app.interfaces.traversing import ITraverser, IPhysicallyLocatable
-from zope.app.traversing.traverser import WrapperChain, Traverser
+# XXX moved to later on to avoid byzantine circular import
+#from zope.app.traversing.adapters import Traverser
 from zope.proxy.context import getWrapperContext, isWrapper
+from zope.proxy.context import getWrapperContainer
 from types import StringTypes
 
 __all__ = ['traverse', 'traverseName', 'objectName', 'getParent',
@@ -45,6 +47,7 @@ def traverse(place, path, default=_marker, request=None):
           code unexpectedly.
           Consider using traverseName instead.
     """
+    from zope.app.traversing.adapters import Traverser
     traverser = Traverser(place)
     if default is _marker:
         return traverser.traverse(path, request=request)
@@ -100,9 +103,14 @@ def getParents(obj):
     if IContainmentRoot.isImplementedBy(obj):
         return []
     if isWrapper(obj):
-        iterator = WrapperChain(obj)
-        iterator.next()  # send head of chain (current object) to /dev/null
-        parents = [p for p in iterator]
+        parents = []
+        w = obj
+        while 1:
+            w = getWrapperContainer(w)
+            if w is None:
+                break
+            parents.append(w)
+            
         if parents and IContainmentRoot.isImplementedBy(parents[-1]):
             return parents
     raise TypeError, "Not enough context information to get all parents"

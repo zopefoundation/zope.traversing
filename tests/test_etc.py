@@ -14,7 +14,7 @@
 """
 
 Revision information:
-$Id: test_etc.py,v 1.2 2002/12/25 14:13:27 jim Exp $
+$Id: test_etc.py,v 1.3 2002/12/28 17:49:34 stevea Exp $
 """
 
 from unittest import TestCase, TestSuite, main, makeSuite
@@ -23,7 +23,7 @@ from zope.testing.cleanup import CleanUp # Base class w registry cleanup
 class Test(CleanUp, TestCase):
 
     def testApplicationControl(self):
-        from zope.app.traversing.etcnamespace import etc
+        from zope.app.traversing.namespace import etc
         from zope.app.applicationcontrol.applicationcontrol \
              import applicationController, applicationControllerRoot
 
@@ -33,7 +33,7 @@ class Test(CleanUp, TestCase):
             applicationController)
 
     def testServices(self):
-        from zope.app.traversing.etcnamespace import etc
+        from zope.app.traversing.namespace import etc
         class C:
             def getServiceManager(self): return 42
 

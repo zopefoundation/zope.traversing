@@ -14,14 +14,14 @@
 """
 
 Revision information:
-$Id: test_presentation.py,v 1.2 2002/12/25 14:13:27 jim Exp $
+$Id: test_presentation.py,v 1.3 2002/12/28 17:49:34 stevea Exp $
 """
 
 from unittest import TestCase, TestSuite, main, makeSuite
 from zope.app.tests.placelesssetup import PlacelessSetup
 from zope.component.view import provideView
 from zope.component.resource import provideResource
-from zope.app.traversing.presentationnamespaces import view, resource
+from zope.app.traversing.namespace import view, resource
 from zope.exceptions import NotFoundError
 from zope.interface import Interface
 

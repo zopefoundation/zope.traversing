@@ -12,7 +12,7 @@
 #
 ##############################################################################
 """
-$Id: test_physicallocationadapters.py,v 1.3 2002/12/28 14:13:29 stevea Exp $
+$Id: test_physicallocationadapters.py,v 1.4 2002/12/28 17:49:34 stevea Exp $
 """
 
 from unittest import TestCase, TestSuite, main, makeSuite
@@ -22,8 +22,8 @@ from zope.component import getAdapter
 
 from zope.app.interfaces.traversing import IContainmentRoot
 from zope.app.interfaces.traversing import IPhysicallyLocatable
-from zope.app.traversing.physicallocationadapters \
-     import WrapperPhysicallyLocatable, RootPhysicallyLocatable
+from zope.app.traversing.adapters import WrapperPhysicallyLocatable
+from zope.app.traversing.adapters import RootPhysicallyLocatable
 from zope.proxy.context import ContextWrapper
 
 class Root: __implements__ = IContainmentRoot

@@ -14,7 +14,7 @@
 """
 
 Revision information:
-$Id: test_skin.py,v 1.2 2002/12/25 14:13:27 jim Exp $
+$Id: test_skin.py,v 1.3 2002/12/28 17:49:34 stevea Exp $
 """
 
 from unittest import TestCase, TestSuite, main, makeSuite
@@ -24,7 +24,7 @@ from zope.publisher.browser import TestRequest
 class Test(CleanUp, TestCase):
 
     def test(self):
-        from zope.app.traversing.skinnamespace import skin
+        from zope.app.traversing.namespace import skin
 
         request = TestRequest()
         self.assertEqual(request.getPresentationSkin(), '')

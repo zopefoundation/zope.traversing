@@ -3,7 +3,7 @@
   <directives namespace="http://namespaces.zope.org/zope">
 
     <directive name="traversalNamespace" attributes="name handler"
-       handler="zope.app.traversing.namespaces.directive" />
+       handler="zope.app.traversing.namespace.directive" />
 
   </directives>
 

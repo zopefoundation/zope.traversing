@@ -14,7 +14,7 @@
 """
 
 Revision information:
-$Id: test_namespacetrversal.py,v 1.2 2002/12/25 14:13:27 jim Exp $
+$Id: test_namespacetrversal.py,v 1.3 2002/12/28 17:49:34 stevea Exp $
 """
 
 from unittest import TestCase, TestSuite, main, makeSuite
@@ -30,21 +30,21 @@ c=C()
 class Test(CleanUp, TestCase):
 
     def setUp(self):
-        from zope.app.traversing.namespaces import provideNamespaceHandler
-        from zope.app.traversing.attritemnamespaces import attr, item
-        from zope.app.traversing.skinnamespace import skin
+        from zope.app.traversing.namespace import provideNamespaceHandler
+        from zope.app.traversing.namespace import attr, item
+        from zope.app.traversing.namespace import skin
         provideNamespaceHandler('attribute', attr)
         provideNamespaceHandler('item', item)
         provideNamespaceHandler('skin', skin)
 
     def testAttr(self):
-        from zope.app.traversing.traverser import Traverser
+        from zope.app.traversing.adapters import Traverser
         traverser = Traverser(c)
         v = traverser.traverse('++attribute++a')
         self.assertEqual(v, 1)
 
     def testItem(self):
-        from zope.app.traversing.traverser import Traverser
+        from zope.app.traversing.adapters import Traverser
         traverser = Traverser(c)
         v = traverser.traverse('++item++a')
         self.assertEqual(v, 'avalue')
@@ -52,9 +52,8 @@ class Test(CleanUp, TestCase):
     def testSideEffectsContextDetail(self):
         # Check to make sure that when we traverse something in context,
         # that we get the right context for the result.
-        from zope.proxy.context \
-             import ContextWrapper, getWrapperContainer
-        from zope.app.traversing.traverser import Traverser
+        from zope.proxy.context import ContextWrapper, getWrapperContainer
+        from zope.app.traversing.adapters import Traverser
         from zope.publisher.browser import TestRequest
 
         c1 = C()

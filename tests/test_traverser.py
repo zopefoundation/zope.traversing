@@ -13,18 +13,17 @@
 ##############################################################################
 """
 
-$Id: test_traverser.py,v 1.3 2002/12/28 14:13:29 stevea Exp $
+$Id: test_traverser.py,v 1.4 2002/12/28 17:49:34 stevea Exp $
 """
 
 import unittest
 from zope.app.interfaces.traversing import ITraverser, ITraversable
-from zope.app.traversing.traverser import Traverser
-from zope.app.traversing.defaulttraversable import DefaultTraversable
+from zope.app.traversing.adapters import Traverser, DefaultTraversable
 
 from zope.app.interfaces.traversing import IPhysicallyLocatable
 from zope.app.interfaces.traversing import IContainmentRoot
-from zope.app.traversing.physicallocationadapters \
-     import WrapperPhysicallyLocatable, RootPhysicallyLocatable
+from zope.app.traversing.adapters import WrapperPhysicallyLocatable
+from zope.app.traversing.adapters import RootPhysicallyLocatable
 
 from zope.proxy.context import ContextWrapper
 from zope.exceptions import NotFoundError, Unauthorized

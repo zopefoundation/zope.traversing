@@ -44,12 +44,12 @@ def namespaceLookup(ns, name, object, request=None):
 
          >>> class I(zope.interface.Interface):
          ...     'Test interface'
-         >>> class C:
+         >>> class C(object):
          ...     zope.interface.implements(I)
 
        We'll register a simple testing adapter:
 
-         >>> class Adapter:
+         >>> class Adapter(object):
          ...     def __init__(self, context):
          ...         self.context = context
          ...     def traverse(self, name, remaining):
@@ -82,7 +82,7 @@ def namespaceLookup(ns, name, object, request=None):
 
        We need to provide a view:
 
-         >>> class View:
+         >>> class View(object):
          ...     def __init__(self, context, request):
          ...         pass
          ...     def traverse(self, name, remaining):
@@ -201,7 +201,7 @@ class acquire(SimpleHandler):
 
            Let's set up some example data:
 
-             >>> class testcontent:
+             >>> class testcontent(object):
              ...     zope.interface.implements(ITraversable)
              ...     def traverse(self, name, remaining):
              ...         v = getattr(self, name, None)

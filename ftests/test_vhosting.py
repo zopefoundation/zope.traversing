@@ -15,7 +15,6 @@
 
 $Id$
 """
-
 import unittest
 from zope.app.tests import ztapi
 from zope.app.tests.functional import BrowserTestCase
@@ -26,8 +25,6 @@ from zope.app.traversing.api import traverse
 from zope.security.checker import defineChecker, NamesChecker, NoProxy
 from zope.app.container.contained import Contained
 from zope.app.zptpage.zptpage import ZPTPage
-
-__metaclass__ = type
 
 class MyObj(Contained):
     def __getitem__(self, key):

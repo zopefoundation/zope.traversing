@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: testConvenienceFunctions.py,v 1.6 2002/08/05 16:27:03 gvanrossum Exp $
+$Id: testConvenienceFunctions.py,v 1.7 2002/11/26 13:14:50 stevea Exp $
 """
 from unittest import TestCase, TestSuite, main, makeSuite
 from Zope.App.OFS.Services.ServiceManager.tests.PlacefulSetup \
@@ -189,60 +189,79 @@ class Test(PlacefulSetup, TestCase):
             self.unwrapped_item
             )
 
-    def testLocationAsTuple(self):
-        # TODO: put these assertions in a less random order
-        from Zope.App.Traversing import locationAsTuple as lat
-        loc = (u'xx',u'yy',u'zz')
-        self.assertEqual(lat((u'xx',u'yy',u'zz')), loc)
-        self.assertEqual(lat((u'', u'xx',u'yy',u'zz')), (u'',)+loc)
-        self.assertEqual(lat(('xx','yy','zz')), loc)
-        self.assertRaises(ValueError, lat, ())
-        self.assertEqual(lat(('xx',)), (u'xx',))
-        self.assertRaises(ValueError, lat, 23)
-        self.assertRaises(UnicodeError, lat, ('', u'123', '\xa323'))
-        self.assertRaises(UnicodeError, lat, '\xa323')
-        self.assertEqual(lat(u'xx/yy/zz'), loc)
-        self.assertEqual(lat(u'/xx/yy/zz'), (u'',)+loc)
-        self.assertEqual(lat('xx/yy/zz'), loc)
-        self.assertRaises(ValueError, lat, '')
-        self.assertEqual(lat('/'), (u'',))
-        self.assertEqual(lat('xx'), (u'xx',))
-        self.assertRaises(ValueError, lat, '//')
-        self.assertRaises(AssertionError, lat, '/foo//bar')
+    _bad_locations = (
+        (UnicodeError, ('',u'123','\xa323')),
+        (UnicodeError, '\xa323'),
+        (ValueError, ()),
+        (ValueError, 23),
+        (ValueError, ''),
+        (ValueError, '//'),
+        (AssertionError, '/foo//bar'),
+
+        # regarding the next four errors:
         # having a trailing slash on a location is undefined.
         # we might want to give it a particular meaning for zope3 later
         # for now, it is an invalid location identifier
-        self.assertRaises(ValueError, lat, '/foo/bar/')
-        self.assertRaises(ValueError, lat, 'foo/bar/')
-        self.assertRaises(ValueError, lat, ('','foo','bar',''))
-        self.assertRaises(ValueError, lat, ('foo','bar',''))
+        (ValueError, '/foo/bar/'),
+        (ValueError, 'foo/bar/'),
+        (ValueError, ('','foo','bar','')),
+        (ValueError, ('foo','bar',''))
+        )
+
+    # sequence of N-tuples:
+    #   (loc_returned_as_string, loc_returned_as_tuple, input, input, ...)
+    # The string and tuple are tested as input as well as being the
+    # specification for output.
+
+    _good_locations = (
+        # location returned as string   location returned as tuple
+        ( u'xx/yy/zz',                  (u'xx',u'yy',u'zz'),          
+            # arguments to try in addition to the above
+            ('xx','yy','zz'),
+            'xx/yy/zz',
+        ),
+        ( u'/xx/yy/zz',                 (u'',u'xx',u'yy',u'zz'),      
+            ('','xx','yy','zz'),
+            '/xx/yy/zz',
+        ),
+        ( u'xx',                        (u'xx',),
+            ('xx',),
+            'xx',
+        ),
+        ( u'/',                         (u'',),
+            ('',),
+            '/',
+        ),
+    )
+
+    def testLocationAsTuple(self):
+        from Zope.App.Traversing import locationAsTuple as lat
+
+        for error_type, value in self._bad_locations:
+            self.assertRaises(error_type, lat, value)
+
+        for spec in self._good_locations:
+            correct_answer = spec[1]
+            for argument in spec:
+                self.applyAssertEqual(lat, argument, correct_answer)
         
     def testLocationAsUnicode(self):
         from Zope.App.Traversing import locationAsUnicode as lau
-        loc = u'xx/yy/zz'
-        self.assertEqual(lau((u'xx',u'yy',u'zz')), loc)
-        self.assertEqual(lau((u'', u'xx',u'yy',u'zz')), '/'+loc)
-        self.assertEqual(lau(('xx','yy','zz')), loc)
-        self.assertRaises(ValueError, lau, ())
-        self.assertEqual(lau(('xx',)), u'xx')
-        self.assertRaises(ValueError, lau, 23)
-        self.assertRaises(UnicodeError, lau, ('', u'123', '\xa323'))
-        self.assertRaises(UnicodeError, lau, '\xa323')
-        self.assertEqual(lau(u'xx/yy/zz'), loc)
-        self.assertEqual(lau(u'/xx/yy/zz'), u'/'+loc)
-        self.assertEqual(lau('xx/yy/zz'), loc)
-        self.assertRaises(ValueError, lau, '')
-        self.assertEqual(lau('/'), u'/')
-        self.assertEqual(lau('xx'), u'xx')
-        self.assertRaises(ValueError, lau, '//')
-        self.assertRaises(AssertionError, lau, '/foo//bar')
-        # having a trailing slash on a location is undefined.
-        # we might want to give it a particular meaning for zope3 later
-        # for now, it is an invalid location identifier
-        self.assertRaises(ValueError, lau, '/foo/bar/')
-        self.assertRaises(ValueError, lau, 'foo/bar/')
-        self.assertRaises(ValueError, lau, ('','foo','bar',''))
-        self.assertRaises(ValueError, lau, ('foo','bar',''))
+
+        for error_type, value in self._bad_locations:
+            self.assertRaises(error_type, lau, value)
+
+        for spec in self._good_locations:
+            correct_answer = spec[0]
+            for argument in spec:
+                self.applyAssertEqual(lau, argument, correct_answer)
+
+    def applyAssertEqual(self, func, arg, answer):
+        try:
+            self.assertEqual(func(arg), answer)
+        except:
+            print "Failure on ", arg
+            raise
 
 def test_suite():
     return makeSuite(Test)

@@ -142,7 +142,7 @@ def locationAsTuple(location):
         raise ValueError, \
             "location %s must be a string or a tuple of strings." % (location,)
         
-    if t[-1] == u'':  # matches '' or u''
+    if len(t) > 1 and t[-1] == u'':  # matches '' or u''
         raise ValueError, \
             "location tuple %s must not end with empty string." % (t,)
     # don't usually need this, so just an assertion rather than a value error
@@ -160,6 +160,8 @@ def locationAsUnicode(location):
         raise ValueError, "location must be non-empty."
     if isinstance(location, tuple):
         u = u'/'.join(location)
+        if not u:  # special case for u''
+            return u'/'
     elif isinstance(location, StringTypes):
         u = unicode(location)
     else:

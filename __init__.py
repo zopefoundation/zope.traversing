@@ -31,13 +31,20 @@ def joinPath(path, *args):
     The path should be well-formed, and not end in a '/' unless it is the
     root path.
     The positional arguments are strings to be added to the path as new path
-    segments. These segments should not contain the '/' character.
+    segments. These segments may contain the '/' character.
     """
     if not args:
         return unicode(path)
-    if path != u'/':
+    if path != u'/' and not path.endswith('/'):
         path += u'/'
-    return path + u'/'.join(args)
+    clean_args = []
+    for arg in args:
+        if arg.startswith('/'):
+            arg = arg[1:]
+        if arg.endswith('/'):
+            arg = arg[:-1]
+        clean_args.append(arg)
+    return path + u'/'.join(clean_args)
 
 def getPath(obj):
     """Returns a string representing the physical path to the object.

@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: test_conveniencefunctions.py,v 1.13 2003/03/24 16:42:22 mgedmin Exp $
+$Id: test_conveniencefunctions.py,v 1.14 2003/03/31 13:32:06 sidnei Exp $
 """
 from unittest import TestCase, main, makeSuite
 from zope.app.services.tests.placefulsetup import PlacefulSetup
@@ -285,6 +285,24 @@ class Test(PlacefulSetup, TestCase):
                 self.assertEqual(canonicalPath(argument), correct_answer,
                                  "failure on %s" % argument)
 
+
+    def testJoinPathDoubleSlash(self):
+        from zope.app.traversing import joinPath
+        path = u'/'
+        args = ('/test', 'bla', '/foo/', '/bar')
+        self.assertEqual(joinPath(path, *args), u'/test/bla/foo/bar')
+        
+    def testJoinPathMultipleArgs(self):
+        from zope.app.traversing import joinPath
+        path = u'/bla/'
+        args = ('foo', 'bar', 'baz', 'bone')
+        self.assertEqual(joinPath(path, *args), u'/bla/foo/bar/baz/bone')
+
+    def testJoinPathNoSlash(self):
+        from zope.app.traversing import joinPath
+        path = u'bla'
+        args = ('foo', 'bar', 'baz', 'bone')
+        self.assertEqual(joinPath(path, *args), u'bla/foo/bar/baz/bone')
 
 def test_suite():
     return makeSuite(Test)

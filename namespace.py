@@ -12,7 +12,7 @@
 #
 ##############################################################################
 """
-$Id: namespace.py,v 1.18 2003/08/17 06:08:30 philikon Exp $
+$Id: namespace.py,v 1.19 2003/09/02 20:46:53 jim Exp $
 """
 
 from zope.exceptions import NotFoundError
@@ -168,7 +168,7 @@ def etc(name, parameters, pname, ob, request):
     if name not in ('site', 'Services'):
         raise NotFoundError(ob, pname, request)
 
-    method_name = "getServiceManager"
+    method_name = "getSiteManager"
     method = getattr(ob, method_name, None)
     if method is None:
         raise NotFoundError(ob, pname, request)

@@ -14,7 +14,7 @@
 """
 
 Revision information:
-$Id: test_etc.py,v 1.5 2003/05/01 19:35:38 faassen Exp $
+$Id: test_etc.py,v 1.6 2003/09/02 20:46:53 jim Exp $
 """
 
 from unittest import TestCase, main, makeSuite
@@ -35,7 +35,7 @@ class Test(CleanUp, TestCase):
     def testServices(self):
         from zope.app.traversing.namespace import etc
         class C:
-            def getServiceManager(self): return 42
+            def getSiteManager(self): return 42
 
         self.assertEqual(etc('site', (), 'etc:site', C(), None), 42)
 

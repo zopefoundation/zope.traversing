@@ -12,11 +12,11 @@
 #
 ##############################################################################
 """
-$Id: testPhysicalLocationAdapters.py,v 1.3 2002/07/17 16:54:20 jeremy Exp $
+$Id: testPhysicalLocationAdapters.py,v 1.4 2002/10/04 18:37:24 jim Exp $
 """
 
 from unittest import TestCase, TestSuite, main, makeSuite
-from Zope.ComponentArchitecture.tests.PlacelessSetup import PlacelessSetup
+from Zope.App.tests.PlacelessSetup import PlacelessSetup
 from Zope.ComponentArchitecture.GlobalAdapterService import provideAdapter
 from Zope.ComponentArchitecture import getAdapter
 

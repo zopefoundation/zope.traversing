@@ -14,12 +14,12 @@
 """Test the ObjectName adapter
 
 Revision information:
-$Id: testObjectName.py,v 1.2 2002/07/17 16:54:20 jeremy Exp $
+$Id: testObjectName.py,v 1.3 2002/10/04 18:37:24 jim Exp $
 """
 from unittest import TestCase, TestSuite, main, makeSuite
 from Interface import Interface
 
-from Zope.ComponentArchitecture.tests.PlacelessSetup import PlacelessSetup
+from Zope.App.tests.PlacelessSetup import PlacelessSetup
 from Zope.ComponentArchitecture import getService, getAdapter
 
 from Zope.Proxy.ContextWrapper import ContextWrapper

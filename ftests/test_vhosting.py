@@ -55,35 +55,35 @@ class TestVirtualHosting(functional.BrowserTestCase):
     def test_request_base(self):
         self.addPage('/pt', u'<head></head>')
         self.verify('/pt',
-                    '<head>\n<base href="http://localhost/pt/index.html" />\n'
+                    '<head>\n<base href="http://localhost" />\n'
                     '</head>\n')
         self.verify('/++vh++/++/pt',
-                    '<head>\n<base href="http://localhost/pt/index.html" />\n'
+                    '<head>\n<base href="http://localhost" />\n'
                     '</head>\n')
         self.verify('/++vh++https:otherhost:443/++/pt',
                     '<head>\n'
-                    '<base href="https://otherhost/pt/index.html" />'
+                    '<base href="https://otherhost" />'
                     '\n</head>\n')
         self.verify('/++vh++https:otherhost:443/fake/folders/++/pt',
                     '<head>\n<base href='
-                    '"https://otherhost/fake/folders/pt/index.html" />'
+                    '"https://otherhost/fake/folders" />'
                     '\n</head>\n')
 
         self.addPage('/foo/bar/pt', u'<head></head>')
         self.verify('/foo/bar/pt',
                     '<head>\n<base '
-                    'href="http://localhost/foo/bar/pt/index.html" />\n'
+                    'href="http://localhost/foo/bar" />\n'
                     '</head>\n')
         self.verify('/foo/bar/++vh++/++/pt',
-                    '<head>\n<base href="http://localhost/pt/index.html" />\n'
+                    '<head>\n<base href="http://localhost" />\n'
                     '</head>\n')
         self.verify('/foo/bar/++vh++https:otherhost:443/++/pt',
                     '<head>\n'
-                    '<base href="https://otherhost/pt/index.html" />'
+                    '<base href="https://otherhost" />'
                     '\n</head>\n')
         self.verify('/foo/++vh++https:otherhost:443/fake/folders/++/bar/pt',
                     '<head>\n<base href='
-                    '"https://otherhost/fake/folders/bar/pt/index.html" />'
+                    '"https://otherhost/fake/folders/bar" />'
                     '\n</head>\n')
 
     def test_request_redirect(self):

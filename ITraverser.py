@@ -13,12 +13,12 @@
 ##############################################################################
 """
 
-$Id: ITraverser.py,v 1.4 2002/08/13 17:57:05 gvanrossum Exp $
+$Id: ITraverser.py,v 1.5 2002/11/29 15:48:43 stevea Exp $
 """
 
 import Interface
 
-_RAISE_KEYERROR=[]
+_RAISE_KEYERROR = object()
 
 class ITraverser(Interface.Interface):
     """Provide traverse features"""

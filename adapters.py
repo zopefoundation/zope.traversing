@@ -48,12 +48,13 @@ class DefaultTraversable(object):
         attr = getattr(subject, name, _marker)
         if attr is not _marker:
             return attr
-
         if hasattr(subject, '__getitem__'):
-            # Let exceptions propagate.
-            return subject[name]
-        else:
-            raise TraversalError(subject, name)
+            try:
+                return subject[name]
+            except KeyError:
+                pass
+        raise TraversalError(subject, name)
+
 
 class RootPhysicallyLocatable(object):
     __doc__ = IPhysicallyLocatable.__doc__

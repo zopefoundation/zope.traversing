@@ -124,10 +124,10 @@ def nsParse(name):
     ('', '++hello world++foo')
     >>> nsParse('+++acquire+++foo')
     ('', '+++acquire+++foo')
-    
+
 
     But it may also be a @@foo, which implies the view namespace:
-    
+
     >>> nsParse('@@foo')
     ('view', 'foo')
 
@@ -158,7 +158,7 @@ def getResourceInContext(ob, name, request):
     return resource
 
 def queryResourceInContext(ob, name, request, default=None):
-    resource_service = component.getService(ob, Presentation)
+    resource_service = component.getService(Presentation, ob)
     resource = resource_service.queryResource(name, request)
     if resource is None:
         return default
@@ -178,7 +178,7 @@ def queryResourceInContext(ob, name, request, default=None):
 class SimpleHandler(object):
 
     zope.interface.implements(ITraversable)
-    
+
     def __init__(self, context, request=None):
         """Simple hadlers can be usd as adapters or views
 
@@ -187,7 +187,7 @@ class SimpleHandler(object):
 
               >>> SimpleHandler(42).context
               42
-              
+
               >>> SimpleHandler(42, 43).context
               42
            """
@@ -271,7 +271,7 @@ class attr(SimpleHandler):
               >>> adapter = attr(ob)
               >>> adapter.traverse('keys', ())()
               ['x']
-              
+
            """
         return getattr(self.context, name)
 
@@ -294,7 +294,7 @@ from zope.app.applicationcontrol.applicationcontrol \
 from zope.app.traversing.interfaces import IContainmentRoot
 
 class etc(SimpleHandler):
-    
+
     def traverse(self, name, ignored):
         # XXX
 
@@ -333,11 +333,11 @@ class help(SimpleHandler):
 class view(object):
 
     zope.interface.implements(ITraversable)
-    
+
     def __init__(self, context, request):
         self.context = context
         self.request = request
-    
+
     def traverse(self, name, ignored):
         view = component.queryView(self.context, name, self.request)
         if view is None:
@@ -355,7 +355,7 @@ class resource(view):
         return resource
 
 class skin(view):
-    
+
     def traverse(self, name, ignored):
         self.request.shiftNameToApplication()
         self.request.setPresentationSkin(name)
@@ -363,11 +363,11 @@ class skin(view):
         return self.context
 
 class vh(view):
-    
+
     def traverse(self, name, ignored):
 
         request = self.request
-        
+
         traversal_stack = request.getTraversalStack()
         app_names = []
 

@@ -39,7 +39,8 @@
 
 <traversalNamespace name="etc" handler=".EtcNamespace.etc" />
 <traversalNamespace name="view" handler=".PresentationNamespaces.view" />
-<traversalNamespace name="view" handler=".PresentationNamespaces.resource" />
+<traversalNamespace name="resource"
+                    handler=".PresentationNamespaces.resource" />
 <traversalNamespace name="attribute" handler=".AttrItemNamespaces.attr" />
 <traversalNamespace name="item" handler=".AttrItemNamespaces.attr" />
 <traversalNamespace name="acquire" handler=".AcquireNamespace.acquire" />

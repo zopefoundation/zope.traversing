@@ -11,12 +11,10 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
-"""
+"""Presentation Traverser Tests
 
-Revision information:
 $Id$
 """
-
 from unittest import TestCase, main, makeSuite
 from zope.app.tests import ztapi
 from zope.app.tests.placelesssetup import PlacelessSetup

@@ -13,7 +13,7 @@
 ##############################################################################
 """Virtual hosting namespace tests.
 
-$Id: test_vh.py,v 1.3 2004/04/17 17:15:35 jim Exp $
+$Id: test_vh.py,v 1.4 2004/04/18 16:00:35 jim Exp $
 """
 
 import unittest
@@ -53,7 +53,7 @@ class TestVHNamespace(unittest.TestCase):
 
         request = TestRequest(['folder1'], ['folder1_1', '++', 'z', 'y', 'x'])
         ob = object()
-        result = vh('', ob, request)
+        result = vh(ob, request).traverse('', ())
 
         self.assertEqual(result, ob)
         self.assertEqual(request._traversal_stack, ['folder1_1'])
@@ -67,7 +67,8 @@ class TestVHNamespace(unittest.TestCase):
         # GET /folder1/folder2/++vh++http:host:80/folder1_1
         request = TestRequest(['folder1', 'folder2'], ['folder1_1'])
         ob = object()
-        self.assertRaises(ValueError, vh, 'http:host:80', ob, request)
+        handler = vh(ob, request)
+        self.assertRaises(ValueError, handler.traverse, 'http:host:80', ())
 
 
     def test_vh_host(self):
@@ -75,7 +76,7 @@ class TestVHNamespace(unittest.TestCase):
 
         request = TestRequest(['folder1'], ['folder1_1', '++'])
         ob = object()
-        result = vh('http:www.fubarco.com:80', ob, request)
+        result = vh(ob, request).traverse('http:www.fubarco.com:80', ())
 
         self.assertEqual(request._app_server, 'http://www.fubarco.com:80')
 

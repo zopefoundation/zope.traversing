@@ -15,40 +15,92 @@
     for="zope.app.traversing.interfaces.IContainmentRoot"
     factory="zope.app.traversing.adapters.RootPhysicallyLocatable" />
 
-<traversalNamespace
+<adapter
     name="etc"
-    handler="zope.app.traversing.namespace.etc" />
+    provides="zope.app.traversing.interfaces.ITraversable" for="*"
+    factory="zope.app.traversing.namespace.etc" 
+    />
+<view
+    name="etc"
+    type="zope.interface.Interface"
+    provides="zope.app.traversing.interfaces.ITraversable" for="*"
+    factory="zope.app.traversing.namespace.etc" 
+    />
 
-<traversalNamespace
-    name="view"
-    handler="zope.app.traversing.namespace.view" />
-
-<traversalNamespace
-    name="resource"
-    handler="zope.app.traversing.namespace.resource" />
-
-<traversalNamespace
+<adapter
     name="attribute"
-    handler="zope.app.traversing.namespace.attr" />
+    provides="zope.app.traversing.interfaces.ITraversable" for="*"
+    factory="zope.app.traversing.namespace.attr" 
+    />
+<view
+    name="attribute"
+    type="zope.interface.Interface"
+    provides="zope.app.traversing.interfaces.ITraversable" for="*"
+    factory="zope.app.traversing.namespace.attr" 
+    />
 
-<traversalNamespace
+<adapter
     name="item"
-    handler="zope.app.traversing.namespace.item" />
+    provides="zope.app.traversing.interfaces.ITraversable" for="*"
+    factory="zope.app.traversing.namespace.item" 
+    />
+<view
+    name="item"
+    type="zope.interface.Interface"
+    provides="zope.app.traversing.interfaces.ITraversable" for="*"
+    factory="zope.app.traversing.namespace.item" 
+    />
 
-<traversalNamespace
+<adapter
     name="acquire"
-    handler="zope.app.traversing.namespace.acquire" />
+    provides="zope.app.traversing.interfaces.ITraversable" for="*"
+    factory="zope.app.traversing.namespace.acquire" 
+    />
+<view
+    name="acquire"
+    type="zope.interface.Interface"
+    provides="zope.app.traversing.interfaces.ITraversable" for="*"
+    factory="zope.app.traversing.namespace.acquire" 
+    />
 
-<traversalNamespace
-    name="skin"
-    handler="zope.app.traversing.namespace.skin" />
-
-<traversalNamespace
+<adapter
     name="help"
-    handler="zope.app.traversing.namespace.help" />
+    provides="zope.app.traversing.interfaces.ITraversable" for="*"
+    factory="zope.app.traversing.namespace.help" 
+    />
+<view
+    name="help"
+    type="zope.interface.Interface"
+    provides="zope.app.traversing.interfaces.ITraversable" for="*"
+    factory="zope.app.traversing.namespace.help" 
+    />
 
-<traversalNamespace
+<view
+    name="view"
+    type="zope.interface.Interface"
+    provides="zope.app.traversing.interfaces.ITraversable" for="*"
+    factory="zope.app.traversing.namespace.view" 
+    />
+
+<view
+    name="resource"
+    type="zope.interface.Interface"
+    provides="zope.app.traversing.interfaces.ITraversable" for="*"
+    factory="zope.app.traversing.namespace.resource" 
+    />
+
+<view
+    name="skin"
+    type="zope.interface.Interface"
+    provides="zope.app.traversing.interfaces.ITraversable" for="*"
+    factory="zope.app.traversing.namespace.skin" 
+    />
+
+<view
     name="vh"
-    handler="zope.app.traversing.namespace.vh" />
+    type="zope.interface.Interface"
+    provides="zope.app.traversing.interfaces.ITraversable" for="*"
+    factory="zope.app.traversing.namespace.vh" 
+    />
 
 </configure>

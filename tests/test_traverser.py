@@ -32,7 +32,8 @@ from zope.app.location.traversing import LocationPhysicallyLocatable
 from zope.app.traversing.adapters import RootPhysicallyLocatable
 from zope.app.container.contained import contained
 
-from zope.exceptions import NotFoundError, Unauthorized
+from zope.exceptions import NotFoundError
+from zope.security.interfaces import Unauthorized
 from zope.app.servicenames import Adapters
 
 from zope.app.site.tests.placefulsetup import PlacefulSetup

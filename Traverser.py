@@ -13,18 +13,16 @@
 ##############################################################################
 """Default implementation of ITraverser.
 
-$Id: Traverser.py,v 1.5 2002/11/11 14:32:16 stevea Exp $
+$Id: Traverser.py,v 1.6 2002/12/17 14:17:36 stevea Exp $
 """
 
 from Zope.ComponentArchitecture import getAdapter
-from Zope.ContextWrapper.IWrapper import IWrapper
-from Zope.Proxy.ContextWrapper import getWrapperContainer, getInnerWrapperData
+from Zope.Proxy.ContextWrapper import getWrapperContainer
 from Zope.Proxy.ContextWrapper import ContextWrapper
 from Zope.ComponentArchitecture import queryAdapter
-from Zope.Exceptions import NotFoundError, Unauthorized
+from Zope.Exceptions import NotFoundError
 from Namespaces import namespaceLookup
 from ParameterParsing import parameterizedNameParse
-from Zope.Security.SecurityManagement import getSecurityManager
 
 from IPhysicallyLocatable import IPhysicallyLocatable
 from ITraverser import ITraverser

@@ -13,6 +13,8 @@
 ##############################################################################
 """
 Convenience functions for traversing the object tree.
+
+$Id: __init__.py,v 1.18 2003/04/08 18:26:34 alga Exp $
 """
 from zope.component import getAdapter
 from zope.app.interfaces.traversing import IObjectName, IContainmentRoot
@@ -25,26 +27,34 @@ __all__ = ['traverse', 'traverseName', 'objectName', 'getParent',
 _marker = object()
 
 def joinPath(path, *args):
-    """Join the given args to the path, separated by slashes.
+    """Join the given relative paths to the given path.
 
     Returns a unicode path.
-    The path should be well-formed, and not end in a '/' unless it is the
-    root path.
-    The positional arguments are strings to be added to the path as new path
-    segments. These segments may contain the '/' character.
+
+    The path should be well-formed, and not end in a '/' unless it is
+    the root path. It can be either a string (ascii only) or unicode.
+    The positional arguments are relative paths to be added to the
+    path as new path segments.  The path may be absolute or relative.
+
+    A segment may not start with a '/' because that would be confused
+    with an absolute path. A segment may not end with a '/' because we
+    do not allow '/' at the end of relative paths.  A segment may
+    consist of . or .. to mean "the same place", or "the parent path"
+    respectively. A '.' should be removed and a '..' should cause the
+    segment to the left to be removed.  joinPath('/', '..') should
+    raise an exception.
     """
+
     if not args:
         return unicode(path)
-    if path != u'/' and not path.endswith('/'):
+    if path != '/' and path.endswith('/'):
+        raise ValueError('path must not end with a "/": %s' % path)
+    if path != '/':
         path += u'/'
-    clean_args = []
     for arg in args:
-        if arg.startswith('/'):
-            arg = arg[1:]
-        if arg.endswith('/'):
-            arg = arg[:-1]
-        clean_args.append(arg)
-    return path + u'/'.join(clean_args)
+        if arg.startswith('/') or arg.endswith('/'):
+            raise ValueError("Leading or trailing slashes in path elements")
+    return _normalizePath(path + u'/'.join(args))
 
 def getPath(obj):
     """Returns a string representing the physical path to the object.
@@ -150,6 +160,33 @@ def getParents(obj):
             return parents
     raise TypeError, "Not enough context information to get all parents"
 
+
+def _normalizePath(path):
+    """Normalize a path by resolving '.' and '..' path elements."""
+
+    # Special case for the root path.
+    if path == u'/':
+        return path
+
+    new_segments = []
+    prefix = u''
+    if path.startswith('/'):
+        prefix = u'/'
+        path = path[1:]
+
+    for segment in path.split(u'/'):
+        if segment == u'.':
+            continue
+        if segment == u'..':
+            new_segments.pop()  # raises IndexError if there is nothing to pop
+            continue
+        if not segment:
+            raise ValueError('path must not contain empty segments: %s'
+                             % path)
+        new_segments.append(segment)
+
+    return prefix + u'/'.join(new_segments)
+
 def canonicalPath(path_or_object):
     """Returns a canonical absolute unicode path for the given path or object.
 
@@ -176,19 +213,7 @@ def canonicalPath(path_or_object):
         raise ValueError('path must not end with a "/": %s' % path)
 
     # Break path into segments. Process '.' and '..' segments.
-    new_segments = []
-    for segment in path.split(u'/')[1:]:  # skip empty segment at the start
-        if segment == u'.':
-            continue
-        if segment == u'..':
-            new_segments.pop()  # raises IndexError if there is nothing to pop
-            continue
-        if not segment:
-            raise ValueError('path must not contain empty segments: %s'
-                             % path)
-        new_segments.append(segment)
-
-    return u'/' + (u'/'.join(new_segments))
+    return _normalizePath(path)
 
 # import this down here to avoid circular imports
 from zope.app.traversing.adapters import traversePathElement

@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: test_conveniencefunctions.py,v 1.14 2003/03/31 13:32:06 sidnei Exp $
+$Id: test_conveniencefunctions.py,v 1.15 2003/04/08 18:26:34 alga Exp $
 """
 from unittest import TestCase, main, makeSuite
 from zope.app.services.tests.placefulsetup import PlacefulSetup
@@ -233,76 +233,152 @@ class Test(PlacefulSetup, TestCase):
             self.root
             )
 
-    _bad_locations = (
-        (UnicodeError, '\xa323'),
-        (ValueError, ''),
-        (ValueError, '//'),
-        (ValueError, '/foo//bar'),
+    def testCanonicalPath(self):
 
-        # regarding the next two errors:
-        # having a trailing slash on a location is undefined.
-        # we might want to give it a particular meaning for zope3 later
-        # for now, it is an invalid location identifier
-        (ValueError, '/foo/bar/'),
-        (ValueError, 'foo/bar/'),
+        _bad_locations = (
+            (UnicodeError, '\xa323'),
+            (ValueError, ''),
+            (ValueError, '//'),
+            (ValueError, '/foo//bar'),
 
-        (IndexError, '/a/../..'),
-        (ValueError, '/a//v'),
+            # regarding the next two errors:
+            # having a trailing slash on a location is undefined.
+            # we might want to give it a particular meaning for zope3 later
+            # for now, it is an invalid location identifier
+            (ValueError, '/foo/bar/'),
+            (ValueError, 'foo/bar/'),
+
+            (IndexError, '/a/../..'),
+            (ValueError, '/a//v'),
+            )
+
+        # sequence of N-tuples:
+        #   (loc_returned_as_string, input, input, ...)
+        # The string and tuple are tested as input as well as being the
+        # specification for output.
+
+        _good_locations = (
+            # location returned as string
+            ( u'/xx/yy/zz',
+                # arguments to try in addition to the above
+                '/xx/yy/zz',
+                '/xx/./yy/ww/../zz',
+            ),
+            ( u'/xx/yy/zz',
+                '/xx/yy/zz',
+            ),
+            ( u'/xx',
+                '/xx',
+            ),
+            ( u'/',
+                '/',
+            ),
         )
 
-    # sequence of N-tuples:
-    #   (loc_returned_as_string, loc_returned_as_tuple, input, input, ...)
-    # The string and tuple are tested as input as well as being the
-    # specification for output.
-
-    _good_locations = (
-        # location returned as string
-        ( u'/xx/yy/zz',
-            # arguments to try in addition to the above
-            '/xx/yy/zz',
-            '/xx/./yy/ww/../zz',
-        ),
-        ( u'/xx/yy/zz',
-            '/xx/yy/zz',
-        ),
-        ( u'/xx',
-            '/xx',
-        ),
-        ( u'/',
-            '/',
-        ),
-    )
-
-    def testCanonicalPath(self):
         from zope.app.traversing import canonicalPath
 
-        for error_type, value in self._bad_locations:
+        for error_type, value in _bad_locations:
             self.assertRaises(error_type, canonicalPath, value)
 
-        for spec in self._good_locations:
+        for spec in _good_locations:
             correct_answer = spec[0]
             for argument in spec:
                 self.assertEqual(canonicalPath(argument), correct_answer,
                                  "failure on %s" % argument)
 
 
-    def testJoinPathDoubleSlash(self):
+    def test_normalizePath(self):
+
+        _bad_locations = (
+            (ValueError, '//'),
+            (ValueError, '/foo//bar'),
+            (IndexError, '/a/../..'),
+            (IndexError, '/a/./../..'),
+            )
+
+        # sequence of N-tuples:
+        #   (loc_returned_as_string, input, input, ...)
+        # The string and tuple are tested as input as well as being the
+        # specification for output.
+
+        _good_locations = (
+            # location returned as string
+            ( '/xx/yy/zz',
+              # arguments to try in addition to the above
+              '/xx/yy/zz',
+              '/xx/./yy/ww/../zz',
+              '/xx/./yy/ww/./../zz',
+            ),
+            ( 'xx/yy/zz',
+              # arguments to try in addition to the above
+              'xx/yy/zz',
+              'xx/./yy/ww/../zz',
+              'xx/./yy/ww/./../zz',
+            ),
+            ( '/xx/yy/zz',
+              '/xx/yy/zz',
+            ),
+            ( '/xx',
+              '/xx',
+            ),
+            ( '/',
+              '/',
+            ),
+        )
+
+
+        from zope.app.traversing import _normalizePath
+
+        for error_type, value in _bad_locations:
+            self.assertRaises(error_type, _normalizePath, value)
+
+        for spec in _good_locations:
+            correct_answer = spec[0]
+            for argument in spec:
+                self.assertEqual(_normalizePath(argument), correct_answer,
+                                 "failure on %s" % argument)
+
+    def test_joinPath_slashes(self):
         from zope.app.traversing import joinPath
         path = u'/'
-        args = ('/test', 'bla', '/foo/', '/bar')
-        self.assertEqual(joinPath(path, *args), u'/test/bla/foo/bar')
-        
-    def testJoinPathMultipleArgs(self):
+        args = ('/test', 'bla', '/foo', 'bar')
+        self.assertRaises(ValueError, joinPath, path, *args)
+
+        args = ('/test', 'bla', 'foo/', '/bar')
+        self.assertRaises(ValueError, joinPath, path, *args)
+
+    def test_joinPath(self):
         from zope.app.traversing import joinPath
-        path = u'/bla/'
+        path = u'/bla'
         args = ('foo', 'bar', 'baz', 'bone')
         self.assertEqual(joinPath(path, *args), u'/bla/foo/bar/baz/bone')
 
-    def testJoinPathNoSlash(self):
-        from zope.app.traversing import joinPath
         path = u'bla'
         args = ('foo', 'bar', 'baz', 'bone')
         self.assertEqual(joinPath(path, *args), u'bla/foo/bar/baz/bone')
+
+        path = u'bla'
+        args = ('foo', 'bar/baz', 'bone')
+        self.assertEqual(joinPath(path, *args), u'bla/foo/bar/baz/bone')
+
+        path = u'bla/'
+        args = ('foo', 'bar', 'baz', 'bone')
+        self.assertRaises(ValueError, joinPath, path, *args)
+
+    def test_joinPath_normalize(self):
+        from zope.app.traversing import joinPath
+        path = u'/bla'
+        args = ('foo', 'bar', '..', 'baz', 'bone')
+        self.assertEqual(joinPath(path, *args), u'/bla/foo/baz/bone')
+
+        path = u'bla'
+        args = ('foo', 'bar', '.', 'baz', 'bone')
+        self.assertEqual(joinPath(path, *args), u'bla/foo/bar/baz/bone')
+
+        path = u'/'
+        args = ('foo', 'bar', '.', 'baz', 'bone')
+        self.assertEqual(joinPath(path, *args), u'/foo/bar/baz/bone')
+
 
 def test_suite():
     return makeSuite(Test)

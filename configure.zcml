@@ -45,8 +45,7 @@
     factory="zope.app.traversing.namespace.item" 
     />
 <view
-    name="item"
-    type="zope.interface.Interface"
+    name="item" type="*"
     provides="zope.app.traversing.interfaces.ITraversable" for="*"
     factory="zope.app.traversing.namespace.item" 
     />
@@ -57,8 +56,7 @@
     factory="zope.app.traversing.namespace.acquire" 
     />
 <view
-    name="acquire"
-    type="zope.interface.Interface"
+    name="acquire" type="*"
     provides="zope.app.traversing.interfaces.ITraversable" for="*"
     factory="zope.app.traversing.namespace.acquire" 
     />
@@ -69,36 +67,31 @@
     factory="zope.app.traversing.namespace.help" 
     />
 <view
-    name="help"
-    type="zope.interface.Interface"
+    name="help" type="*"
     provides="zope.app.traversing.interfaces.ITraversable" for="*"
     factory="zope.app.traversing.namespace.help" 
     />
 
 <view
-    name="view"
-    type="zope.interface.Interface"
+    name="view" type="*"
     provides="zope.app.traversing.interfaces.ITraversable" for="*"
     factory="zope.app.traversing.namespace.view" 
     />
 
 <view
-    name="resource"
-    type="zope.interface.Interface"
+    name="resource" type="*"
     provides="zope.app.traversing.interfaces.ITraversable" for="*"
     factory="zope.app.traversing.namespace.resource" 
     />
 
 <view
-    name="skin"
-    type="zope.interface.Interface"
+    name="skin" type="*"
     provides="zope.app.traversing.interfaces.ITraversable" for="*"
     factory="zope.app.traversing.namespace.skin" 
     />
 
 <view
-    name="vh"
-    type="zope.interface.Interface"
+    name="vh" type="*"
     provides="zope.app.traversing.interfaces.ITraversable" for="*"
     factory="zope.app.traversing.namespace.vh" 
     />

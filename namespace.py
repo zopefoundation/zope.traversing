@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: namespace.py,v 1.8 2003/03/13 17:10:38 gvanrossum Exp $
+$Id: namespace.py,v 1.9 2003/03/23 22:35:43 jim Exp $
 """
 
 from zope.interface import Interface
@@ -192,11 +192,11 @@ def etc(name, parameters, pname, ob, request):
     if parameters:
         raise UnexpectedParameters(parameters)
 
-    if name == 'ApplicationController' and ob.__class__ == RootFolder:
+    if (name in ('process', 'ApplicationController')
+        and ob.__class__ == RootFolder):
         return applicationController
 
-    if name != 'Services':
-
+    if name not in ('site', 'Services'):
         raise NotFoundError(ob, pname, request)
 
     method_name = "getServiceManager"

@@ -14,7 +14,7 @@
 """
 
 Revision information:
-$Id: test_etc.py,v 1.3 2002/12/28 17:49:34 stevea Exp $
+$Id: test_etc.py,v 1.4 2003/03/23 22:35:43 jim Exp $
 """
 
 from unittest import TestCase, TestSuite, main, makeSuite
@@ -28,7 +28,7 @@ class Test(CleanUp, TestCase):
              import applicationController, applicationControllerRoot
 
         self.assertEqual(
-            etc('ApplicationController', (), '++etc++ApplicationController',
+            etc('process', (), '++etc++process',
                 applicationControllerRoot, None),
             applicationController)
 
@@ -37,7 +37,7 @@ class Test(CleanUp, TestCase):
         class C:
             def getServiceManager(self): return 42
 
-        self.assertEqual(etc('Services', (), 'etc:Services', C(), None), 42)
+        self.assertEqual(etc('site', (), 'etc:site', C(), None), 42)
 
 
 

@@ -11,10 +11,10 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""
-$Id: namespace.py,v 1.22 2003/11/21 17:09:36 jim Exp $
-"""
+"""URL Namespace Implementations
 
+$Id: namespace.py,v 1.23 2004/02/24 14:11:17 srichter Exp $
+"""
 from zope.app import zapi
 from zope.exceptions import NotFoundError
 from zope.app.interfaces.traversing import ITraversable

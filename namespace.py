@@ -425,10 +425,49 @@ class adapter(SimpleHandler):
              no adapter
 
            Cleanup:
-    
+
              >>> tearDown()
            """
         try:
             return component.getAdapter(self.context, IPathAdapter, name=name)
         except:
             raise NotFoundError(self.context, name)
+
+
+class debug(view):
+
+    def traverse(self, name, ignored):
+        """Debug traversal adapter
+
+           This adapter allows debugging flags to be set in the request.
+           See IDebugFlags.
+
+           Demonstration:
+
+             >>> from zope.publisher.browser import TestRequest
+             >>> request = TestRequest()
+             >>> ob = object()
+             >>> adapter = debug(ob, request)
+             >>> request.debug.sourceAnnotations
+             False
+             >>> adapter.traverse('source', ()) is ob
+             True
+             >>> request.debug.sourceAnnotations
+             True
+             >>> adapter.traverse('source,source', ()) is ob
+             True
+             >>> try:
+             ...     adapter.traverse('badflag', ())
+             ... except ValueError:
+             ...     print 'unknown debugging flag'
+             unknown debugging flag
+
+        """
+        request = self.request
+        for flag in name.split(','):
+            if flag == 'source':
+                request.debug.sourceAnnotations = True
+            else:
+                raise ValueError("Unknown debug flag: %s" % flag)
+        return self.context
+

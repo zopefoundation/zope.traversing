@@ -1,63 +1,59 @@
-<zopeConfigure
-   xmlns='http://namespaces.zope.org/zope'
-   xmlns:browser='http://namespaces.zope.org/browser'
->
+<configure xmlns="http://namespaces.zope.org/zope">
 
-<adapter for="*"
-         factory="zope.app.traversing.adapters.Traverser"
-         provides="zope.app.interfaces.traversing.ITraverser"
-         />
+<adapter 
+    for="*"
+    factory="zope.app.traversing.adapters.Traverser"
+    provides="zope.app.interfaces.traversing.ITraverser" />
 
-<adapter for="*"
-         factory="zope.app.traversing.adapters.DefaultTraversable"
-         provides="zope.app.interfaces.traversing.ITraversable" />
+<adapter 
+    for="*"
+    factory="zope.app.traversing.adapters.DefaultTraversable"
+    provides="zope.app.interfaces.traversing.ITraversable" />
 
 <adapter 
     for="*"
     provides="zope.app.interfaces.traversing.IPhysicallyLocatable"
-    factory="zope.app.traversing.adapters.WrapperPhysicallyLocatable" 
-    />
+    factory="zope.app.traversing.adapters.WrapperPhysicallyLocatable" />
 
 <adapter 
     provides="zope.app.interfaces.traversing.IPhysicallyLocatable"
     for="zope.app.interfaces.traversing.IContainmentRoot"
-    factory="zope.app.traversing.adapters.RootPhysicallyLocatable" 
-    />
+    factory="zope.app.traversing.adapters.RootPhysicallyLocatable" />
 
 <traversalNamespace
     name="etc"
-    handler="zope.app.traversing.namespace.etc"
-    />
+    handler="zope.app.traversing.namespace.etc" />
+
 <traversalNamespace
     name="view"
-    handler="zope.app.traversing.namespace.view"
-    />
+    handler="zope.app.traversing.namespace.view" />
+
 <traversalNamespace
     name="resource"
-    handler="zope.app.traversing.namespace.resource"
-    />
+    handler="zope.app.traversing.namespace.resource" />
+
 <traversalNamespace
     name="attribute"
-    handler="zope.app.traversing.namespace.attr"
-    />
+    handler="zope.app.traversing.namespace.attr" />
+
 <traversalNamespace
     name="item"
-    handler="zope.app.traversing.namespace.item"
-    />
+    handler="zope.app.traversing.namespace.item" />
+
 <traversalNamespace
     name="acquire"
-    handler="zope.app.traversing.namespace.acquire"
-    />
+    handler="zope.app.traversing.namespace.acquire" />
+
 <traversalNamespace
     name="skin"
-    handler="zope.app.traversing.namespace.skin"
-    />
+    handler="zope.app.traversing.namespace.skin" />
+
 <traversalNamespace
     name="help"
-    handler="zope.app.traversing.namespace.help"
-    />
+    handler="zope.app.traversing.namespace.help" />
+
 <traversalNamespace
     name="vh"
-    handler="zope.app.traversing.namespace.vh"
-    />
-</zopeConfigure>
+    handler="zope.app.traversing.namespace.vh" />
+
+</configure>

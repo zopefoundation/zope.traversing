@@ -11,10 +11,9 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
-"""
+"""Traversal Namespace Tests
 
-Revision information:
-$Id: test_namespacetrversal.py,v 1.7 2003/06/01 15:59:38 jim Exp $
+$Id: test_namespacetrversal.py,v 1.8 2003/08/02 18:17:28 srichter Exp $
 """
 
 from unittest import TestCase, main, makeSuite

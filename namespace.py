@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: namespace.py,v 1.15 2003/07/04 10:59:24 ryzaja Exp $
+$Id: namespace.py,v 1.16 2003/08/02 18:17:25 srichter Exp $
 """
 
 from zope.exceptions import NotFoundError
@@ -42,14 +42,6 @@ _namespace_handlers = {}
 
 def provideNamespaceHandler(ns, handler):
     _namespace_handlers[ns] = handler
-
-def directive(_context, name, handler):
-    handler = _context.resolve(handler)
-    return [Action(
-               discriminator=("traversalNamespace", name),
-               callable=provideNamespaceHandler,
-               args=(name, handler),
-               )]
 
 def namespaceLookup(name, ns, qname, parameters, object, request=None):
     """Lookup a value from a namespace

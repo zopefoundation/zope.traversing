@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: namespace.py,v 1.4 2003/02/06 06:50:02 seanb Exp $
+$Id: namespace.py,v 1.5 2003/02/11 16:00:01 sidnei Exp $
 """
 
 from zope.interface import Interface

@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: test_traverser.py,v 1.6 2003/02/06 06:50:04 seanb Exp $
+$Id: test_traverser.py,v 1.7 2003/02/11 16:00:03 sidnei Exp $
 """
 
 import unittest

@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: test_conveniencefunctions.py,v 1.6 2003/02/06 06:50:04 seanb Exp $
+$Id: test_conveniencefunctions.py,v 1.7 2003/02/11 16:00:03 sidnei Exp $
 """
 from unittest import TestCase, main, makeSuite
 from zope.app.services.tests.placefulsetup import PlacefulSetup

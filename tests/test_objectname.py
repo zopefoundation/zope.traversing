@@ -14,7 +14,7 @@
 """Test the ObjectName adapter
 
 Revision information:
-$Id: test_objectname.py,v 1.4 2003/02/06 06:50:04 seanb Exp $
+$Id: test_objectname.py,v 1.5 2003/02/11 16:00:03 sidnei Exp $
 """
 from unittest import TestCase, TestSuite, main, makeSuite
 from zope.interface import Interface

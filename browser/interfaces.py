@@ -13,7 +13,7 @@
 ##############################################################################
 """Browser traversal interfaces
 
-$Id: interfaces.py,v 1.2 2004/03/17 18:24:59 philikon Exp $
+$Id: interfaces.py,v 1.3 2004/04/27 10:53:50 jim Exp $
 """
 from zope.interface import Interface
 
@@ -36,4 +36,10 @@ class IAbsoluteURL(Interface):
 
         Name is the name to display for that segment of the breadcrumbs.
         URL is the link for that segment of the breadcrumbs.
+        """
+
+class IAbsoluteURLAPI(Interface):
+
+    def absoluteURL(ob, request):
+        """Compute the absolute URL of an object
         """

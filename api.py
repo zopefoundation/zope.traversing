@@ -98,7 +98,6 @@ def traverse(object, path, default=_marker, request=None):
     except TraversalError:
         raise
     except NotFoundError, v: 
-        import pdb; pdb.set_trace()
         warnings.warn(
             "A %s instance raised a NotFoundError in "
             "traverse.  Raising NotFoundError in this "

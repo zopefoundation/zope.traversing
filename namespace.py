@@ -98,7 +98,7 @@ def namespaceLookup(ns, name, object, request=None):
         traverser = component.queryView(object, ns, request,
                                         providing=ITraversable)
     else:
-        traverser = component.queryNamedAdapter(object, ITraversable, ns)
+        traverser = component.queryAdapter(object, ITraversable, ns)
 
     if traverser is None:
         raise NotFoundError("++%s++%s" % (ns, name))

@@ -33,7 +33,6 @@ from zope.app.traversing.adapters import RootPhysicallyLocatable
 from zope.app.container.contained import contained
 
 from zope.exceptions import NotFoundError, Unauthorized
-from zope.component import getService
 from zope.app.servicenames import Adapters
 
 from zope.app.site.tests.placefulsetup import PlacefulSetup

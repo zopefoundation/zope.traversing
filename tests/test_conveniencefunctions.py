@@ -20,7 +20,6 @@ from zope.app.tests import ztapi
 from zope.interface import directlyProvides
 from zope.app.site.tests.placefulsetup import PlacefulSetup
 from zope.app.traversing.adapters import Traverser
-from zope.component import getService
 from zope.app.servicenames import Adapters
 from zope.app.traversing.interfaces import ITraverser, ITraversable
 from zope.app.traversing.adapters import DefaultTraversable

@@ -104,7 +104,7 @@ def getParent(obj):
         parent = getWrapperContext(obj)
         if parent is not None:
             return parent
-    raise TypeError, "Not enough context information to get parent"
+    raise TypeError("Not enough context information to get parent", obj)
 
 def getParents(obj):
     """Returns a list starting with the given object's parent followed by

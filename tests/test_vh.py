@@ -13,7 +13,7 @@
 ##############################################################################
 """Virtual hosting namespace tests.
 
-$Id: test_vh.py,v 1.1 2003/04/15 09:37:27 alga Exp $
+$Id: test_vh.py,v 1.2 2003/08/08 18:07:55 jim Exp $
 """
 
 import unittest
@@ -34,17 +34,15 @@ class TestRequest:
     def setTraversalStack(self, stack):
         self._traversal_stack[:] = list(stack)
 
-    def setApplicationNames(self, names):
-        self._app_names = names
-
     def setApplicationServer(self, host, proto='http', port=None):
         host = "%s://%s" % (proto, host)
         if port:
             host = "%s:%s" % (host, port)
         self._app_server = host
 
-    def setVirtualHostRoot(self):
-        self._vh_trunc = len(self._traversed_names) + 1
+    def setVirtualHostRoot(self, names=None):
+        del self._traversed_names[:]
+        self._app_names = names or []
 
 class TestVHNamespace(unittest.TestCase):
 
@@ -59,8 +57,7 @@ class TestVHNamespace(unittest.TestCase):
 
         self.assertEqual(result, ob)
         self.assertEqual(request._traversal_stack, ['folder1_1'])
-        #self.assertEqual(request._traversed_names, [])
-        self.assertEqual(request._vh_trunc, 2)
+        self.assertEqual(request._traversed_names, [])
         self.assertEqual(request._app_names, ['x', 'y', 'z'])
         self.assertEqual(request._app_server, 'http://server')
 
@@ -70,18 +67,14 @@ class TestVHNamespace(unittest.TestCase):
         # GET /folder1/folder2/++vh++http:host:80/folder1_1
         request = TestRequest(['folder1', 'folder2'], ['folder1_1'])
         ob = object()
-        result = vh('http:host:80', (), '++vh++http:host:80', ob, request)
+        self.assertRaises(ValueError, vh,
+                          'http:host:80', (), '++vh++http:host:80', ob, request)
 
-        self.assertEqual(result, ob)
-        self.assertEqual(request._traversal_stack, ['folder1_1'])
-        self.assertEqual(request._vh_trunc, 3)
-        #self.assertEqual(request._traversed_names, [])
-        self.assertEqual(request._app_names, [])
 
     def test_vh_host(self):
         from zope.app.traversing.namespace import vh
 
-        request = TestRequest(['folder1'], ['folder1_1'])
+        request = TestRequest(['folder1'], ['folder1_1', '++'])
         ob = object()
         result = vh('http:www.fubarco.com:80', (),
                     '++vh++http:www.fubarco.com:80', ob, request)

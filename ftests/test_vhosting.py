@@ -13,7 +13,7 @@
 ##############################################################################
 """Functional tests for virtual hosting.
 
-$Id: test_vhosting.py,v 1.2 2003/04/15 12:24:34 alga Exp $
+$Id: test_vhosting.py,v 1.3 2003/04/16 06:54:42 mgedmin Exp $
 """
 
 import unittest
@@ -80,6 +80,14 @@ class TestVirtualHosting(BrowserTestCase):
                     '"https://otherhost:443/fake/folders/bar/pt/index.html" />'
                     '\n</head>\n')
 
+    def test_request_redirect(self):
+        self.addPage('/foo/index.html', u'Spam')
+        self.verifyRedirect('/foo', 'http://localhost/foo/index.html')
+        self.verifyRedirect('/++vh++https:otherhost:443/foo',
+                            'https://otherhost:443/foo/index.html')
+        self.verifyRedirect('/foo/++vh++https:otherhost:443/bar/++',
+                            'https://otherhost:443/bar/index.html')
+
     def test_absolute_url(self):
         self.addPage('/pt', u'<span tal:replace="template/@@absolute_url"/>')
         self.verify('/pt', 'http://localhost/pt\n')
@@ -135,6 +143,11 @@ class TestVirtualHosting(BrowserTestCase):
         result = self.publish(path)
         self.assertEquals(result.getStatus(), 200)
         self.assertEquals(result.getBody(), content)
+
+    def verifyRedirect(self, path, location):
+        result = self.publish(path)
+        self.assertEquals(result.getStatus(), 302)
+        self.assertEquals(result.getHeader('Location'), location)
 
 
 def test_suite():

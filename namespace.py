@@ -12,18 +12,15 @@
 #
 ##############################################################################
 """
-$Id: namespace.py,v 1.19 2003/09/02 20:46:53 jim Exp $
+$Id: namespace.py,v 1.20 2003/09/21 17:33:39 jim Exp $
 """
 
 from zope.exceptions import NotFoundError
-from zope.app.context import ContextWrapper
-from zope.context import getWrapperContext
 from zope.component import queryAdapter
 from zope.component import queryDefaultViewName, queryView, getService
 from zope.app.services.servicenames import Resources
-
 from zope.app.interfaces.traversing import ITraversable
-
+from zope.proxy import removeAllProxies
 import re
 
 class UnexpectedParameters(NotFoundError):
@@ -57,8 +54,6 @@ def namespaceLookup(name, ns, qname, parameters, object, request=None):
         raise NotFoundError(name)
 
     new = handler(qname, parameters, name, object, request)
-    if new is not object:
-        new = ContextWrapper(new, object, name=name)
 
     return new
 
@@ -100,7 +95,15 @@ def queryResourceInContext(ob, name, request, default=None):
     resource = resource_service.queryResource(ob, name, request)
     if resource is None:
         return default
-    return ContextWrapper(resource, resource_service, name=name)
+
+    # We need to set the __parent__ and __name__. We need the unproxied
+    # resource to do this.  we will still return the proxied resource.
+    r = removeAllProxies(resource)
+    
+    r.__parent__ = ob
+    r.__name__ = name
+
+    return resource
 
 
 # ---- namespace processors below ----
@@ -120,13 +123,14 @@ def acquire(name, parameters, pname, ob, request):
                 # XXX what do we do if the path gets bigger?
                 path = []
                 next = traversable.traverse(name, parameters, pname, path)
-                if path: continue
+                if path:
+                    continue
             except NotFoundError:
                 pass
             else:
-                return ContextWrapper(next, ob, name=name)
+                return next
 
-        ob = getWrapperContext(ob)
+        ob = getattr(ob, '__parent__', None)
         if ob is None:
             raise NotFoundError(origOb, pname)
 
@@ -144,7 +148,7 @@ def item(name, parameters, pname, ob, request):
 
 from zope.app.applicationcontrol.applicationcontrol \
     import applicationController
-from zope.app.content.folder import RootFolder
+from zope.app.interfaces.content.folder import IRootFolder
 def etc(name, parameters, pname, ob, request):
     # XXX
 
@@ -162,7 +166,7 @@ def etc(name, parameters, pname, ob, request):
         raise UnexpectedParameters(parameters)
 
     if (name in ('process', 'ApplicationController')
-        and ob.__class__ == RootFolder):
+        and IRootFolder.isImplementedBy(ob)):
         return applicationController
 
     if name not in ('site', 'Services'):

@@ -17,8 +17,7 @@ Convenience functions for traversing the object tree.
 from zope.component import getAdapter
 from zope.app.interfaces.traversing import IObjectName, IContainmentRoot
 from zope.app.interfaces.traversing import ITraverser, IPhysicallyLocatable
-from zope.proxy.context import getWrapperContext, isWrapper
-from zope.proxy.context import getWrapperContainer
+from zope.proxy.context import getWrapperContainer, isWrapper
 from types import StringTypes
 
 __all__ = ['traverse', 'traverseName', 'objectName', 'getParent',

@@ -12,10 +12,12 @@
 #
 ##############################################################################
 """
-$Id: adapters.py,v 1.20 2004/04/17 17:15:34 jim Exp $
+$Id: adapters.py,v 1.21 2004/05/05 08:38:03 philikon Exp $
 """
+from types import StringTypes, MethodType
 
 from zope.exceptions import NotFoundError
+from zope.interface import implements
 
 from zope.app.traversing.interfaces import IPhysicallyLocatable
 from zope.app.traversing.interfaces import IContainmentRoot
@@ -24,10 +26,6 @@ from zope.app.traversing.interfaces import ITraverser, ITraversable
 from zope.app.traversing.namespace import namespaceLookup
 from zope.app.traversing.namespace import UnexpectedParameters
 from zope.app.traversing.namespace import nsParse
-
-from zope.interface import implements
-
-from types import StringTypes, MethodType
 
 __metaclass__ = type
 _marker = object()  # opaque marker that doesn't get security proxied

@@ -13,19 +13,19 @@
 ##############################################################################
 """Functional tests for virtual hosting.
 
-$Id: test_vhosting.py,v 1.10 2003/11/21 17:12:15 jim Exp $
+$Id: test_vhosting.py,v 1.11 2004/02/24 16:51:39 philikon Exp $
 """
 
 import unittest
 from zope.app.tests import ztapi
 from zope.testing.functional import BrowserTestCase
-from zope.app.content.zpt import ZPTPage
-from zope.app.content.folder import Folder
+from zope.app.folder import Folder
 from transaction import get_transaction
 from zope.app.publisher.browser.resource import Resource
 from zope.app.traversing import traverse
 from zope.security.checker import defineChecker, NoProxy
 from zope.app.container.contained import Contained
+from zope.app.zptpage.zptpage import ZPTPage
 
 __metaclass__ = type
 

@@ -448,7 +448,7 @@ class adapter(SimpleHandler):
            """
         try:
             return component.getAdapter(self.context, IPathAdapter, name)
-        except:
+        except ComponentLookupError:
             raise TraversalError(self.context, name)
 
 

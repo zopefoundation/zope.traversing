@@ -2,24 +2,27 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:browser="http://namespaces.zope.org/browser">
 
-  <browser:page
-      name="_traverse"
+  <view
       for="zope.interface.Interface"
-      class="zope.app.publication.traversers.SimpleComponentTraverser"
+      type="zope.publisher.interfaces.browser.IBrowserRequest"
+      provides="zope.publisher.interfaces.browser.IBrowserPublisher"
+      factory="zope.app.publication.traversers.SimpleComponentTraverser"
       permission="zope.Public"
       />
 
-  <browser:page
-      name="_traverse"
+  <view
       for="zope.app.container.interfaces.IItemContainer"
-      class="zope.app.container.traversal.ItemTraverser"
+      type="zope.publisher.interfaces.browser.IBrowserRequest"
+      provides="zope.publisher.interfaces.browser.IBrowserPublisher"
+      factory="zope.app.container.traversal.ItemTraverser"
       permission="zope.Public"
       />
 
-  <browser:page
-      name="_traverse"
+  <view
       for="zope.app.container.interfaces.ISimpleReadContainer"
-      class="zope.app.container.traversal.ContainerTraverser"
+      type="zope.publisher.interfaces.browser.IBrowserRequest"
+      provides="zope.publisher.interfaces.browser.IBrowserPublisher"
+      factory="zope.app.container.traversal.ItemTraverser"
       permission="zope.Public"
       />
 

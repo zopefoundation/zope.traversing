@@ -12,15 +12,13 @@
 #
 ##############################################################################
 """
-
-$Id: namespace.py,v 1.17 2003/08/08 18:07:33 jim Exp $
+$Id: namespace.py,v 1.18 2003/08/17 06:08:30 philikon Exp $
 """
 
 from zope.exceptions import NotFoundError
 from zope.app.context import ContextWrapper
-from zope.context import getWrapperContext, getWrapperData
-from zope.configuration.action import Action
-from zope.component import queryAdapter, getServiceManager
+from zope.context import getWrapperContext
+from zope.component import queryAdapter
 from zope.component import queryDefaultViewName, queryView, getService
 from zope.app.services.servicenames import Resources
 

@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: AcquireNamespace.py,v 1.2 2002/06/10 23:28:17 jim Exp $
+$Id: AcquireNamespace.py,v 1.3 2002/07/12 19:28:32 jim Exp $
 """
 
 from Namespaces import provideNamespaceHandler
@@ -52,6 +52,4 @@ def acquire(name, parameters, pname, ob, request):
             raise NotFoundError(origOb, pname)
 
     raise ExcessiveWrapping(origOb, pname)
-
-provideNamespaceHandler('acquire', acquire)
 

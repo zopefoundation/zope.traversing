@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: EtcNamespace.py,v 1.3 2002/07/11 18:21:34 jim Exp $
+$Id: EtcNamespace.py,v 1.4 2002/07/12 19:28:32 jim Exp $
 """
 from Zope.App.OFS.ApplicationControl.ApplicationControl \
      import ApplicationController
@@ -50,5 +50,3 @@ def etc(name, parameters, pname, ob, request):
         raise NotFoundError(ob, pname, request)
 
     return method()
-
-provideNamespaceHandler('etc', etc)

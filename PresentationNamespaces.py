@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: PresentationNamespaces.py,v 1.3 2002/06/13 23:15:44 jim Exp $
+$Id: PresentationNamespaces.py,v 1.4 2002/07/12 19:28:32 jim Exp $
 """
 
 from Zope.ComponentArchitecture import getView
@@ -34,8 +34,6 @@ def view(name, parameters, pname, ob, request):
         raise NoRequest(pname)
     return getView(ob, name, request)
 
-provideNamespaceHandler('view', view)
-
 def resource(name, parameters, pname, ob, request):
     if parameters:
         raise UnexpectedParameters(parameters)
@@ -47,6 +45,4 @@ def resource(name, parameters, pname, ob, request):
         raise NotFoundError(ob, pname)
 
     return resource
-
-provideNamespaceHandler('resource', resource)
 

@@ -13,18 +13,20 @@
 ##############################################################################
 """
 
-$Id: AttrItemNamespaces.py,v 1.3 2002/07/12 19:28:32 jim Exp $
+$Id: SkinNamespace.py,v 1.1 2002/07/12 19:28:32 jim Exp $
 """
 
+from Zope.App.OFS.ApplicationControl.ApplicationControl \
+     import ApplicationController
 from Namespaces import provideNamespaceHandler
 from Exceptions import UnexpectedParameters
+from Zope.Exceptions import NotFoundError
 
-def attr(name, parameters, pname, ob, request):
+def skin(name, parameters, pname, ob, request):
+
     if parameters:
         raise UnexpectedParameters(parameters)
-    return getattr(ob, name)
 
-def item(name, parameters, pname, ob, request):
-    if parameters:
-        raise UnexpectedParameters(parameters)
-    return ob[name]
+    request.setViewSkin(name)
+
+    return ob

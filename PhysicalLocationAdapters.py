@@ -15,7 +15,7 @@
 
 XXX longer description goes here.
 
-$Id: PhysicalLocationAdapters.py,v 1.1 2002/07/11 18:21:34 jim Exp $
+$Id: PhysicalLocationAdapters.py,v 1.2 2002/07/12 19:28:32 jim Exp $
 """
 __metaclass__ = type
 
@@ -49,6 +49,10 @@ class WrapperPhysicallyLocatable:
 
         container = getAdapter(container, IPhysicallyLocatable)
         container_path = container.getPhysicalPath()
+
+        if name == '.':
+            # skip
+            return container_path
 
         return container_path + (name, )
         

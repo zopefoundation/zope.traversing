@@ -14,41 +14,24 @@
 """
 
 Revision information:
-$Id: testNamespaceTrversal.py,v 1.3 2002/07/12 19:28:33 jim Exp $
+$Id: testSkin.py,v 1.1 2002/07/12 19:28:33 jim Exp $
 """
 
 from unittest import TestCase, TestSuite, main, makeSuite
 from Zope.Testing.CleanUp import CleanUp # Base class w registry cleanup
-
-class C:
-    a = 1
-    def __getitem__(self, key): return key+'value'
-    
-c=C()
-
+from Zope.Publisher.Browser.BrowserRequest import TestRequest
 
 class Test(CleanUp, TestCase):
 
-    def setUp(self):
-        from Zope.App.Traversing.Namespaces import provideNamespaceHandler
-        from Zope.App.Traversing.AttrItemNamespaces import attr, item
-        provideNamespaceHandler('attribute', attr)
-        provideNamespaceHandler('item', item)
+    def test(self):
+        from Zope.App.Traversing.SkinNamespace import skin
 
-
-    def testAttr(self):
-        from Zope.App.Traversing.Traverser import Traverser
-        traverser = Traverser(c)
-        v = traverser.traverse('++attribute++a')
-        self.assertEqual(v, 1)
-
-    def testItem(self):
-        from Zope.App.Traversing.Traverser import Traverser
-        traverser = Traverser(c)
-        v = traverser.traverse('++item++a')
-        self.assertEqual(v, 'avalue')
-        
-        
+        request = TestRequest()
+        self.assertEqual(request.getPresentationSkin(), '')
+        ob = object()
+        ob2 = skin('foo', (), '++skin++foo', ob, request)
+        self.assertEqual(ob, ob2)
+        self.assertEqual(request.getPresentationSkin(), 'foo')
 
 def test_suite():
     return TestSuite((

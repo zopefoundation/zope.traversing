@@ -25,7 +25,14 @@ __all__ = ['traverse', 'traverseName', 'objectName', 'getParent',
 _marker = object()
 
 def joinPath(path, *args):
-    """Concatenate a path and various args with slashes"""
+    """Join the given args to the path, separated by slashes.
+
+    Returns a unicode path.
+    The path should be well-formed, and not end in a '/' unless it is the
+    root path.
+    The positional arguments are strings to be added to the path as new path
+    segments. These segments should not contain the '/' character.
+    """
     if not args:
         return unicode(path)
     if path != u'/':

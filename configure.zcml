@@ -45,5 +45,5 @@
 <traversalNamespace name="item" handler=".AttrItemNamespaces.item" />
 <traversalNamespace name="acquire" handler=".AcquireNamespace.acquire" />
 <traversalNamespace name="skin" handler=".SkinNamespace.skin" />
-
+<traversalNamespace name="module" handler=".ModuleNamespace.module" />
 </zopeConfigure>

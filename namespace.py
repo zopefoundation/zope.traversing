@@ -180,9 +180,9 @@ class SimpleHandler(object):
     zope.interface.implements(ITraversable)
 
     def __init__(self, context, request=None):
-        """Simple hadlers can be usd as adapters or views
+        """Simple handlers can be used as adapters or views
 
-           The ignore their second constructor arg and store the first
+           They ignore their second constructor arg and store the first
            one in their context attr:
 
               >>> SimpleHandler(42).context
@@ -328,7 +328,9 @@ class help(SimpleHandler):
 
     def traverse(self, name, ignored):
         """Used to traverse to an online help topic."""
-        return component.getService(self.context, 'OnlineHelp')
+        onlinehelp = component.getService(self.context, 'OnlineHelp')
+        onlinehelp.context = self.context
+        return onlinehelp
 
 class view(object):
 

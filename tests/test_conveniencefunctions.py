@@ -13,18 +13,17 @@
 ##############################################################################
 """
 
-$Id: test_conveniencefunctions.py,v 1.3 2002/12/28 14:13:29 stevea Exp $
+$Id: test_conveniencefunctions.py,v 1.4 2002/12/28 15:20:50 stevea Exp $
 """
-from unittest import TestCase, TestSuite, main, makeSuite
+from unittest import TestCase, main, makeSuite
 from zope.app.services.tests.placefulsetup import PlacefulSetup
 from zope.proxy.context import ContextWrapper
 from zope.app.traversing.traverser import Traverser
 from zope.component import getService
-
-from zope.app.interfaces.traversing import ITraverser
-from zope.app.interfaces.traversing import ITraversable
+from zope.app.interfaces.traversing import ITraverser, ITraversable
+from zope.app.interfaces.traversing import IObjectName
 from zope.app.traversing.defaulttraversable import DefaultTraversable
-from zope.app.traversing.objectname import IObjectName, ObjectName
+from zope.app.traversing.objectname import ObjectName
 
 from zope.app.interfaces.traversing import IPhysicallyLocatable
 from zope.app.interfaces.traversing import IContainmentRoot
@@ -54,11 +53,15 @@ class Test(PlacefulSetup, TestCase):
         folder = C('folder')
         item = C('item')
 
-        self.root =   ContextWrapper(root, None)
+        self.root = root  # root is not usually wrapped
         self.folder = ContextWrapper(folder, self.root,   name='folder')
         self.item =   ContextWrapper(item,   self.folder, name='item')
         self.unwrapped_item = item
-
+        self.broken_chain_folder = ContextWrapper(folder, None)
+        self.broken_chain_item = ContextWrapper(item, 
+                                    self.broken_chain_folder,
+                                    name='item'
+                                    )
         root.folder = folder
         folder.item = item
 
@@ -141,6 +144,21 @@ class Test(PlacefulSetup, TestCase):
             self.folder
             )
 
+    def testGetParentFromRoot(self):
+        from zope.app.traversing import getParent
+        self.assertEqual(
+            getParent(self.root),
+            None
+            )
+
+    def testGetParentBrokenChain(self):
+        from zope.app.traversing import getParent
+        self.assertRaises(
+            TypeError,
+            getParent,
+            self.broken_chain_folder
+            )
+
     def testGetParentFromUnwrapped(self):
         from zope.app.traversing import getParent
         self.assertRaises(
@@ -156,6 +174,13 @@ class Test(PlacefulSetup, TestCase):
             [self.folder, self.root]
             )
 
+    def testGetParentsBrokenChain(self):
+        from zope.app.traversing import getParents
+        self.assertRaises(
+            TypeError,
+            getParents,
+            self.broken_chain_item
+            )
 
     def testGetParentsFromUnwrapped(self):
         from zope.app.traversing import getParents
@@ -215,7 +240,7 @@ class Test(PlacefulSetup, TestCase):
         (ValueError, 23),
         (ValueError, ''),
         (ValueError, '//'),
-##        (AssertionError, '/foo//bar'),
+        (ValueError, '/foo//bar'),
 
         # regarding the next four errors:
         # having a trailing slash on a location is undefined.

@@ -15,7 +15,7 @@
 Traversing the object tree.
 """
 from zope.component import getAdapter
-from zope.app.interfaces.traversing import IObjectName
+from zope.app.interfaces.traversing import IObjectName, IContainmentRoot
 from zope.app.interfaces.traversing import ITraverser, IPhysicallyLocatable
 from zope.app.traversing.traverser import WrapperChain, Traverser
 from zope.proxy.context import getWrapperContext, isWrapper
@@ -27,13 +27,14 @@ __all__ = ['traverse', 'traverseName', 'objectName', 'getParent',
 
 _marker = object()
 
-# XXX: this probably shouldn't have "request" in its signature, nor
-#      in the arguments of the call to traverser.traverse
 def traverse(place, path, default=_marker, request=None):
     """Traverse 'path' relative to 'place'
 
     'path' can be a string with path segments separated by '/'
     or a sequence of path segments.
+
+    'request' is passed in when traversing from presentation code. This
+    allows paths like @@foo to work.
 
     Raises NotFoundError if path cannot be found
     Raises TypeError if place is not context wrapped
@@ -67,7 +68,6 @@ def traverseName(obj, name, default=_marker):
     # treated as a single path segment, regardless of any '/' characters
     return traverse(obj, [name], default=default)
 
-
 def objectName(obj):
     """Get the name an object was traversed via
 
@@ -78,42 +78,48 @@ def objectName(obj):
 def getParent(obj):
     """Returns the container the object was traversed via.
 
-    Raises TypeError if the given object is not context wrapped
+    Returns None if the object is a containment root.
+    Raises TypeError if the object doesn't have enough context to get the
+    parent.
     """
-    if not isWrapper(obj):
-        raise TypeError, "Not enough context information to traverse"
-    return getWrapperContext(obj)
+    if IContainmentRoot.isImplementedBy(obj):
+        return None
+    if isWrapper(obj):
+        parent = getWrapperContext(obj)
+        if parent is not None:
+            return parent
+    raise TypeError, "Not enough context information to get parent"
 
 def getParents(obj):
     """Returns a list starting with the given object's parent followed by
     each of its parents.
+    
+    Raises a TypeError if the context doesn't go all the way down to
+    a containment root.
     """
-    if not isWrapper(obj):
-        raise TypeError, "Not enough context information to traverse"
-    iterator = WrapperChain(obj)
-    iterator.next()  # send head of chain (current object) to /dev/null
-    return [p for p in iterator]
+    if IContainmentRoot.isImplementedBy(obj):
+        return []
+    if isWrapper(obj):
+        iterator = WrapperChain(obj)
+        iterator.next()  # send head of chain (current object) to /dev/null
+        parents = [p for p in iterator]
+        if parents and IContainmentRoot.isImplementedBy(parents[-1]):
+            return parents
+    raise TypeError, "Not enough context information to get all parents"
 
 def getPhysicalPath(obj):
     """Returns a tuple of names representing the physical path to the object.
-
-    Raises TypeError if the given object is not context wrapped
     """
     return getAdapter(obj, IPhysicallyLocatable).getPhysicalPath()
 
 def getPhysicalPathString(obj):
     """Returns a string representing the physical path to the object.
-
-    Raises TypeError if the given object is not context wrapped
     """
     path = getAdapter(obj, IPhysicallyLocatable).getPhysicalPath()
     return locationAsUnicode(path)
 
-
 def getPhysicalRoot(obj):
     """Returns the root of the traversal for the given object.
-
-    Raises TypeError if the given object is not context wrapped
     """
     return getAdapter(obj, IPhysicallyLocatable).getPhysicalRoot()
 
@@ -125,7 +131,7 @@ def locationAsTuple(location):
     Raises a ValueError if a poorly formed location is given.
     """
     if not location:
-        raise ValueError, "location must be non-empty: %s" % repr(location)
+        raise ValueError("location must be non-empty: %s" % repr(location))
     if isinstance(location, StringTypes):
         if location == u'/':  # matches '/' or u'/'
             return (u'',)
@@ -134,14 +140,15 @@ def locationAsTuple(location):
         # isinstance doesn't work when tuple is security-wrapped
         t = tuple(map(unicode, location))
     else:
-        raise ValueError, \
-            "location %s must be a string or a tuple of strings." % (location,)
+        raise ValueError("location must be a string or a tuple of strings: %s"
+                         % repr(location))
 
     if len(t) > 1 and t[-1] == u'':  # matches '' or u''
-        raise ValueError, \
-            "location tuple %s must not end with empty string." % (t,)
-    # don't usually need this, so just an assertion rather than a value error
-    assert '' not in t[1:]
+        raise ValueError("location tuple must not end with empty string: %s"
+                         % repr(t))
+    if '' in t[1:]:
+        raise ValueError("location tuple must not contain '' except at the"
+                         " start: %s" % repr(t))
     return t
 
 def locationAsUnicode(location):
@@ -152,7 +159,7 @@ def locationAsUnicode(location):
     Raises ValueError if a poorly formed location is given.
     """
     if not location:
-        raise ValueError, "location must be non-empty."
+        raise ValueError("location must be non-empty: %s" % repr(location))
     if isinstance(location, StringTypes):
         u = unicode(location)
     elif location.__class__ == tuple:
@@ -161,11 +168,11 @@ def locationAsUnicode(location):
         if not u:  # special case for u''
             return u'/'
     else:
-        raise ValueError, \
-            "location %s must be a string or a tuple of strings." % (location,)
+        raise ValueError("location must be a string or a tuple of strings: %s"
+                         % repr(location))
     if u != '/' and u[-1] == u'/':
-        raise ValueError, "location %s must not end with a slash." % u
-    # don't usually need this, so just an assertion rather than a value error
-    assert u.find(u'//') == -1
+        raise ValueError("location must not end with a slash: %s" % u)
+    if u.find(u'//') != -1:
+        raise ValueError("location must not contain // : %s" % u)
     return u
 

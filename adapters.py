@@ -12,7 +12,7 @@
 #
 ##############################################################################
 """
-$Id: adapters.py,v 1.12 2003/06/20 06:53:56 stevea Exp $
+$Id: adapters.py,v 1.13 2003/06/21 21:20:36 jim Exp $
 """
 
 from zope.exceptions import NotFoundError
@@ -54,7 +54,7 @@ class DefaultTraversable:
             #     That much is expected from page templates.
             #     What about classmethods / staticmethods / other descriptors?
             #     What about methods that take several arguments?
-            if r.__class__ == MethodType:
+            if getattr(r, '__class__', 0) == MethodType:
                 return r()
             return r
 

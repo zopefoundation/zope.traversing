@@ -423,6 +423,10 @@ class adapter(SimpleHandler):
              ... except NotFoundError:
              ...     print 'no adapter'
              no adapter
+
+           Cleanup:
+    
+             >>> tearDown()
            """
         try:
             return component.getAdapter(self.context, IPathAdapter, name=name)

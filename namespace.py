@@ -454,7 +454,7 @@ class debug(view):
              True
              >>> request.debug.sourceAnnotations
              True
-             >>> adapter.traverse('source,source', ()) is ob
+             >>> adapter.traverse('source,tal', ()) is ob
              True
              >>> try:
              ...     adapter.traverse('badflag', ())
@@ -468,6 +468,8 @@ class debug(view):
             for flag in name.split(','):
                 if flag == 'source':
                     request.debug.sourceAnnotations = True
+                elif flag == 'tal':
+                    request.debug.showTAL = True
                 else:
                     raise ValueError("Unknown debug flag: %s" % flag)
             return self.context

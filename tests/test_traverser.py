@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: test_traverser.py,v 1.4 2002/12/28 17:49:34 stevea Exp $
+$Id: test_traverser.py,v 1.5 2002/12/31 03:35:13 jim Exp $
 """
 
 import unittest
@@ -34,7 +34,7 @@ from zope.interface.implements import instancesOfObjectImplements
 from zope.app.services.tests.placefulsetup import PlacefulSetup
 from zope.security.checker \
     import ProxyFactory, defineChecker, CheckerPublic, Checker
-from zope.security.securitymanagement import newSecurityManager
+from zope.security.management import newSecurityManager
 
 class C:
     def __init__(self, name):

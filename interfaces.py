@@ -62,7 +62,7 @@ class IPhysicallyLocatable(Interface):
     def getNearestSite():
         """Return the site the object is contained in
         
-        If the object is a site, self is returned.
+        If the object is a site, the object itself is returned.
         """
 
 class ITraversable(Interface):

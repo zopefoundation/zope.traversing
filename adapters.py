@@ -80,7 +80,7 @@ class RootPhysicallyLocatable(object):
 
     def getNearestSite(self):
         "See IPhysicallyLocatable"
-        return self
+        return self.context
 
 
 class Traverser(object):

@@ -13,11 +13,9 @@
 ##############################################################################
 """
 
-$Id: SkinNamespace.py,v 1.2 2002/07/13 14:18:36 jim Exp $
+$Id: SkinNamespace.py,v 1.3 2002/12/20 19:45:45 jim Exp $
 """
 
-from Zope.App.OFS.ApplicationControl.ApplicationControl \
-     import ApplicationController
 from Namespaces import provideNamespaceHandler
 from Exceptions import UnexpectedParameters
 from Zope.Exceptions import NotFoundError

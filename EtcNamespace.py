@@ -13,13 +13,15 @@
 ##############################################################################
 """
 
-$Id: EtcNamespace.py,v 1.4 2002/07/12 19:28:32 jim Exp $
+$Id: EtcNamespace.py,v 1.5 2002/12/20 19:45:45 jim Exp $
 """
 from Zope.App.OFS.ApplicationControl.ApplicationControl \
-     import ApplicationController
+     import applicationController
 from Namespaces import provideNamespaceHandler
 from Exceptions import UnexpectedParameters
 from Zope.Exceptions import NotFoundError
+
+from Zope.App.OFS.Content.Folder.RootFolder import RootFolder
 
 def etc(name, parameters, pname, ob, request):
     # XXX
@@ -37,8 +39,8 @@ def etc(name, parameters, pname, ob, request):
     if parameters:
         raise UnexpectedParameters(parameters)
 
-    if name == 'ApplicationController' and ob is None:
-        return ApplicationController
+    if name == 'ApplicationController' and ob.__class__ == RootFolder:
+        return applicationController
 
     if name != 'Services':
         

@@ -14,7 +14,7 @@
 """
 
 Revision information:
-$Id: testEtc.py,v 1.3 2002/07/17 16:54:20 jeremy Exp $
+$Id: testEtc.py,v 1.4 2002/12/20 19:45:46 jim Exp $
 """
 
 from unittest import TestCase, TestSuite, main, makeSuite
@@ -25,11 +25,12 @@ class Test(CleanUp, TestCase):
     def testApplicationControl(self):
         from Zope.App.Traversing.EtcNamespace import etc
         from Zope.App.OFS.ApplicationControl.ApplicationControl \
-             import ApplicationController
+             import applicationController, applicationControllerRoot
         
         self.assertEqual(
-            etc('ApplicationController', (), '++etc++Services', None, None),
-            ApplicationController)
+            etc('ApplicationController', (), '++etc++ApplicationController',
+                applicationControllerRoot, None),
+            applicationController)
 
     def testServices(self):
         from Zope.App.Traversing.EtcNamespace import etc

@@ -13,22 +13,21 @@
 ##############################################################################
 """Test the AbsoluteURL view
 
-$Id: test_absoluteurl.py,v 1.3 2004/03/18 20:33:56 srichter Exp $
+$Id: tests.py,v 1.1 2004/04/27 10:53:55 jim Exp $
 """
 
 from unittest import TestCase, main, makeSuite
-
+from zope.app.container.contained import contained
 from zope.app.tests import ztapi
-from zope.interface import Interface, implements
-
 from zope.app.tests.placelesssetup import PlacelessSetup
+from zope.app.traversing.browser.absoluteurl import absoluteURL
+from zope.app.traversing.browser.interfaces import IAbsoluteURL
 from zope.component import getService, getView
-
 from zope.i18n.interfaces import IUserPreferredCharsets
-
+from zope.interface import Interface, implements
 from zope.publisher.browser import TestRequest
 from zope.publisher.http import IHTTPRequest, HTTPCharsets
-from zope.app.container.contained import contained
+
 
 
 class IRoot(Interface): pass
@@ -46,6 +45,8 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
         from zope.app.traversing.browser import AbsoluteURL, SiteAbsoluteURL
         ztapi.browserView(None, 'absolute_url', AbsoluteURL)
         ztapi.browserView(IRoot, 'absolute_url', SiteAbsoluteURL)
+        ztapi.browserView(None, '', AbsoluteURL, providing=IAbsoluteURL)
+        ztapi.browserView(IRoot, '', SiteAbsoluteURL, providing=IAbsoluteURL)
         ztapi.provideAdapter(IHTTPRequest, IUserPreferredCharsets,
                              HTTPCharsets)
 
@@ -53,11 +54,13 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
         request = TestRequest()
         view = getView(42, 'absolute_url', request)
         self.assertRaises(TypeError, view.__str__)
+        self.assertRaises(TypeError, absoluteURL, 42, request)
 
     def testNoContext(self):
         request = TestRequest()
         view = getView(Root(), 'absolute_url', request)
         self.assertEqual(str(view), 'http://127.0.0.1')
+        self.assertEqual(absoluteURL(Root(), request), 'http://127.0.0.1')
 
     def testBasicContext(self):
         request = TestRequest()
@@ -67,6 +70,8 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
         content = contained(TrivialContent(), content, name='c')
         view = getView(content, 'absolute_url', request)
         self.assertEqual(str(view), 'http://127.0.0.1/a/b/c')
+        self.assertEqual(absoluteURL(content, request),
+                         'http://127.0.0.1/a/b/c')
 
         breadcrumbs = view.breadcrumbs()
         self.assertEqual(breadcrumbs,

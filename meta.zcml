@@ -1,0 +1,10 @@
+<zopeConfigure xmlns='http://namespaces.zope.org/zope'>
+
+  <directives namespace="http://namespaces.zope.org/zope">
+
+    <directive name="traversalNamespace" attributes="name handler"
+       handler="zope.app.traversing.namespaces.directive" />
+
+  </directives>
+
+</zopeConfigure>

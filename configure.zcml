@@ -1,0 +1,49 @@
+<zopeConfigure
+   xmlns='http://namespaces.zope.org/zope'
+   xmlns:browser='http://namespaces.zope.org/browser'
+>
+
+<adapter factory="zope.app.traversing.traverser.Traverser"
+         provides="zope.app.interfaces.traversing.traverser.ITraverser"
+         />
+    <!-- Ultimately, this should be registered only for IWrapper, but that
+         won't work like that just now.
+         for="zope.proxy.interfaces.context.IWrapper" /> -->
+
+<adapter factory="zope.app.traversing.defaulttraversable.DefaultTraversable"
+         provides="zope.app.interfaces.traversing.traversable.ITraversable" />
+
+<adapter
+    factory="zope.app.traversing.objectname.ObjectName"
+    provides="zope.app.traversing.objectname.IObjectName"
+    permission='zope.Public'
+    />
+
+<adapter
+    factory="zope.app.traversing.objectname.SiteObjectName"
+    provides="zope.app.traversing.objectname.IObjectName"
+    for="zope.app.interfaces.content.folder.IRootFolder"
+    permission='zope.Public'
+    />
+
+<adapter 
+    provides="zope.app.interfaces.traversing.physicallylocatable.IPhysicallyLocatable"
+    factory="zope.app.traversing.physicallocationadapters.WrapperPhysicallyLocatable" 
+    />
+
+<adapter 
+    provides="zope.app.interfaces.traversing.physicallylocatable.IPhysicallyLocatable"
+    for="zope.app.interfaces.traversing.containmentroot.IContainmentRoot"
+    factory="zope.app.traversing.physicallocationadapters.RootPhysicallyLocatable" 
+    />
+
+<traversalNamespace name="etc" handler="zope.app.traversing.etcnamespace.etc" />
+<traversalNamespace name="view" handler="zope.app.traversing.presentationnamespaces.view" />
+<traversalNamespace name="resource"
+                    handler="zope.app.traversing.presentationnamespaces.resource" />
+<traversalNamespace name="attribute" handler="zope.app.traversing.attritemnamespaces.attr" />
+<traversalNamespace name="item" handler="zope.app.traversing.attritemnamespaces.item" />
+<traversalNamespace name="acquire" handler="zope.app.traversing.acquirenamespace.acquire" />
+<traversalNamespace name="skin" handler="zope.app.traversing.skinnamespace.skin" />
+<traversalNamespace name="module" handler="zope.app.traversing.modulenamespace.module" />
+</zopeConfigure>

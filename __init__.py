@@ -24,6 +24,13 @@ __all__ = ['traverse', 'traverseName', 'objectName', 'getParent',
 
 _marker = object()
 
+def joinPath(path, *args):
+    """Concatenate a path and various args with slashes"""
+    for arg in args:
+        path = path.endswith('/') and '%s%s' % (path, arg) \
+               or '%s/%s' % (path, arg)
+    return path
+
 def getPath(obj):
     """Returns a string representing the physical path to the object.
     """

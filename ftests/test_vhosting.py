@@ -13,7 +13,7 @@
 ##############################################################################
 """Functional tests for virtual hosting.
 
-$Id: test_vhosting.py,v 1.4 2003/04/18 06:42:52 mgedmin Exp $
+$Id: test_vhosting.py,v 1.5 2003/04/28 13:14:20 mgedmin Exp $
 """
 
 import unittest
@@ -24,6 +24,18 @@ from transaction import get_transaction
 from zope.component.resource import provideResource
 from zope.publisher.interfaces.browser import IBrowserPresentation
 from zope.app.publisher.browser.resource import Resource
+from zope.app.traversing import traverse
+from zope.security.checker import defineChecker, NoProxy
+from zope.proxy.context import ContextMethod
+
+__metaclass__ = type
+
+class MyObj:
+    def __getitem__(wrapped_self, key):
+        return traverse(wrapped_self, '/foo/bar/' + key)
+    __getitem__ = ContextMethod(__getitem__)
+
+defineChecker(MyObj, NoProxy)
 
 class TestVirtualHosting(BrowserTestCase):
 
@@ -108,6 +120,14 @@ class TestVirtualHosting(BrowserTestCase):
         self.verify('/foo/++vh++https:otherhost:443/fake/folders/++/bar/pt',
                     'https://otherhost/fake/folders/bar/pt\n')
 
+    def test_absolute_url_absolute_traverse(self):
+        self.createObject('/foo/bar/obj', MyObj())
+        self.addPage('/foo/bar/pt',
+                     u'<span tal:replace="container/obj/pt/@@absolute_url"/>')
+        self.verify('/foo/bar/pt', 'http://localhost/foo/bar/pt\n')
+        self.verify('/foo/++vh++https:otherhost:443/bar/pt',
+                    'https://otherhost/bar/pt\n')
+
     def test_resources(self):
         provideResource('quux', IBrowserPresentation, Resource)
         self.addPage('/foo/bar/pt',
@@ -132,12 +152,15 @@ class TestVirtualHosting(BrowserTestCase):
                 folder = folder[id]
         return folder, path[-1]
 
-    def addPage(self, path, content):
+    def createObject(self, path, obj):
         folder, id = self.createFolders(path)
+        folder.setObject(id, obj)
+        get_transaction().commit()
+
+    def addPage(self, path, content):
         page = ZPTPage()
         page.source = content
-        folder.setObject(id, page)
-        get_transaction().commit()
+        self.createObject(path, page)
 
     def verify(self, path, content):
         result = self.publish(path)

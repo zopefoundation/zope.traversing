@@ -1,0 +1,60 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser">
+
+  <browser:page
+      name="_traverse"
+      for="zope.interface.Interface"
+      class="zope.app.publication.traversers.SimpleComponentTraverser"
+      permission="zope.Public"
+      />
+
+  <browser:page
+      name="_traverse"
+      for="zope.app.container.interfaces.IItemContainer"
+      class="zope.app.container.traversal.ItemTraverser"
+      permission="zope.Public"
+      />
+
+  <browser:page
+      name="_traverse"
+      for="zope.app.container.interfaces.ISimpleReadContainer"
+      class="zope.app.container.traversal.ContainerTraverser"
+      permission="zope.Public"
+      />
+
+  <view
+      for="*"
+      name="absolute_url"
+      factory=".AbsoluteURL"
+      type="zope.publisher.interfaces.http.IHTTPRequest"
+      permission="zope.Public"
+      allowed_interface=".interfaces.IAbsoluteURL"
+      />
+
+  <view
+      for="zope.app.traversing.interfaces.IContainmentRoot"
+      name="absolute_url"
+      factory=".SiteAbsoluteURL"
+      type="zope.publisher.interfaces.http.IHTTPRequest"
+      permission="zope.Public"
+      allowed_interface=".interfaces.IAbsoluteURL"
+      />
+
+  <browser:page
+      for="*"
+      name="absolute_url"
+      class=".AbsoluteURL"
+      permission="zope.Public"
+      allowed_interface=".interfaces.IAbsoluteURL"
+      />
+
+  <browser:page
+      for="zope.app.traversing.interfaces.IContainmentRoot"
+      name="absolute_url"
+      class=".SiteAbsoluteURL"
+      permission="zope.Public"
+      allowed_interface=".interfaces.IAbsoluteURL"
+      />
+
+</configure>

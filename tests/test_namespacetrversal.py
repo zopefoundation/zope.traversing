@@ -13,11 +13,14 @@
 ##############################################################################
 """Traversal Namespace Tests
 
-$Id: test_namespacetrversal.py,v 1.8 2003/08/02 18:17:28 srichter Exp $
+$Id: test_namespacetrversal.py,v 1.9 2003/08/08 18:07:44 jim Exp $
 """
 
 from unittest import TestCase, main, makeSuite
 from zope.testing.cleanup import CleanUp # Base class w registry cleanup
+from zope.app.traversing.namespace import provideNamespaceHandler
+from zope.app.traversing.namespace import attr, item
+from zope.app.traversing.adapters import Traverser
 
 class C:
     a = 1
@@ -25,25 +28,23 @@ class C:
 
 c=C()
 
+def noop(name, parameters, pname, ob, request):
+    return ob
+
 
 class Test(CleanUp, TestCase):
 
     def setUp(self):
-        from zope.app.traversing.namespace import provideNamespaceHandler
-        from zope.app.traversing.namespace import attr, item
-        from zope.app.traversing.namespace import skin
         provideNamespaceHandler('attribute', attr)
         provideNamespaceHandler('item', item)
-        provideNamespaceHandler('skin', skin)
+        provideNamespaceHandler('noop', noop)
 
     def testAttr(self):
-        from zope.app.traversing.adapters import Traverser
         traverser = Traverser(c)
         v = traverser.traverse('++attribute++a')
         self.assertEqual(v, 1)
 
     def testItem(self):
-        from zope.app.traversing.adapters import Traverser
         traverser = Traverser(c)
         v = traverser.traverse('++item++a')
         self.assertEqual(v, 'avalue')
@@ -51,19 +52,11 @@ class Test(CleanUp, TestCase):
     def testSideEffectsContextDetail(self):
         # Check to make sure that when we traverse something in context,
         # that we get the right context for the result.
-        from zope.app.context import ContextWrapper
-        from zope.context import getWrapperContainer
-        from zope.app.traversing.adapters import Traverser
-        from zope.publisher.browser import TestRequest
 
-        c1 = C()
-        c2 = C()
-        c2c1 = ContextWrapper(c2, c1)
-
-        traverser = Traverser(c2c1)
-        v = traverser.traverse('++skin++ZopeTop', request=TestRequest())
-        self.assertEqual(v, c2)
-        self.failUnless(getWrapperContainer(v) is c1)
+        c = C()
+        traverser = Traverser(c)
+        v = traverser.traverse('++noop++yeeha')
+        self.assert_(v is c)
 
 
 def test_suite():

@@ -22,7 +22,7 @@ from zope.component.servicenames import Presentation
 from zope.exceptions import NotFoundError
 
 from zope.app.traversing.interfaces import ITraversable, IPathAdapter
-from zope.proxy import removeAllProxies
+from zope.security.proxy import removeSecurityProxy
 
 class UnexpectedParameters(NotFoundError):
     "Unexpected namespace parameters were provided."
@@ -163,9 +163,9 @@ def queryResource(site, name, request, default=None):
     if resource is None:
         return default
 
-    # We need to set the __parent__ and __name__. We need the unproxied
-    # resource to do this.  we will still return the proxied resource.
-    r = removeAllProxies(resource)
+    # We need to set the __parent__ and __name__.  We need the unproxied
+    # resource to do this.  We still return the proxied resource.
+    r = removeSecurityProxy(resource)
 
     r.__parent__ = site
     r.__name__ = name

@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: namespace.py,v 1.13 2003/06/01 15:59:37 jim Exp $
+$Id: namespace.py,v 1.14 2003/07/02 11:00:16 alga Exp $
 """
 
 from zope.interface import Interface
@@ -198,16 +198,6 @@ def etc(name, parameters, pname, ob, request):
         raise NotFoundError(ob, pname, request)
 
     return method()
-
-def module(name, parameters, pname, ob, request):
-    """Used to traverse to a module (in dot notation)"""
-    servicemanager = getServiceManager(ob)
-    adapter = getAdapter(servicemanager, IModuleService)
-    if adapter is not None:
-        ob = adapter.resolve(name)
-    if queryDefaultViewName(ob, request) is None:
-        return Interface
-    return ob
 
 def help(name, parameters, pname, ob, request):
     """Used to traverse to an online help topic."""

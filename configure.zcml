@@ -53,10 +53,6 @@
     handler="zope.app.traversing.namespace.skin"
     />
 <traversalNamespace
-    name="module"
-    handler="zope.app.traversing.namespace.module"
-    />
-<traversalNamespace
     name="help"
     handler="zope.app.traversing.namespace.help"
     />

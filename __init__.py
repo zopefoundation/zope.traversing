@@ -14,12 +14,12 @@
 """
 Convenience functions for traversing the object tree.
 
-$Id: __init__.py,v 1.26 2004/03/06 16:50:31 jim Exp $
+$Id: __init__.py,v 1.27 2004/03/13 21:03:23 srichter Exp $
 """
 
 from zope.interface import moduleProvides
-from zope.app.interfaces.traversing import IContainmentRoot, ITraversalAPI
-from zope.app.interfaces.traversing import ITraverser, IPhysicallyLocatable
+from interfaces import IContainmentRoot, ITraversalAPI
+from interfaces import ITraverser, IPhysicallyLocatable
 
 moduleProvides(ITraversalAPI)
 __all__ = tuple(ITraversalAPI)

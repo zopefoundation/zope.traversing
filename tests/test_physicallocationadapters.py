@@ -13,15 +13,15 @@
 ##############################################################################
 """Physical Location Adapter Tests
 
-$Id: test_physicallocationadapters.py,v 1.18 2004/03/13 15:21:36 srichter Exp $
+$Id: test_physicallocationadapters.py,v 1.19 2004/03/13 21:03:23 srichter Exp $
 """
 from unittest import TestCase, main, makeSuite
 from zope.app.tests.placelesssetup import PlacelessSetup
 from zope.app.tests import ztapi
 from zope.interface import implements
 
-from zope.app.interfaces.traversing import IContainmentRoot
-from zope.app.interfaces.traversing import IPhysicallyLocatable
+from zope.app.traversing.interfaces import IContainmentRoot
+from zope.app.traversing.interfaces import IPhysicallyLocatable
 from zope.app.location import LocationPhysicallyLocatable
 from zope.app.traversing.adapters import RootPhysicallyLocatable
 from zope.app.container.contained import contained

@@ -3,16 +3,16 @@
 <adapter 
     for="*"
     factory="zope.app.traversing.adapters.Traverser"
-    provides="zope.app.interfaces.traversing.ITraverser" />
+    provides="zope.app.traversing.interfaces.ITraverser" />
 
 <adapter 
     for="*"
     factory="zope.app.traversing.adapters.DefaultTraversable"
-    provides="zope.app.interfaces.traversing.ITraversable" />
+    provides="zope.app.traversing.interfaces.ITraversable" />
 
 <adapter 
-    provides="zope.app.interfaces.traversing.IPhysicallyLocatable"
-    for="zope.app.interfaces.traversing.IContainmentRoot"
+    provides="zope.app.traversing.interfaces.IPhysicallyLocatable"
+    for="zope.app.traversing.interfaces.IContainmentRoot"
     factory="zope.app.traversing.adapters.RootPhysicallyLocatable" />
 
 <traversalNamespace

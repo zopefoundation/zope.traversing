@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: test_conveniencefunctions.py,v 1.22 2004/03/13 15:21:36 srichter Exp $
+$Id: test_conveniencefunctions.py,v 1.23 2004/03/13 21:03:23 srichter Exp $
 """
 from unittest import TestCase, main, makeSuite
 from zope.app.tests import ztapi
@@ -22,11 +22,11 @@ from zope.app.site.tests.placefulsetup import PlacefulSetup
 from zope.app.traversing.adapters import Traverser
 from zope.component import getService
 from zope.app.services.servicenames import Adapters
-from zope.app.interfaces.traversing import ITraverser, ITraversable
+from zope.app.traversing.interfaces import ITraverser, ITraversable
 from zope.app.traversing.adapters import DefaultTraversable
 
-from zope.app.interfaces.traversing import IPhysicallyLocatable
-from zope.app.interfaces.traversing import IContainmentRoot
+from zope.app.traversing.interfaces import IPhysicallyLocatable
+from zope.app.traversing.interfaces import IContainmentRoot
 from zope.app.location import LocationPhysicallyLocatable
 from zope.app.traversing.adapters import RootPhysicallyLocatable
 

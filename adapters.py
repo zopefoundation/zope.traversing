@@ -12,14 +12,14 @@
 #
 ##############################################################################
 """
-$Id: adapters.py,v 1.18 2004/03/06 17:48:54 jim Exp $
+$Id: adapters.py,v 1.19 2004/03/13 21:03:23 srichter Exp $
 """
 
 from zope.exceptions import NotFoundError
 
-from zope.app.interfaces.traversing import IPhysicallyLocatable
-from zope.app.interfaces.traversing import IContainmentRoot
-from zope.app.interfaces.traversing import ITraverser, ITraversable
+from zope.app.traversing.interfaces import IPhysicallyLocatable
+from zope.app.traversing.interfaces import IContainmentRoot
+from zope.app.traversing.interfaces import ITraverser, ITraversable
 
 from zope.app.traversing.namespace import namespaceLookup
 from zope.app.traversing.namespace import UnexpectedParameters

@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: test_traverser.py,v 1.16 2004/03/13 15:21:36 srichter Exp $
+$Id: test_traverser.py,v 1.17 2004/03/13 21:03:23 srichter Exp $
 """
 
 import unittest
@@ -23,11 +23,11 @@ from zope.interface import directlyProvides
 from zope.interface.verify import verifyClass
 from zope.interface import implementedBy
 
-from zope.app.interfaces.traversing import ITraverser, ITraversable
+from zope.app.traversing.interfaces import ITraverser, ITraversable
 from zope.app.traversing.adapters import Traverser, DefaultTraversable
 
-from zope.app.interfaces.traversing import IPhysicallyLocatable
-from zope.app.interfaces.traversing import IContainmentRoot
+from zope.app.traversing.interfaces import IPhysicallyLocatable
+from zope.app.traversing.interfaces import IContainmentRoot
 from zope.app.location import LocationPhysicallyLocatable
 from zope.app.traversing.adapters import RootPhysicallyLocatable
 from zope.app.container.contained import contained

@@ -14,12 +14,12 @@
 """
 
 Revision information:
-$Id: test_acquire.py,v 1.9 2003/11/21 17:12:15 jim Exp $
+$Id: test_acquire.py,v 1.10 2004/03/13 21:03:23 srichter Exp $
 """
 
 from unittest import TestCase, main, makeSuite
 from zope.app.tests.placelesssetup import PlacelessSetup
-from zope.app.interfaces.traversing import ITraversable
+from zope.app.traversing.interfaces import ITraversable
 from zope.app.traversing.adapters import DefaultTraversable
 from zope.app.tests import ztapi
 from zope.app.traversing.namespace import acquire

@@ -13,12 +13,12 @@
 ##############################################################################
 """URL Namespace Implementations
 
-$Id: namespace.py,v 1.26 2004/03/06 17:48:54 jim Exp $
+$Id: namespace.py,v 1.27 2004/03/13 21:03:23 srichter Exp $
 """
 import re
 from zope.app import zapi
 from zope.exceptions import NotFoundError
-from zope.app.interfaces.traversing import ITraversable
+from zope.app.traversing.interfaces import ITraversable
 from zope.proxy import removeAllProxies
 
 class UnexpectedParameters(NotFoundError):
@@ -146,7 +146,7 @@ def item(name, parameters, pname, ob, request):
 
 from zope.app.applicationcontrol.applicationcontrol \
     import applicationController
-from zope.app.interfaces.traversing import IContainmentRoot
+from zope.app.traversing.interfaces import IContainmentRoot
 def etc(name, parameters, pname, ob, request):
     # XXX
 

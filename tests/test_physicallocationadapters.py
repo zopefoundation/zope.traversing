@@ -12,7 +12,7 @@
 #
 ##############################################################################
 """
-$Id: test_physicallocationadapters.py,v 1.15 2003/11/21 17:12:16 jim Exp $
+$Id: test_physicallocationadapters.py,v 1.16 2003/12/07 11:31:14 zagy Exp $
 """
 
 from unittest import TestCase, main, makeSuite
@@ -26,12 +26,33 @@ from zope.app.interfaces.traversing import IPhysicallyLocatable
 from zope.app.location import LocationPhysicallyLocatable
 from zope.app.traversing.adapters import RootPhysicallyLocatable
 from zope.app.container.contained import contained
+from zope.component.interfaces import IServiceService
+from zope.app.services.servicecontainer import ServiceManagerContainer
+
 
 class Root:
     implements(IContainmentRoot)
 
+    __parent__ = None
+
+
 class C:
     pass
+
+
+class SiteManager:
+
+    implements(IServiceService)
+
+    def getService(self, object, name):
+        '''See interface IServiceService'''
+        raise ComponentLookupError(name)
+
+    def getServiceDefinitions(self):
+        '''See interface IServiceService'''
+        return ()
+
+
 
 class Test(PlacelessSetup, TestCase):
 
@@ -43,16 +64,20 @@ class Test(PlacelessSetup, TestCase):
 
         root = Root()
         f1 = contained(C(), root, name='f1')
-        f2 = contained(C(),   f1, name='f2')
+        f2 = contained(ServiceManagerContainer(),   f1, name='f2')
         f3 = contained(C(),   f2, name='f3')
-
+        
         adapter = getAdapter(f3, IPhysicallyLocatable)
 
         self.assertEqual(adapter.getPath(), '/f1/f2/f3')
         self.assertEqual(adapter.getName(), 'f3')
         self.assertEqual(adapter.getRoot(), root)
+        self.assertEqual(adapter.getNearestSite(), root)
 
+        f2.setSiteManager(SiteManager())
+        self.assertEqual(adapter.getNearestSite(), f2)
 
+        
 def test_suite():
     return makeSuite(Test)
 

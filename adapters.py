@@ -12,7 +12,7 @@
 #
 ##############################################################################
 """
-$Id: adapters.py,v 1.15 2003/09/21 17:31:14 jim Exp $
+$Id: adapters.py,v 1.16 2003/12/07 11:31:13 zagy Exp $
 """
 
 from zope.exceptions import NotFoundError
@@ -83,6 +83,11 @@ class RootPhysicallyLocatable:
     def getName(self):
         "See IPhysicallyLocatable"
         return u''
+
+    def getNearestSite(self):
+        "See IPhysicallyLocatable"
+        return self
+
 
 class Traverser:
     """Provide traverse features"""

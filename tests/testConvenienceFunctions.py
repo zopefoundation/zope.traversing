@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: testConvenienceFunctions.py,v 1.11 2002/12/12 11:32:35 mgedmin Exp $
+$Id: testConvenienceFunctions.py,v 1.12 2002/12/20 23:56:06 jeremy Exp $
 """
 from unittest import TestCase, TestSuite, main, makeSuite
 from Zope.App.OFS.Services.ServiceManager.tests.PlacefulSetup \
@@ -216,7 +216,7 @@ class Test(PlacefulSetup, TestCase):
         (ValueError, 23),
         (ValueError, ''),
         (ValueError, '//'),
-        (AssertionError, '/foo//bar'),
+##        (AssertionError, '/foo//bar'),
 
         # regarding the next four errors:
         # having a trailing slash on a location is undefined.

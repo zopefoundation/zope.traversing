@@ -35,55 +35,55 @@ class TestVirtualHosting(functional.BrowserTestCase):
 
     def test_request_url(self):
         self.addPage('/pt', u'<span tal:replace="request/URL"/>')
-        self.verify('/pt', 'http://localhost/pt/index.html\n')
+        self.verify('/pt', 'http://localhost/pt\n')
         self.verify('/++vh++/++/pt',
-                    'http://localhost/pt/index.html\n')
+                    'http://localhost/pt\n')
         self.verify('/++vh++https:otherhost:443/++/pt',
-                    'https://otherhost/pt/index.html\n')
+                    'https://otherhost/pt\n')
         self.verify('/++vh++https:otherhost:443/fake/folders/++/pt',
-                    'https://otherhost/fake/folders/pt/index.html\n')
+                    'https://otherhost/fake/folders/pt\n')
 
         self.addPage('/foo/bar/pt', u'<span tal:replace="request/URL"/>')
-        self.verify('/foo/bar/pt', 'http://localhost/foo/bar/pt/index.html\n')
+        self.verify('/foo/bar/pt', 'http://localhost/foo/bar/pt\n')
         self.verify('/foo/bar/++vh++/++/pt',
-                    'http://localhost/pt/index.html\n')
+                    'http://localhost/pt\n')
         self.verify('/foo/bar/++vh++https:otherhost:443/++/pt',
-                    'https://otherhost/pt/index.html\n')
+                    'https://otherhost/pt\n')
         self.verify('/foo/++vh++https:otherhost:443/fake/folders/++/bar/pt',
-                    'https://otherhost/fake/folders/bar/pt/index.html\n')
+                    'https://otherhost/fake/folders/bar/pt\n')
 
     def test_request_base(self):
         self.addPage('/pt', u'<head></head>')
-        self.verify('/pt',
-                    '<head>\n<base href="http://localhost" />\n'
+        self.verify('/pt/',
+                    '<head>\n<base href="http://localhost/pt" />\n'
                     '</head>\n')
-        self.verify('/++vh++/++/pt',
-                    '<head>\n<base href="http://localhost" />\n'
+        self.verify('/++vh++/++/pt/',
+                    '<head>\n<base href="http://localhost/pt" />\n'
                     '</head>\n')
-        self.verify('/++vh++https:otherhost:443/++/pt',
+        self.verify('/++vh++https:otherhost:443/++/pt/',
                     '<head>\n'
-                    '<base href="https://otherhost" />'
+                    '<base href="https://otherhost/pt" />'
                     '\n</head>\n')
-        self.verify('/++vh++https:otherhost:443/fake/folders/++/pt',
+        self.verify('/++vh++https:otherhost:443/fake/folders/++/pt/',
                     '<head>\n<base href='
-                    '"https://otherhost/fake/folders" />'
+                    '"https://otherhost/fake/folders/pt" />'
                     '\n</head>\n')
 
         self.addPage('/foo/bar/pt', u'<head></head>')
-        self.verify('/foo/bar/pt',
+        self.verify('/foo/bar/pt/',
                     '<head>\n<base '
-                    'href="http://localhost/foo/bar" />\n'
+                    'href="http://localhost/foo/bar/pt" />\n'
                     '</head>\n')
-        self.verify('/foo/bar/++vh++/++/pt',
-                    '<head>\n<base href="http://localhost" />\n'
+        self.verify('/foo/bar/++vh++/++/pt/',
+                    '<head>\n<base href="http://localhost/pt" />\n'
                     '</head>\n')
-        self.verify('/foo/bar/++vh++https:otherhost:443/++/pt',
+        self.verify('/foo/bar/++vh++https:otherhost:443/++/pt/',
                     '<head>\n'
-                    '<base href="https://otherhost" />'
+                    '<base href="https://otherhost/pt" />'
                     '\n</head>\n')
-        self.verify('/foo/++vh++https:otherhost:443/fake/folders/++/bar/pt',
+        self.verify('/foo/++vh++https:otherhost:443/fake/folders/++/bar/pt/',
                     '<head>\n<base href='
-                    '"https://otherhost/fake/folders/bar" />'
+                    '"https://otherhost/fake/folders/bar/pt" />'
                     '\n</head>\n')
 
     def test_request_redirect(self):

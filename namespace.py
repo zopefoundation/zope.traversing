@@ -13,20 +13,18 @@
 ##############################################################################
 """
 
-$Id: namespace.py,v 1.14 2003/07/02 11:00:16 alga Exp $
+$Id: namespace.py,v 1.15 2003/07/04 10:59:24 ryzaja Exp $
 """
 
-from zope.interface import Interface
 from zope.exceptions import NotFoundError
 from zope.app.context import ContextWrapper
 from zope.context import getWrapperContext, getWrapperData
 from zope.configuration.action import Action
-from zope.component import queryAdapter, getAdapter, getServiceManager
+from zope.component import queryAdapter, getServiceManager
 from zope.component import queryDefaultViewName, queryView, getService
 from zope.app.services.servicenames import Resources
 
 from zope.app.interfaces.traversing import ITraversable
-from zope.app.interfaces.services.module import IModuleService
 
 import re
 

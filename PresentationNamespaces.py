@@ -13,13 +13,15 @@
 ##############################################################################
 """
 
-$Id: PresentationNamespaces.py,v 1.2 2002/06/10 23:28:17 jim Exp $
+$Id: PresentationNamespaces.py,v 1.3 2002/06/13 23:15:44 jim Exp $
 """
 
-from Zope.ComponentArchitecture import getView, getResource
+from Zope.ComponentArchitecture import getView
 from Namespaces import provideNamespaceHandler
 from Exceptions import UnexpectedParameters
 from Zope.Exceptions import NotFoundError
+from Zope.Proxy.ContextWrapper import ContextWrapper
+from GetResource import queryResource
 
 class NoRequest(NotFoundError):
     """Atempt to access a presentation component outside of a request context
@@ -39,7 +41,12 @@ def resource(name, parameters, pname, ob, request):
         raise UnexpectedParameters(parameters)
     if not request:
         raise NoRequest(pname)
-    return getResource(ob, name, request)
+
+    resource = queryResource(ob, name, request)
+    if resource is None:
+        raise NotFoundError(ob, pname)
+
+    return resource
 
 provideNamespaceHandler('resource', resource)
 

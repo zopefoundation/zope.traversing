@@ -14,15 +14,18 @@
 """
 Convenience functions for traversing the object tree.
 
-$Id: __init__.py,v 1.21 2003/05/27 14:18:27 jim Exp $
+$Id: __init__.py,v 1.22 2003/06/03 19:43:45 jim Exp $
 """
+
+from zope.interface import moduleProvides
 from zope.component import getAdapter
 from zope.app.interfaces.traversing import IObjectName, IContainmentRoot
 from zope.app.interfaces.traversing import ITraverser, IPhysicallyLocatable
+from zope.app.interfaces.traversing import ITraversalAPI
 from zope.context import getWrapperContainer, isWrapper
 
-__all__ = ['traverse', 'traverseName', 'objectName', 'getParent',
-           'getParents', 'getPath', 'getRoot', 'canonicalPath', 'joinPath']
+moduleProvides(ITraversalAPI)
+__all__ = tuple(ITraversalAPI)
 
 _marker = object()
 

@@ -88,8 +88,6 @@ def getParents(obj):
     
     Raises TypeError if the given object is not context wrapped
     """
-    if not _isWrapper(obj):
-        raise TypeError, "Not enough context information to traverse"
     iterator = _WrapperChain(obj)
     iterator.next()  # send head of chain (current object) to /dev/null
     return [p for p in iterator]
@@ -99,9 +97,6 @@ def getPhysicalPath(obj):
     
     Raises TypeError if the given object is not context wrapped
     """
-    if not _isWrapper(obj):
-        raise TypeError, "Not enough context information to traverse"
-    
     return _getAdapter(obj, _IPhysicallyLocatable).getPhysicalPath()
 
 def getPhysicalPathString(obj):
@@ -109,9 +104,6 @@ def getPhysicalPathString(obj):
     
     Raises TypeError if the given object is not context wrapped
     """
-    if not _isWrapper(obj):
-        raise TypeError, "Not enough context information to traverse"
-    
     path = _getAdapter(obj, _IPhysicallyLocatable).getPhysicalPath()
     return locationAsUnicode(path)
     

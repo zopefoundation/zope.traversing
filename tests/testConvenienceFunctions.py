@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: testConvenienceFunctions.py,v 1.8 2002/11/26 19:00:21 stevea Exp $
+$Id: testConvenienceFunctions.py,v 1.9 2002/12/05 13:45:59 stevea Exp $
 """
 from unittest import TestCase, TestSuite, main, makeSuite
 from Zope.App.OFS.Services.ServiceManager.tests.PlacefulSetup \
@@ -151,14 +151,6 @@ class Test(PlacefulSetup, TestCase):
             [self.folder, self.root]
             )
 
-    def testGetParentsFromUnwrapped(self):
-        from Zope.App.Traversing import getParents
-        self.assertRaises(
-            TypeError,
-            getParents,
-            self.unwrapped_item
-            )
-
     def testGetPhysicalPath(self):
         from Zope.App.Traversing import getPhysicalPath
         self.assertEqual(
@@ -187,27 +179,11 @@ class Test(PlacefulSetup, TestCase):
             u'/',
             )
 
-    def testGetPhysicalPathFromUnwrapped(self):
-        from Zope.App.Traversing import getPhysicalPath
-        self.assertRaises(
-            TypeError,
-            getPhysicalPath,
-            self.unwrapped_item
-            )
-
     def testGetPhysicalRoot(self):
         from Zope.App.Traversing import getPhysicalRoot
         self.assertEqual(
             getPhysicalRoot(self.item),
             self.root
-            )
-
-    def testGetPhysicalRootFromUnwrapped(self):
-        from Zope.App.Traversing import getPhysicalRoot
-        self.assertRaises(
-            TypeError,
-            getPhysicalRoot,
-            self.unwrapped_item
             )
 
     _bad_locations = (

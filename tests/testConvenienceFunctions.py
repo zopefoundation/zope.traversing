@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: testConvenienceFunctions.py,v 1.9 2002/12/05 13:45:59 stevea Exp $
+$Id: testConvenienceFunctions.py,v 1.10 2002/12/05 14:29:22 stevea Exp $
 """
 from unittest import TestCase, TestSuite, main, makeSuite
 from Zope.App.OFS.Services.ServiceManager.tests.PlacefulSetup \
@@ -149,6 +149,23 @@ class Test(PlacefulSetup, TestCase):
         self.assertEqual(
             getParents(self.item),
             [self.folder, self.root]
+            )
+
+
+    def testGetParentsFromUnwrapped(self):
+        from Zope.App.Traversing import getParents
+        self.assertRaises(
+            TypeError,
+            getParents,
+            self.unwrapped_item
+            )
+
+    def testGetParentFromUnwrapped(self):
+        from Zope.App.Traversing import getParent
+        self.assertRaises(
+            TypeError,
+            getParent,
+            self.unwrapped_item
             )
 
     def testGetPhysicalPath(self):

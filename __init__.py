@@ -43,9 +43,6 @@ def traverse(place, path, default=_marker, request=None):
           code unexpectedly.
           Consider using traverseName instead.
     """
-    # XXX This made no sense. It would mean you couldn't traverse from root
-    #if not _isWrapper(place):
-    #    raise TypeError, "Not enough context information to traverse"
     traverser = _Traverser(place)
     if default is _marker:
         return traverser.traverse(path, request=request)
@@ -88,6 +85,8 @@ def getParents(obj):
     
     Raises TypeError if the given object is not context wrapped
     """
+    if not _isWrapper(obj):
+        raise TypeError, "Not enough context information to traverse"
     iterator = _WrapperChain(obj)
     iterator.next()  # send head of chain (current object) to /dev/null
     return [p for p in iterator]
@@ -123,7 +122,7 @@ def locationAsTuple(location):
     Raises a ValueError if a poorly formed location is given.
     """
     if not location:
-        raise ValueError, "location must be non-empty."
+        raise ValueError, "location must be non-empty: %s" % repr(location)
     if isinstance(location, tuple):
         t = tuple(map(unicode, location))
     elif isinstance(location, StringTypes):

@@ -13,14 +13,14 @@
 ##############################################################################
 """
 
-$Id: test_traverser.py,v 1.11 2003/06/01 15:59:38 jim Exp $
+$Id: test_traverser.py,v 1.12 2003/06/07 06:54:24 stevea Exp $
 """
 
 import unittest
 
 from zope.interface import directlyProvides
 from zope.interface.verify import verifyClass
-from zope.interface.implements import instancesOfObjectImplements
+from zope.interface import implementedBy
 
 from zope.app.interfaces.traversing import ITraverser, ITraversable
 from zope.app.traversing.adapters import Traverser, DefaultTraversable
@@ -58,7 +58,7 @@ class TraverserTests(PlacefulSetup, unittest.TestCase):
         self.failUnless(ITraverser.isImplementedBy(self.tr))
 
     def testVerifyInterfaces(self):
-        for interface in instancesOfObjectImplements(Traverser):
+        for interface in implementedBy(Traverser):
             verifyClass(interface, Traverser)
 
 class UnrestrictedNoTraverseTests(unittest.TestCase):
@@ -201,7 +201,7 @@ class DefaultTraversableTests(unittest.TestCase):
         self.failUnless(ITraversable.isImplementedBy(DefaultTraversable(None)))
 
     def testVerifyInterfaces(self):
-        for interface in instancesOfObjectImplements(DefaultTraversable):
+        for interface in implementedBy(DefaultTraversable):
             verifyClass(interface, DefaultTraversable)
 
     def testAttributeTraverse(self):

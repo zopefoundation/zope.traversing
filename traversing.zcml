@@ -1,0 +1,19 @@
+<zopeConfigure
+   xmlns='http://namespaces.zope.org/zope'
+   xmlns:security='http://namespaces.zope.org/security'
+   xmlns:zmi='http://namespaces.zope.org/zmi'
+   xmlns:browser='http://namespaces.zope.org/browser'
+>
+
+<adapter factory="Zope.App.Traversing.Traverser."
+         provides="Zope.App.Traversing.ITraverser."
+         />
+    <!-- Ultimately, this should be registered only for IWrapper, but that
+         won't work like that just now.
+         for="Zope.ContextWrapper.IWrapper." /> -->
+
+<adapter factory="Zope.App.Traversing.DefaultTraversable."
+         provides="Zope.App.Traversing.ITraversable." />
+
+
+</zopeConfigure>

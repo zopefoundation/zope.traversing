@@ -17,7 +17,7 @@ $Id$
 """
 import re
 
-import zope.component as capi
+import zope.component
 import zope.interface
 from zope.component.exceptions import ComponentLookupError
 from zope.interface import providedBy, directlyProvides, directlyProvidedBy
@@ -104,10 +104,10 @@ def namespaceLookup(ns, name, object, request=None):
        """
 
     if request is not None:
-        traverser = capi.queryMultiAdapter((object, request), 
-                                           ITraversable, ns)
+        traverser = zope.component.queryMultiAdapter((object, request),
+                                                     ITraversable, ns)
     else:
-        traverser = capi.queryAdapter(object, ITraversable, ns)
+        traverser = zope.component.queryAdapter(object, ITraversable, ns)
 
     if traverser is None:
         raise TraversalError("++%s++%s" % (ns, name))
@@ -167,7 +167,7 @@ def getResource(site, name, request):
     return resource
 
 def queryResource(site, name, request, default=None):
-    resource = capi.queryAdapter(request, name=name)
+    resource = zope.component.queryAdapter(request, name=name)
     if resource is None:
         return default
 
@@ -353,8 +353,8 @@ class view(object):
         self.request = request
 
     def traverse(self, name, ignored):
-        view = capi.queryMultiAdapter((self.context, self.request),
-                                           name=name)
+        view = zope.component.queryMultiAdapter((self.context, self.request),
+                                                name=name)
         if view is None:
             raise TraversalError(self.context, name)
 
@@ -371,7 +371,7 @@ class skin(view):
 
     def traverse(self, name, ignored):
         self.request.shiftNameToApplication()
-        skin = capi.getUtility(ISkin, name)
+        skin = zope.component.getUtility(ISkin, name)
         applySkin(self.request, skin)
         return self.context
 
@@ -448,7 +448,7 @@ class adapter(SimpleHandler):
              >>> tearDown()
            """
         try:
-            return capi.getAdapter(self.context, IPathAdapter, name)
+            return zope.component.getAdapter(self.context, IPathAdapter, name)
         except ComponentLookupError:
             raise TraversalError(self.context, name)
 
@@ -528,7 +528,7 @@ class debug(view):
                     # TODO: I am not sure this is the best solution.  What
                     # if we want to enable tracebacks when also trying to
                     # debug a different skin?
-                    skin = capi.getUtility(ISkin, 'Debug')
+                    skin = zope.component.getUtility(ISkin, 'Debug')
                     directlyProvides(request, providedBy(request)+skin)
                 else:
                     raise ValueError("Unknown debug flag: %s" % flag)

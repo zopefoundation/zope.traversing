@@ -20,7 +20,7 @@ from zope.interface import implements
 from zope.proxy import sameProxiedObjects
 from zope.publisher.browser import IBrowserRequest
 
-import zope.component as capi
+import zope.component
 from zope.app.i18n import ZopeMessageIDFactory as _
 from zope.app.publisher.browser import BrowserView
 from zope.app.traversing.browser.interfaces import IAbsoluteURL
@@ -32,7 +32,7 @@ _insufficientContext = _("There isn't enough context to get URL information. "
 _safe = '@+' # Characters that we don't want to have quoted
 
 def absoluteURL(ob, request):
-    return capi.getMultiAdapter((ob, request), IAbsoluteURL)()
+    return zope.component.getMultiAdapter((ob, request), IAbsoluteURL)()
 
 class AbsoluteURL(BrowserView):
     implements(IAbsoluteURL)
@@ -54,8 +54,8 @@ class AbsoluteURL(BrowserView):
         if container is None:
             raise TypeError, _insufficientContext
 
-        url = str(capi.getMultiAdapter((container, request),
-                                       name='absolute_url'))
+        url = str(zope.component.getMultiAdapter((container, request),
+                                                 name='absolute_url'))
         name = self._getContextName(context)
         if name is None:
             raise TypeError, _insufficientContext
@@ -83,8 +83,8 @@ class AbsoluteURL(BrowserView):
                isinstance(context, Exception):
             return ({'name':'', 'url': self.request.getApplicationURL()}, )
 
-        base = tuple(capi.getMultiAdapter((container, request),
-                                          name='absolute_url').breadcrumbs())
+        base = tuple(zope.component.getMultiAdapter(
+                (container, request), name='absolute_url').breadcrumbs())
 
         name = getattr(context, '__name__', None)
         if name is None:

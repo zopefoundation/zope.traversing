@@ -324,14 +324,6 @@ class etc(SimpleHandler):
 
         return method()
 
-class help(SimpleHandler):
-
-    def traverse(self, name, ignored):
-        """Used to traverse to an online help topic."""
-        onlinehelp = component.getService(self.context, 'OnlineHelp')
-        onlinehelp.context = self.context
-        return onlinehelp
-
 class view(object):
 
     zope.interface.implements(ITraversable)

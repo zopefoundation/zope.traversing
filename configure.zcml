@@ -61,17 +61,6 @@
     factory="zope.app.traversing.namespace.acquire" 
     />
 
-<adapter
-    name="help"
-    provides="zope.app.traversing.interfaces.ITraversable" for="*"
-    factory="zope.app.traversing.namespace.help" 
-    />
-<view
-    name="help" type="*"
-    provides="zope.app.traversing.interfaces.ITraversable" for="*"
-    factory="zope.app.traversing.namespace.help" 
-    />
-
 <view
     name="view" type="*"
     provides="zope.app.traversing.interfaces.ITraversable" for="*"

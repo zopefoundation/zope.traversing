@@ -47,7 +47,7 @@ def namespaceLookup(ns, name, object, request=None):
        Let's start with adapter-based transersal. We're going to use the
        component architecture, so we'll need to initialize it:
 
-         >>> from zope.app.tests.placelesssetup import setUp, tearDown
+         >>> from zope.app.testing.placelesssetup import setUp, tearDown
          >>> setUp()
 
          >>> class I(zope.interface.Interface):
@@ -63,7 +63,7 @@ def namespaceLookup(ns, name, object, request=None):
          ...     def traverse(self, name, remaining):
          ...         return name+'42'
 
-         >>> from zope.app.tests import ztapi
+         >>> from zope.app.testing import ztapi
          >>> ztapi.provideAdapter(I, ITraversable, Adapter, 'foo')
 
        Then given an object, we can traverse it with a
@@ -419,9 +419,9 @@ class adapter(SimpleHandler):
 
            To demonstrate this, we need to register some adapters:
 
-             >>> from zope.app.tests.placelesssetup import setUp, tearDown
+             >>> from zope.app.testing.placelesssetup import setUp, tearDown
              >>> setUp()
-             >>> from zope.app.tests import ztapi
+             >>> from zope.app.testing import ztapi
              >>> def adapter1(ob):
              ...     return 1
              >>> def adapter2(ob):
@@ -488,7 +488,7 @@ class debug(view):
 
         ++debug++errors enables tracebacks (by switching to debug skin)
 
-            >>> from zope.app.tests import ztapi
+            >>> from zope.app.testing import ztapi
             >>> from zope.publisher.interfaces.browser import IBrowserRequest
 
             >>> class Debug(IBrowserRequest):

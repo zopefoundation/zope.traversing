@@ -21,6 +21,7 @@ from ITraverser import ITraverser as _ITraverser
 from Traverser import WrapperChain as _WrapperChain
 from Zope.Proxy.ContextWrapper import getWrapperContext as _getWrapperContext
 from Zope.Proxy.ContextWrapper import isWrapper as _isWrapper
+from types import StringTypes
 _marker = object()
 
 # XXX: this probably shouldn't have "request" in its signature, nor
@@ -111,3 +112,50 @@ def getPhysicalRoot(obj):
         
     return _getAdapter(obj, _ITraverser).getPhysicalRoot()
 
+def locationAsTuple(location):
+    """Given a location as a unicode or ascii string or as a tuple of
+    unicode or ascii strings, returns the location as a tuple of
+    unicode strings.
+    
+    Raises a ValueError if a poorly formed location is given.
+    """
+    if not location:
+        raise ValueError, "location must be non-empty."
+    if isinstance(location, tuple):
+        t = tuple(map(unicode, location))
+    elif isinstance(location, StringTypes):
+        if location == u'/':  # matches '/' or u'/'
+            return (u'',)
+        t = tuple(location.split(u'/'))
+    else:
+        raise ValueError, \
+            "location %s must be a string or a tuple of strings." % (location,)
+        
+    if t[-1] == u'':  # matches '' or u''
+        raise ValueError, \
+            "location tuple %s must not end with empty string." % (t,)
+    # don't usually need this, so just an assertion rather than a value error
+    assert '' not in t[1:]
+    return t
+    
+def locationAsUnicode(location):
+    """Given a location as a unicode or ascii string or as a tuple of
+    unicode or ascii strings, returns the location as a slash-separated
+    unicode string.
+    
+    Raises ValueError if a poorly formed location is given.
+    """
+    if not location:
+        raise ValueError, "location must be non-empty."
+    if isinstance(location, tuple):
+        u = u'/'.join(location)
+    elif isinstance(location, StringTypes):
+        u = unicode(location)
+    else:
+        raise ValueError, \
+            "location %s must be a string or a tuple of strings." % (location,)
+    if u != '/' and u[-1] == u'/':
+        raise ValueError, "location %s must not end with a slash." % u
+    # don't usually need this, so just an assertion rather than a value error
+    assert u.find(u'//') == -1
+    return u

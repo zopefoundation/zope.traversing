@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: testConvenienceFunctions.py,v 1.2 2002/06/18 22:14:16 stevea Exp $
+$Id: testConvenienceFunctions.py,v 1.3 2002/06/25 12:38:12 stevea Exp $
 """
 from unittest import TestCase, TestSuite, main, makeSuite
 from Zope.App.OFS.Services.ServiceManager.tests.PlacefulSetup \
@@ -184,6 +184,61 @@ class Test(PlacefulSetup, TestCase):
             getPhysicalRoot,
             self.unwrapped_item
             )
+
+    def testLocationAsTuple(self):
+        # TODO: put these assertions in a less random order
+        from Zope.App.Traversing import locationAsTuple as lat
+        loc = (u'xx',u'yy',u'zz')
+        self.assertEqual(lat((u'xx',u'yy',u'zz')), loc)
+        self.assertEqual(lat((u'', u'xx',u'yy',u'zz')), (u'',)+loc)
+        self.assertEqual(lat(('xx','yy','zz')), loc)
+        self.assertRaises(ValueError, lat, ())
+        self.assertEqual(lat(('xx',)), (u'xx',))
+        self.assertRaises(ValueError, lat, 23)
+        self.assertRaises(UnicodeError, lat, ('', u'123', '£23'))
+        self.assertRaises(UnicodeError, lat, '£23')
+        self.assertEqual(lat(u'xx/yy/zz'), loc)
+        self.assertEqual(lat(u'/xx/yy/zz'), (u'',)+loc)
+        self.assertEqual(lat('xx/yy/zz'), loc)
+        self.assertRaises(ValueError, lat, '')
+        self.assertEqual(lat('/'), (u'',))
+        self.assertEqual(lat('xx'), (u'xx',))
+        self.assertRaises(ValueError, lat, '//')
+        self.assertRaises(AssertionError, lat, '/foo//bar')
+        # having a trailing slash on a location is undefined.
+        # we might want to give it a particular meaning for zope3 later
+        # for now, it is an invalid location identifier
+        self.assertRaises(ValueError, lat, '/foo/bar/')
+        self.assertRaises(ValueError, lat, 'foo/bar/')
+        self.assertRaises(ValueError, lat, ('','foo','bar',''))
+        self.assertRaises(ValueError, lat, ('foo','bar',''))
+        
+    def testLocationAsUnicode(self):
+        from Zope.App.Traversing import locationAsUnicode as lau
+        loc = u'xx/yy/zz'
+        self.assertEqual(lau((u'xx',u'yy',u'zz')), loc)
+        self.assertEqual(lau((u'', u'xx',u'yy',u'zz')), '/'+loc)
+        self.assertEqual(lau(('xx','yy','zz')), loc)
+        self.assertRaises(ValueError, lau, ())
+        self.assertEqual(lau(('xx',)), u'xx')
+        self.assertRaises(ValueError, lau, 23)
+        self.assertRaises(UnicodeError, lau, ('', u'123', '£23'))
+        self.assertRaises(UnicodeError, lau, '£23')
+        self.assertEqual(lau(u'xx/yy/zz'), loc)
+        self.assertEqual(lau(u'/xx/yy/zz'), u'/'+loc)
+        self.assertEqual(lau('xx/yy/zz'), loc)
+        self.assertRaises(ValueError, lau, '')
+        self.assertEqual(lau('/'), u'/')
+        self.assertEqual(lau('xx'), u'xx')
+        self.assertRaises(ValueError, lau, '//')
+        self.assertRaises(AssertionError, lau, '/foo//bar')
+        # having a trailing slash on a location is undefined.
+        # we might want to give it a particular meaning for zope3 later
+        # for now, it is an invalid location identifier
+        self.assertRaises(ValueError, lau, '/foo/bar/')
+        self.assertRaises(ValueError, lau, 'foo/bar/')
+        self.assertRaises(ValueError, lau, ('','foo','bar',''))
+        self.assertRaises(ValueError, lau, ('foo','bar',''))
 
 def test_suite():
     return TestSuite((

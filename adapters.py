@@ -12,7 +12,7 @@
 #
 ##############################################################################
 """
-$Id: adapters.py,v 1.6 2003/04/28 13:18:38 mgedmin Exp $
+$Id: adapters.py,v 1.7 2003/05/23 17:51:53 jim Exp $
 """
 
 from zope.exceptions import NotFoundError
@@ -219,6 +219,10 @@ def traversePathElement(obj, name, further_path, default=_marker,
         nm = name
 
     if traversable is None:
+        if obj.__class__ == dict:
+            # Special-case dicts
+            return obj[name]
+        
         traversable = queryAdapter(obj, ITraversable, None)
         if traversable is None:
             raise NotFoundError('No traversable adapter found', obj)

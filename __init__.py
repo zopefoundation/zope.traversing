@@ -30,6 +30,11 @@ def traverse(place, path, default=_marker, request=None):
     
     Raises NotFoundError if path cannot be found
     Raises TypeError if place is not context wrapped
+    
+    Note: calling traverse with a path argument taken from an untrusted
+          source, such as an HTTP request form variable, is a bad idea.
+          It could allow a maliciously constructed request to call 
+          code unexpectedly.
     """
     if not _isWrapper(place):
         raise TypeError, "Not enough context information to traverse"

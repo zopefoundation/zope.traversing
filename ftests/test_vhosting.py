@@ -13,7 +13,7 @@
 ##############################################################################
 """Functional tests for virtual hosting.
 
-$Id: test_vhosting.py,v 1.6 2003/05/27 14:18:27 jim Exp $
+$Id: test_vhosting.py,v 1.7 2003/08/08 18:07:40 jim Exp $
 """
 
 import unittest
@@ -42,18 +42,18 @@ class TestVirtualHosting(BrowserTestCase):
     def test_request_url(self):
         self.addPage('/pt', u'<span tal:replace="request/URL"/>')
         self.verify('/pt', 'http://localhost/pt/index.html\n')
-        self.verify('/++vh++/pt',
+        self.verify('/++vh++/++/pt',
                     'http://localhost/pt/index.html\n')
-        self.verify('/++vh++https:otherhost:443/pt',
+        self.verify('/++vh++https:otherhost:443/++/pt',
                     'https://otherhost/pt/index.html\n')
         self.verify('/++vh++https:otherhost:443/fake/folders/++/pt',
                     'https://otherhost/fake/folders/pt/index.html\n')
 
         self.addPage('/foo/bar/pt', u'<span tal:replace="request/URL"/>')
         self.verify('/foo/bar/pt', 'http://localhost/foo/bar/pt/index.html\n')
-        self.verify('/foo/bar/++vh++/pt',
+        self.verify('/foo/bar/++vh++/++/pt',
                     'http://localhost/pt/index.html\n')
-        self.verify('/foo/bar/++vh++https:otherhost:443/pt',
+        self.verify('/foo/bar/++vh++https:otherhost:443/++/pt',
                     'https://otherhost/pt/index.html\n')
         self.verify('/foo/++vh++https:otherhost:443/fake/folders/++/bar/pt',
                     'https://otherhost/fake/folders/bar/pt/index.html\n')
@@ -63,10 +63,10 @@ class TestVirtualHosting(BrowserTestCase):
         self.verify('/pt',
                     '<head>\n<base href="http://localhost/pt/index.html" />\n'
                     '</head>\n')
-        self.verify('/++vh++/pt',
+        self.verify('/++vh++/++/pt',
                     '<head>\n<base href="http://localhost/pt/index.html" />\n'
                     '</head>\n')
-        self.verify('/++vh++https:otherhost:443/pt',
+        self.verify('/++vh++https:otherhost:443/++/pt',
                     '<head>\n'
                     '<base href="https://otherhost/pt/index.html" />'
                     '\n</head>\n')
@@ -80,10 +80,10 @@ class TestVirtualHosting(BrowserTestCase):
                     '<head>\n<base '
                     'href="http://localhost/foo/bar/pt/index.html" />\n'
                     '</head>\n')
-        self.verify('/foo/bar/++vh++/pt',
+        self.verify('/foo/bar/++vh++/++/pt',
                     '<head>\n<base href="http://localhost/pt/index.html" />\n'
                     '</head>\n')
-        self.verify('/foo/bar/++vh++https:otherhost:443/pt',
+        self.verify('/foo/bar/++vh++https:otherhost:443/++/pt',
                     '<head>\n'
                     '<base href="https://otherhost/pt/index.html" />'
                     '\n</head>\n')
@@ -95,7 +95,7 @@ class TestVirtualHosting(BrowserTestCase):
     def test_request_redirect(self):
         self.addPage('/foo/index.html', u'Spam')
         self.verifyRedirect('/foo', 'http://localhost/foo/index.html')
-        self.verifyRedirect('/++vh++https:otherhost:443/foo',
+        self.verifyRedirect('/++vh++https:otherhost:443/++/foo',
                             'https://otherhost/foo/index.html')
         self.verifyRedirect('/foo/++vh++https:otherhost:443/bar/++',
                             'https://otherhost/bar/index.html')
@@ -103,9 +103,9 @@ class TestVirtualHosting(BrowserTestCase):
     def test_absolute_url(self):
         self.addPage('/pt', u'<span tal:replace="template/@@absolute_url"/>')
         self.verify('/pt', 'http://localhost/pt\n')
-        self.verify('/++vh++/pt',
+        self.verify('/++vh++/++/pt',
                     'http://localhost/pt\n')
-        self.verify('/++vh++https:otherhost:443/pt',
+        self.verify('/++vh++https:otherhost:443/++/pt',
                     'https://otherhost/pt\n')
         self.verify('/++vh++https:otherhost:443/fake/folders/++/pt',
                     'https://otherhost/fake/folders/pt\n')
@@ -113,9 +113,9 @@ class TestVirtualHosting(BrowserTestCase):
         self.addPage('/foo/bar/pt',
                      u'<span tal:replace="template/@@absolute_url"/>')
         self.verify('/foo/bar/pt', 'http://localhost/foo/bar/pt\n')
-        self.verify('/foo/bar/++vh++/pt',
+        self.verify('/foo/bar/++vh++/++/pt',
                     'http://localhost/pt\n')
-        self.verify('/foo/bar/++vh++https:otherhost:443/pt',
+        self.verify('/foo/bar/++vh++https:otherhost:443/++/pt',
                     'https://otherhost/pt\n')
         self.verify('/foo/++vh++https:otherhost:443/fake/folders/++/bar/pt',
                     'https://otherhost/fake/folders/bar/pt\n')
@@ -125,7 +125,7 @@ class TestVirtualHosting(BrowserTestCase):
         self.addPage('/foo/bar/pt',
                      u'<span tal:replace="container/obj/pt/@@absolute_url"/>')
         self.verify('/foo/bar/pt', 'http://localhost/foo/bar/pt\n')
-        self.verify('/foo/++vh++https:otherhost:443/bar/pt',
+        self.verify('/foo/++vh++https:otherhost:443/++/bar/pt',
                     'https://otherhost/bar/pt\n')
 
     def test_resources(self):

@@ -13,12 +13,12 @@
 ##############################################################################
 """Functional tests for virtual hosting.
 
-$Id: test_vhosting.py,v 1.11 2004/02/24 16:51:39 philikon Exp $
+$Id: test_vhosting.py,v 1.12 2004/04/06 20:58:11 jim Exp $
 """
 
 import unittest
 from zope.app.tests import ztapi
-from zope.testing.functional import BrowserTestCase
+from zope.app.tests.functional import BrowserTestCase
 from zope.app.folder import Folder
 from transaction import get_transaction
 from zope.app.publisher.browser.resource import Resource

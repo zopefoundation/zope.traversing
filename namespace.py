@@ -17,7 +17,8 @@ $Id$
 """
 import re
 import zope.interface
-from zope.app import zapi
+from zope import component
+from zope.component.servicenames import Presentation
 from zope.exceptions import NotFoundError
 from zope.app.traversing.interfaces import ITraversable
 from zope.proxy import removeAllProxies
@@ -94,9 +95,10 @@ def namespaceLookup(ns, name, object, request=None):
        """
 
     if request is not None:
-        traverser = zapi.queryView(object, ns, request, providing=ITraversable)
+        traverser = component.queryView(object, ns, request,
+                                        providing=ITraversable)
     else:
-        traverser = zapi.queryNamedAdapter(object, ITraversable, ns)
+        traverser = component.queryNamedAdapter(object, ITraversable, ns)
 
     if traverser is None:
         raise NotFoundError("++%s++%s" % (ns, name))
@@ -156,7 +158,7 @@ def getResourceInContext(ob, name, request):
     return resource
 
 def queryResourceInContext(ob, name, request, default=None):
-    resource_service = zapi.getService(ob, zapi.servicenames.Presentation)
+    resource_service = component.getService(ob, Presentation)
     resource = resource_service.queryResource(name, request)
     if resource is None:
         return default
@@ -326,7 +328,7 @@ class help(SimpleHandler):
 
     def traverse(self, name, ignored):
         """Used to traverse to an online help topic."""
-        return zapi.getService(self.context, 'OnlineHelp')
+        return component.getService(self.context, 'OnlineHelp')
 
 class view(object):
 
@@ -337,7 +339,7 @@ class view(object):
         self.request = request
     
     def traverse(self, name, ignored):
-        view = zapi.queryView(self.context, name, self.request)
+        view = component.queryView(self.context, name, self.request)
         if view is None:
             raise NotFoundError(self.context, name)
 

@@ -13,14 +13,15 @@
 ##############################################################################
 """Absolute URL View components
 
-$Id: __init__.py,v 1.1 2004/03/14 03:44:08 srichter Exp $
+$Id: __init__.py,v 1.2 2004/03/18 11:15:34 philikon Exp $
 """
-
-from zope.app import zapi
+from zope.interface import implements
 from zope.publisher.browser import BrowserView
 from zope.proxy import sameProxiedObjects
 
+from zope.app import zapi
 from zope.app.i18n import ZopeMessageIDFactory as _
+from zope.app.traversing.browser.interfaces import IAbsoluteURL
 
 _insufficientContext = _("There isn't enough context to get URL information. "
                        "This is probably due to a bug in setting up location "
@@ -28,6 +29,7 @@ _insufficientContext = _("There isn't enough context to get URL information. "
 
 
 class AbsoluteURL(BrowserView):
+    implements(IAbsoluteURL)
 
     def __str__(self):
         context = self.context
@@ -82,6 +84,7 @@ class AbsoluteURL(BrowserView):
         return base
 
 class SiteAbsoluteURL(BrowserView):
+    implements(IAbsoluteURL)
 
     def __str__(self):
         context = self.context

@@ -13,7 +13,7 @@
 ##############################################################################
 """Test the traversalNamespace directive.
 
-$Id: test_directives.py,v 1.1 2003/08/02 18:17:28 srichter Exp $
+$Id: test_directives.py,v 1.2 2003/09/23 19:12:32 jim Exp $
 """
 import unittest
 
@@ -31,6 +31,7 @@ class DirectivesTest(unittest.TestCase):
         self.context = xmlconfig.file("traversing.zcml",
                                       zope.app.traversing.tests)
         self.assertEqual(_namespace_handlers.get('test'), Handler)
+        _namespace_handlers.clear()
 
 
 def test_suite():

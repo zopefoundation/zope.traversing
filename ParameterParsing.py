@@ -14,7 +14,7 @@
 """
 
 Revision information:
-$Id: ParameterParsing.py,v 1.2 2002/06/10 23:28:17 jim Exp $
+$Id: ParameterParsing.py,v 1.3 2002/10/28 11:34:04 stevea Exp $
 """
 
 import re
@@ -34,7 +34,7 @@ def parameterizedNameParse(name):
     """
 
     ns = ''
-    if name[:2] == '@@':
+    if name.startswith('@@'):
         ns = 'view'
         name = name[2:]
     else:

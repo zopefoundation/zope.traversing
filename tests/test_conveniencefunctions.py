@@ -13,9 +13,10 @@
 ##############################################################################
 """
 
-$Id: test_conveniencefunctions.py,v 1.20 2003/09/21 17:31:14 jim Exp $
+$Id: test_conveniencefunctions.py,v 1.21 2003/11/21 17:12:15 jim Exp $
 """
 from unittest import TestCase, main, makeSuite
+from zope.app.tests import ztapi
 from zope.interface import directlyProvides
 from zope.app.services.tests.placefulsetup import PlacefulSetup
 from zope.app.traversing.adapters import Traverser
@@ -68,13 +69,13 @@ class Test(PlacefulSetup, TestCase):
         folder.item = item
 
         self.tr = Traverser(root)
-        getService(None, Adapters).provideAdapter(
+        ztapi.provideAdapter(
               None, ITraverser, Traverser)
-        getService(None, Adapters).provideAdapter(
+        ztapi.provideAdapter(
               None, ITraversable, DefaultTraversable)
-        getService(None, Adapters).provideAdapter(
+        ztapi.provideAdapter(
               None, IPhysicallyLocatable, LocationPhysicallyLocatable)
-        getService(None, Adapters).provideAdapter(
+        ztapi.provideAdapter(
               IContainmentRoot, IPhysicallyLocatable, RootPhysicallyLocatable)
 
     def testTraverse(self):

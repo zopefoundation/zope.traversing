@@ -14,57 +14,47 @@
 """
 
 Revision information:
-$Id: test_presentation.py,v 1.5 2003/06/04 08:46:33 stevea Exp $
+$Id: test_presentation.py,v 1.6 2003/11/21 17:12:16 jim Exp $
 """
 
 from unittest import TestCase, main, makeSuite
+from zope.app.tests import ztapi
 from zope.app.tests.placelesssetup import PlacelessSetup
-from zope.component.view import provideView
-from zope.component.resource import provideResource
 from zope.app.traversing.namespace import view, resource
 from zope.interface import Interface, implements
+from zope.publisher.browser import TestRequest
 
 class IContent(Interface):
-    pass
-
-class IPresentationType(Interface):
     pass
 
 class Content:
     implements(IContent)
 
 class Resource:
-    implements(IPresentationType)
 
     def __init__(self, request):
         pass
 
 class View:
-    implements(IPresentationType)
 
     def __init__(self, content, request):
         self.content = content
-
-class Request:
-
-    def getPresentationType(self): return IPresentationType
-    def getPresentationSkin(self): return ''
 
 
 class Test(PlacelessSetup, TestCase):
 
     def testView(self):
-        provideView(IContent, 'foo', IPresentationType, [View])
+        ztapi.browserView(IContent, 'foo', [View])
 
         ob = Content()
-        v = view('foo', (), '@@foo', ob, Request())
+        v = view('foo', (), '@@foo', ob, TestRequest())
         self.assertEqual(v.__class__, View)
 
     def testResource(self):
-        provideResource('foo', IPresentationType, Resource)
+        ztapi.browserResource('foo', Resource)
 
         ob = Content()
-        r = resource('foo', (), '++resource++foo', ob, Request())
+        r = resource('foo', (), '++resource++foo', ob, TestRequest())
         self.assertEqual(r.__class__, Resource)
 
 

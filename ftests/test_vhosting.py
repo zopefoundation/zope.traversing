@@ -13,16 +13,15 @@
 ##############################################################################
 """Functional tests for virtual hosting.
 
-$Id: test_vhosting.py,v 1.9 2003/09/21 17:33:46 jim Exp $
+$Id: test_vhosting.py,v 1.10 2003/11/21 17:12:15 jim Exp $
 """
 
 import unittest
+from zope.app.tests import ztapi
 from zope.testing.functional import BrowserTestCase
 from zope.app.content.zpt import ZPTPage
 from zope.app.content.folder import Folder
 from transaction import get_transaction
-from zope.component.resource import provideResource
-from zope.publisher.interfaces.browser import IBrowserPresentation
 from zope.app.publisher.browser.resource import Resource
 from zope.app.traversing import traverse
 from zope.security.checker import defineChecker, NoProxy
@@ -128,7 +127,7 @@ class TestVirtualHosting(BrowserTestCase):
                     'https://otherhost/bar/pt\n')
 
     def test_resources(self):
-        provideResource('quux', IBrowserPresentation, Resource)
+        ztapi.browserResource('quux', Resource)
         self.addPage('/foo/bar/pt',
                      u'<span tal:replace="context/++resource++quux" />')
         self.verify('/foo/bar/pt', 'http://localhost/@@/quux\n')

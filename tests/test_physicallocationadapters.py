@@ -12,12 +12,12 @@
 #
 ##############################################################################
 """
-$Id: test_physicallocationadapters.py,v 1.14 2003/09/21 17:31:14 jim Exp $
+$Id: test_physicallocationadapters.py,v 1.15 2003/11/21 17:12:16 jim Exp $
 """
 
 from unittest import TestCase, main, makeSuite
 from zope.app.tests.placelesssetup import PlacelessSetup
-from zope.component.adapter import provideAdapter
+from zope.app.tests import ztapi
 from zope.component import getAdapter
 from zope.interface import implements
 
@@ -36,9 +36,10 @@ class C:
 class Test(PlacelessSetup, TestCase):
 
     def test(self):
-        provideAdapter(None, IPhysicallyLocatable, LocationPhysicallyLocatable)
-        provideAdapter(IContainmentRoot, IPhysicallyLocatable,
-                       RootPhysicallyLocatable)
+        ztapi.provideAdapter(None, IPhysicallyLocatable,
+                             LocationPhysicallyLocatable)
+        ztapi.provideAdapter(IContainmentRoot, IPhysicallyLocatable,
+                             RootPhysicallyLocatable)
 
         root = Root()
         f1 = contained(C(), root, name='f1')

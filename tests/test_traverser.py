@@ -13,11 +13,12 @@
 ##############################################################################
 """
 
-$Id: test_traverser.py,v 1.13 2003/09/21 17:31:14 jim Exp $
+$Id: test_traverser.py,v 1.14 2003/11/21 17:12:16 jim Exp $
 """
 
 import unittest
 
+from zope.app.tests import ztapi
 from zope.interface import directlyProvides
 from zope.interface.verify import verifyClass
 from zope.interface import implementedBy
@@ -83,11 +84,11 @@ class UnrestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
         PlacefulSetup.setUp(self)
         # Build up a wrapper chain
 
-        getService(None, Adapters).provideAdapter(
+        ztapi.provideAdapter(
               None, ITraversable, DefaultTraversable)
-        getService(None, Adapters).provideAdapter(
+        ztapi.provideAdapter(
               None, IPhysicallyLocatable, LocationPhysicallyLocatable)
-        getService(None, Adapters).provideAdapter(
+        ztapi.provideAdapter(
               IContainmentRoot, IPhysicallyLocatable, RootPhysicallyLocatable)
 
         self.root = root = C('root')
@@ -154,11 +155,11 @@ class RestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
     def setUp(self):
         PlacefulSetup.setUp(self)
 
-        getService(None,Adapters).provideAdapter(
+        ztapi.provideAdapter(
              None, ITraversable, DefaultTraversable)
-        getService(None, Adapters).provideAdapter(
+        ztapi.provideAdapter(
               None, IPhysicallyLocatable, LocationPhysicallyLocatable)
-        getService(None, Adapters).provideAdapter(
+        ztapi.provideAdapter(
               IContainmentRoot, IPhysicallyLocatable, RootPhysicallyLocatable)
 
         self.root = root = C('root')

@@ -14,21 +14,21 @@
 """
 
 Revision information:
-$Id: test_acquire.py,v 1.8 2003/09/21 17:31:14 jim Exp $
+$Id: test_acquire.py,v 1.9 2003/11/21 17:12:15 jim Exp $
 """
 
 from unittest import TestCase, main, makeSuite
 from zope.app.tests.placelesssetup import PlacelessSetup
 from zope.app.interfaces.traversing import ITraversable
 from zope.app.traversing.adapters import DefaultTraversable
-from zope.component.adapter import provideAdapter
+from zope.app.tests import ztapi
 from zope.app.traversing.namespace import acquire
 from zope.exceptions import NotFoundError
 
 class Test(PlacelessSetup, TestCase):
 
     def test(self):
-        provideAdapter(None, ITraversable, DefaultTraversable)
+        ztapi.provideAdapter(None, ITraversable, DefaultTraversable)
 
         class C:
             def __init__(self, name):

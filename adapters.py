@@ -149,15 +149,13 @@ def traversePathElement(obj, name, further_path, default=_marker,
         return obj
 
     if name == '..':
-        obj = obj.__parent__
-        return obj
-
+        return obj.__parent__
+ 
     if name and name[:1] in '@+':
         ns, nm = nsParse(name)
         if ns:
             return namespaceLookup(ns, nm, obj, request)
     else:
-        parms = ()
         nm = name
 
     if traversable is None:
@@ -170,10 +168,9 @@ def traversePathElement(obj, name, further_path, default=_marker,
             raise TraversalError('No traversable adapter found', obj)
 
     try:
-        next_item = traversable.traverse(nm, further_path)
-        obj = next_item
+        return traversable.traverse(nm, further_path)
     except TraversalError:
-        if default != _marker:
+        if default is not _marker:
             return default
         else:
             raise
@@ -186,7 +183,7 @@ def traversePathElement(obj, name, further_path, default=_marker,
             "be raised instead."
             % traversable.__class__.__name__,
             DeprecationWarning)
-        if default != _marker:
+        if default is not _marker:
             return default
         else:
             raise

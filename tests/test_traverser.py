@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: test_traverser.py,v 1.17 2004/03/13 21:03:23 srichter Exp $
+$Id: test_traverser.py,v 1.18 2004/03/13 23:55:28 srichter Exp $
 """
 
 import unittest
@@ -34,7 +34,7 @@ from zope.app.container.contained import contained
 
 from zope.exceptions import NotFoundError, Unauthorized
 from zope.component import getService
-from zope.app.services.servicenames import Adapters
+from zope.app.servicenames import Adapters
 
 from zope.app.site.tests.placefulsetup import PlacefulSetup
 from zope.security.checker \

@@ -17,14 +17,25 @@
     factory=".ObjectName."
     provides=".ObjectName.IObjectName"
     permission='Zope.Public'
-/>
+    />
 
 <adapter
     factory=".ObjectName.SiteObjectName"
     provides=".ObjectName.IObjectName"
     for="Zope.App.OFS.Content.Folder.RootFolder.IRootFolder"
     permission='Zope.Public'
-/>
+    />
+
+<adapter 
+    provides=".IPhysicallyLocatable."
+    factory=".PhysicalLocationAdapters.WrapperPhysicallyLocatable" 
+    />
+
+<adapter 
+    provides=".IPhysicallyLocatable."
+    for=".IContainmentRoot."
+    factory=".PhysicalLocationAdapters.RootPhysicallyLocatable" 
+    />
 
 
 </zopeConfigure>

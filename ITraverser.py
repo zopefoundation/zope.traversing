@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: ITraverser.py,v 1.2 2002/06/10 23:28:17 jim Exp $
+$Id: ITraverser.py,v 1.3 2002/07/11 18:21:34 jim Exp $
 """
 
 import Interface
@@ -22,21 +22,6 @@ _RAISE_KEYERROR=[]
 
 class ITraverser(Interface.Base):
     """Provide traverse features"""
-
-    def getPhysicalRoot():
-        """
-        Returns the top-level Application object, or the base object if it is
-        unwrapped.
-        """
-
-    def getPhysicalPath():
-        """
-        Returns a path (an immutable sequence of strings) from the root.
-        
-        This path can be used to access this object again later, for example
-        in a copy/paste operation. Returns an empty tuple if the base object
-        is not wrapped.
-        """
     
     def traverse(path, default=_RAISE_KEYERROR):
         """

@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: testConvenienceFunctions.py,v 1.3 2002/06/25 12:38:12 stevea Exp $
+$Id: testConvenienceFunctions.py,v 1.4 2002/07/11 18:21:34 jim Exp $
 """
 from unittest import TestCase, TestSuite, main, makeSuite
 from Zope.App.OFS.Services.ServiceManager.tests.PlacefulSetup \
@@ -21,10 +21,18 @@ from Zope.App.OFS.Services.ServiceManager.tests.PlacefulSetup \
 from Zope.Proxy.ContextWrapper import ContextWrapper
 from Zope.App.Traversing.Traverser import Traverser
 from Zope.ComponentArchitecture import getService
+
 from Zope.App.Traversing.ITraverser import ITraverser
 from Zope.App.Traversing.ITraversable import ITraversable
 from Zope.App.Traversing.DefaultTraversable import DefaultTraversable
 from Zope.App.Traversing.ObjectName import IObjectName, ObjectName
+
+from Zope.App.Traversing.IPhysicallyLocatable import IPhysicallyLocatable
+from Zope.App.Traversing.IContainmentRoot import IContainmentRoot
+from Zope.App.Traversing.PhysicalLocationAdapters \
+     import WrapperPhysicallyLocatable, RootPhysicallyLocatable
+
+
 from Zope.Exceptions import NotFoundError
 
 class C:
@@ -37,10 +45,11 @@ class Test(PlacefulSetup, TestCase):
         PlacefulSetup.setUp(self)
         # Build up a wrapper chain
         root = C('root')
+        root.__implements__ = IContainmentRoot
         folder = C('folder')
         item = C('item')
         
-        self.root =   ContextWrapper(root,   None,        name='')
+        self.root =   root
         self.folder = ContextWrapper(folder, self.root,   name='folder')
         self.item =   ContextWrapper(item,   self.folder, name='item')
         self.unwrapped_item = item
@@ -49,12 +58,16 @@ class Test(PlacefulSetup, TestCase):
         folder.item = item
 
         self.tr = Traverser(root)
-        getService(None,"Adapters").provideAdapter(
+        getService(None, "Adapters").provideAdapter(
               None, ITraverser, Traverser)
-        getService(None,"Adapters").provideAdapter(
+        getService(None, "Adapters").provideAdapter(
               None, ITraversable, DefaultTraversable)
-        getService(None,"Adapters").provideAdapter(
+        getService(None, "Adapters").provideAdapter(
               None, IObjectName, ObjectName)
+        getService(None, "Adapters").provideAdapter(
+              None, IPhysicallyLocatable, WrapperPhysicallyLocatable)
+        getService(None, "Adapters").provideAdapter(
+              IContainmentRoot, IPhysicallyLocatable, RootPhysicallyLocatable)
 
 
     def testTraverse(self):
@@ -81,15 +94,6 @@ class Test(PlacefulSetup, TestCase):
         self.assertEqual(
             traverseName(self.item, '.'),
             self.tr.traverse('/folder/item')
-            )
-
-            
-    def testTraverseNameUnwrapped(self):
-        from Zope.App.Traversing import traverseName
-        self.assertRaises(
-            TypeError,
-            traverseName,
-            self.unwrapped_item, 'item'
             )
             
     def testTraverseNameBadValue(self):

@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: testTraverser.py,v 1.3 2002/06/15 20:38:18 stevea Exp $
+$Id: testTraverser.py,v 1.4 2002/07/11 18:21:34 jim Exp $
 """
 
 import unittest
@@ -21,6 +21,12 @@ from Zope.App.Traversing.ITraverser import ITraverser
 from Zope.App.Traversing.ITraversable import ITraversable
 from Zope.App.Traversing.Traverser import Traverser
 from Zope.App.Traversing.DefaultTraversable import DefaultTraversable
+
+from Zope.App.Traversing.IPhysicallyLocatable import IPhysicallyLocatable
+from Zope.App.Traversing.IContainmentRoot import IContainmentRoot
+from Zope.App.Traversing.PhysicalLocationAdapters \
+     import WrapperPhysicallyLocatable, RootPhysicallyLocatable
+
 from Zope.Proxy.ContextWrapper import ContextWrapper
 from Zope.Exceptions import NotFoundError, Unauthorized
 from Zope.ComponentArchitecture import getService
@@ -44,7 +50,7 @@ class TraverserTests(PlacefulSetup, unittest.TestCase):
     def setUp(self):
         PlacefulSetup.setUp(self)
         # Build up a wrapper chain
-        self.root =   ContextWrapper(C('root'),   None,        name='')
+        self.root =   C('root')
         self.folder = ContextWrapper(C('folder'), self.root,   name='folder')
         self.item =   ContextWrapper(C('item'),   self.folder, name='item')
         self.tr = Traverser(self.item)
@@ -56,22 +62,10 @@ class TraverserTests(PlacefulSetup, unittest.TestCase):
         for interface in instancesOfObjectImplements(Traverser):
             verifyClass(interface, Traverser)
 
-    def testPhysicalRoot(self):
-        self.failUnless(self.tr.getPhysicalRoot() is self.root)
-
-    def testPhysicalPath(self):
-        self.assertEquals(self.tr.getPhysicalPath(), ('', 'folder', 'item'))
-
-    def testUnwrapped(self):
-        # The feature should do the right thing for unwrapped objects too
-        unwrapped = C('unwrapped')
-        tr = Traverser(unwrapped)
-        self.assertEquals(tr.getPhysicalPath(), ())
-        self.failUnless(tr.getPhysicalRoot() is unwrapped)
-
 class UnrestrictedNoTraverseTests(unittest.TestCase):
     def setUp(self):
         self.root = root = C('root')
+        self.root.__implements__ = IContainmentRoot
         self.folder = folder = C('folder')
         self.item = item = C('item')
 
@@ -89,10 +83,15 @@ class UnrestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
         PlacefulSetup.setUp(self)
         # Build up a wrapper chain
 
-        getService(None,"Adapters").provideAdapter(
+        getService(None, "Adapters").provideAdapter(
               None, ITraversable, DefaultTraversable)
+        getService(None, "Adapters").provideAdapter(
+              None, IPhysicallyLocatable, WrapperPhysicallyLocatable)
+        getService(None, "Adapters").provideAdapter(
+              IContainmentRoot, IPhysicallyLocatable, RootPhysicallyLocatable)
 
         self.root = root = C('root')
+        self.root.__implements__ = IContainmentRoot
         self.folder = folder = C('folder')
         self.item = item = C('item')
 
@@ -160,8 +159,13 @@ class RestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
 
         getService(None,"Adapters").provideAdapter(
              None, ITraversable, DefaultTraversable)
+        getService(None, "Adapters").provideAdapter(
+              None, IPhysicallyLocatable, WrapperPhysicallyLocatable)
+        getService(None, "Adapters").provideAdapter(
+              IContainmentRoot, IPhysicallyLocatable, RootPhysicallyLocatable)
 
         self.root = root = C('root')
+        root.__implements__ = IContainmentRoot
         self.folder = folder = C('folder')
         self.item = item = C('item')
 

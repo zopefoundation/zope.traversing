@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: EtcNamespace.py,v 1.2 2002/06/10 23:28:17 jim Exp $
+$Id: EtcNamespace.py,v 1.3 2002/07/11 18:21:34 jim Exp $
 """
 from Zope.App.OFS.ApplicationControl.ApplicationControl \
      import ApplicationController
@@ -47,7 +47,7 @@ def etc(name, parameters, pname, ob, request):
     method_name = "getServiceManager"
     method = getattr(ob, method_name, None)
     if method is None: 
-        raise NotFound(ob, pname, request)
+        raise NotFoundError(ob, pname, request)
 
     return method()
 

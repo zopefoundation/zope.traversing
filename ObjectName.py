@@ -14,9 +14,9 @@
 """
 
 Revision information:
-$Id: ObjectName.py,v 1.1 2002/06/15 20:38:17 stevea Exp $
+$Id: ObjectName.py,v 1.2 2002/07/11 18:21:34 jim Exp $
 """
-from Zope.Proxy.ContextWrapper import getWrapperData
+from Zope.Proxy.ContextWrapper import getInnerWrapperData
 
 from Interface import Interface
 
@@ -42,7 +42,7 @@ class ObjectName(object):
         self.context = context
 
     def __str__(self):
-        dict = getWrapperData(self.context)
+        dict = getInnerWrapperData(self.context)
         name = dict and dict.get('name') or None
         if name is None:
             raise TypeError, \

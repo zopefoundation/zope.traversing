@@ -13,19 +13,22 @@
 ##############################################################################
 """Default implementation of ITraverser.
 
-$Id: Traverser.py,v 1.2 2002/06/10 23:28:17 jim Exp $
+$Id: Traverser.py,v 1.3 2002/07/11 18:21:34 jim Exp $
 """
 
-from ITraverser import ITraverser
-from ITraversable import ITraversable
+from Zope.ComponentArchitecture import getAdapter
 from Zope.ContextWrapper.IWrapper import IWrapper
-from Zope.Proxy.ContextWrapper import getWrapperContext, getWrapperData
+from Zope.Proxy.ContextWrapper import getWrapperContainer, getInnerWrapperData
 from Zope.Proxy.ContextWrapper import ContextWrapper
 from Zope.ComponentArchitecture import queryAdapter
 from Zope.Exceptions import NotFoundError, Unauthorized
 from Namespaces import namespaceLookup
 from ParameterParsing import parameterizedNameParse
 from Zope.Security.SecurityManagement import getSecurityManager
+
+from IPhysicallyLocatable import IPhysicallyLocatable
+from ITraverser import ITraverser
+from ITraversable import ITraversable
 
 from types import StringTypes
 
@@ -35,7 +38,7 @@ from __future__ import generators
 def WrapperChain(w):
     while w is not None:
         yield w
-        w = getWrapperContext(w)
+        w = getWrapperContainer(w)
 
 _marker = object()
 
@@ -47,27 +50,11 @@ class Traverser:
     # This adapter can be used for any object.
 
     def __init__(self, wrapper):
-        self._wrapper = wrapper
-
-    def getPhysicalRoot(self):
-        # Loop over all wrappers until the last one, which is the root.
-        for w in WrapperChain(self._wrapper):
-            pass
-        return w
-
-    def getPhysicalPath(self):
-        path = []
-        
-        for w in WrapperChain(self._wrapper):
-            d = getWrapperData(w)
-            if d:
-                path.insert(0, d['name'])
-
-        return tuple(path)
+        self.context = wrapper
     
     def traverse(self, path, default=_marker, request=None):
         if not path:
-            return self._wrapper
+            return self.context
 
         if isinstance(path, StringTypes):
             path = path.split('/')
@@ -80,11 +67,12 @@ class Traverser:
         path.reverse()
         pop = path.pop
 
-        curr = self._wrapper
+        curr = self.context
         if not path[-1]:
             # Start at the root
             pop()
-            curr = self.getPhysicalRoot()
+            curr = getAdapter(self.context, IPhysicallyLocatable
+                              ).getPhysicalRoot()
         try:
             while path:
                 name = pop()
@@ -93,7 +81,7 @@ class Traverser:
                     continue
 
                 if name == '..':
-                    curr = getWrapperContext(curr) or curr
+                    curr = getWrapperContainer(curr) or curr
                     continue
 
 
@@ -109,7 +97,8 @@ class Traverser:
 
                 traversable = queryAdapter(curr, ITraversable, None)
                 if traversable is None:
-                    raise NotFoundError, 'No traversable adapter found'
+                    raise NotFoundError(
+                        'No traversable adapter found', curr)
 
                 next = traversable.traverse(nm, parms, name, path)
                 curr = ContextWrapper(next, curr, name=name)

@@ -18,7 +18,9 @@ Traversing the object tree.
 from Zope.ComponentArchitecture import getAdapter as _getAdapter
 from ObjectName import IObjectName as _IObjectName
 from ITraverser import ITraverser as _ITraverser
+from IPhysicallyLocatable import IPhysicallyLocatable as _IPhysicallyLocatable
 from Traverser import WrapperChain as _WrapperChain
+from Traverser import Traverser as _Traverser
 from Zope.Proxy.ContextWrapper import getWrapperContext as _getWrapperContext
 from Zope.Proxy.ContextWrapper import isWrapper as _isWrapper
 from types import StringTypes
@@ -41,9 +43,10 @@ def traverse(place, path, default=_marker, request=None):
           code unexpectedly.
           Consider using traverseName instead.
     """
-    if not _isWrapper(place):
-        raise TypeError, "Not enough context information to traverse"
-    traverser = _getAdapter(place, _ITraverser)
+    # XXX This made no sense. It would mean you couldn't traverse from root
+    #if not _isWrapper(place):
+    #    raise TypeError, "Not enough context information to traverse"
+    traverser = _Traverser(place)
     if default is _marker:
         return traverser.traverse(path, request=request)
     else:
@@ -92,15 +95,26 @@ def getParents(obj):
     return [p for p in iterator]
     
 def getPhysicalPath(obj):
-    """Returns a tuple of names representing the physical path to the
-    given object.
+    """Returns a tuple of names representing the physical path to the object.
     
     Raises TypeError if the given object is not context wrapped
     """
     if not _isWrapper(obj):
         raise TypeError, "Not enough context information to traverse"
     
-    return _getAdapter(obj, _ITraverser).getPhysicalPath()
+    return _getAdapter(obj, _IPhysicallyLocatable).getPhysicalPath()
+
+def getPhysicalPathString(obj):
+    """Returns a string representing the physical path to the object.
+    
+    Raises TypeError if the given object is not context wrapped
+    """
+    if not _isWrapper(obj):
+        raise TypeError, "Not enough context information to traverse"
+    
+    path = _getAdapter(obj, _IPhysicallyLocatable).getPhysicalPath()
+    return '/'.join(path)
+    
     
 def getPhysicalRoot(obj):
     """Returns the root of the traversal for the given object.
@@ -110,7 +124,7 @@ def getPhysicalRoot(obj):
     if not _isWrapper(obj):
         raise TypeError, "Not enough context information to traverse"
         
-    return _getAdapter(obj, _ITraverser).getPhysicalRoot()
+    return _getAdapter(obj, _IPhysicallyLocatable).getPhysicalRoot()
 
 def locationAsTuple(location):
     """Given a location as a unicode or ascii string or as a tuple of

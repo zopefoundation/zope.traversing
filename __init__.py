@@ -121,9 +121,6 @@ def getPhysicalRoot(obj):
     
     Raises TypeError if the given object is not context wrapped
     """
-    if not _isWrapper(obj):
-        raise TypeError, "Not enough context information to traverse"
-        
     return _getAdapter(obj, _IPhysicallyLocatable).getPhysicalRoot()
 
 def locationAsTuple(location):

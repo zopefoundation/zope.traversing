@@ -40,6 +40,7 @@ class DefaultTraversable:
 
     def traverse(self, name, furtherPath):
         subject = self._subject
+        __traceback_info__ = (subject, name, furtherPath)
         attr = getattr(subject, name, _marker)
         if attr is not _marker:
             # TODO: It is pretty obvious that we should call methods.

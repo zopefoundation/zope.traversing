@@ -20,6 +20,7 @@ import zope.interface
 from zope import component
 from zope.component.servicenames import Presentation
 from zope.exceptions import NotFoundError
+
 from zope.app.traversing.interfaces import ITraversable, IPathAdapter
 from zope.proxy import removeAllProxies
 
@@ -151,15 +152,14 @@ def nsParse(name):
 
     return ns, name
 
-def getResourceInContext(ob, name, request):
-    resource = queryResourceInContext(ob, name, request)
+def getResource(site, name, request):
+    resource = queryResource(site, name, request)
     if resource is None:
-        raise NotFoundError(ob, name)
+        raise NotFoundError(site, name)
     return resource
 
-def queryResourceInContext(ob, name, request, default=None):
-    resource_service = component.getService(Presentation, ob)
-    resource = resource_service.queryResource(name, request)
+def queryResource(site, name, request, default=None):
+    resource = component.queryResource(name, request)
     if resource is None:
         return default
 
@@ -167,11 +167,10 @@ def queryResourceInContext(ob, name, request, default=None):
     # resource to do this.  we will still return the proxied resource.
     r = removeAllProxies(resource)
 
-    r.__parent__ = ob
+    r.__parent__ = site
     r.__name__ = name
 
     return resource
-
 
 # ---- namespace processors below ----
 
@@ -341,11 +340,9 @@ class view(object):
 class resource(view):
 
     def traverse(self, name, ignored):
-        resource = queryResourceInContext(self.context, name, self.request)
-        if resource is None:
-            raise NotFoundError(self.context, name)
-
-        return resource
+        # The context is important here, since it becomes the parent of the
+        # resource, which is needed to generate the absolute URL.
+        return getResource(self.context, name, self.request)
 
 class skin(view):
 

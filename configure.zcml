@@ -74,4 +74,8 @@
     name="help"
     handler="zope.app.traversing.namespace.help"
     />
+<traversalNamespace
+    name="vh"
+    handler="zope.app.traversing.namespace.vh"
+    />
 </zopeConfigure>

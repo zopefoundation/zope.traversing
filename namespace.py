@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: namespace.py,v 1.9 2003/03/23 22:35:43 jim Exp $
+$Id: namespace.py,v 1.10 2003/04/15 09:37:26 alga Exp $
 """
 
 from zope.interface import Interface
@@ -253,4 +253,29 @@ def skin(name, parameters, pname, ob, request):
 
     request.setViewSkin(name)
 
+    return ob
+
+def vh(name, parameters, pname, ob, request):
+
+    traversal_stack = request.getTraversalStack()
+    app_names = []
+
+    if name:
+        try:
+            proto, host, port = name.split(":")
+        except ValueError:
+            raise ValueError("Vhost directive should have the form "
+                             "++vh++protocol:host:port")
+
+        request.setApplicationServer(host, proto, port)
+
+    if '++' in traversal_stack:
+        segment = traversal_stack.pop()
+        while segment != '++':
+            app_names.append(segment)
+            segment = traversal_stack.pop()
+        request.setTraversalStack(traversal_stack)
+
+    request.setApplicationNames(app_names)
+    request.setVirtualHostRoot()
     return ob

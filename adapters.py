@@ -182,7 +182,7 @@ def traversePathElement(obj, name, further_path, default=_marker,
             "A %s instance raised a NotFoundError in "
             "traverse.  Raising NotFoundError in this "
             "method is deprecated and will no-longer be supported "
-            "staring in ZopeX3 3.3.  TraversalError should "
+            "starting in ZopeX3 3.3.  TraversalError should "
             "be raised instead."
             % traversable.__class__.__name__,
             DeprecationWarning)

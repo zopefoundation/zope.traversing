@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: testTraverser.py,v 1.2 2002/06/10 23:28:17 jim Exp $
+$Id: testTraverser.py,v 1.3 2002/06/15 20:38:18 stevea Exp $
 """
 
 import unittest
@@ -24,14 +24,15 @@ from Zope.App.Traversing.DefaultTraversable import DefaultTraversable
 from Zope.Proxy.ContextWrapper import ContextWrapper
 from Zope.Exceptions import NotFoundError, Unauthorized
 from Zope.ComponentArchitecture import getService
-from Zope.Security.SecurityManagement import setSecurityPolicy, \
-    noSecurityManager
+from Zope.Security.SecurityManagement \
+    import setSecurityPolicy, noSecurityManager
 
 from Interface.Verify import verifyClass
 from Interface.Implements import instancesOfObjectImplements
-from Zope.App.OFS.Services.ServiceManager.tests.PlacefulSetup import PlacefulSetup
+from Zope.App.OFS.Services.ServiceManager.tests.PlacefulSetup \
+    import PlacefulSetup
 from Zope.Security.Checker \
-     import ProxyFactory, defineChecker, NamesChecker, CheckerPublic, Checker
+    import ProxyFactory, defineChecker, NamesChecker, CheckerPublic, Checker
 from Zope.Security.SecurityManagement import newSecurityManager
 
 class C:

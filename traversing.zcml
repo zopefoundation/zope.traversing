@@ -15,5 +15,18 @@
 <adapter factory="Zope.App.Traversing.DefaultTraversable."
          provides="Zope.App.Traversing.ITraversable." />
 
+<adapter
+    factory=".ObjectName."
+    provides=".ObjectName.IObjectName"
+    permission='Zope.Public'
+/>
+
+<adapter
+    factory=".ObjectName.SiteObjectName"
+    provides=".ObjectName.IObjectName"
+    for="Zope.App.OFS.Content.Folder.RootFolder.IRootFolder"
+    permission='Zope.Public'
+/>
+
 
 </zopeConfigure>

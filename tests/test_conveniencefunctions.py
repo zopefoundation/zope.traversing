@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: test_conveniencefunctions.py,v 1.8 2003/02/12 02:17:40 seanb Exp $
+$Id: test_conveniencefunctions.py,v 1.9 2003/02/26 16:56:00 alga Exp $
 """
 from unittest import TestCase, main, makeSuite
 from zope.app.services.tests.placefulsetup import PlacefulSetup
@@ -141,6 +141,14 @@ class Test(PlacefulSetup, TestCase):
         from zope.app.traversing import getParent
         self.assertEqual(
             getParent(self.item),
+            self.folder
+            )
+
+    def testGetParentOtherContext(self):
+        from zope.app.traversing import getParent
+        item = ContextWrapper(self.item, self.root, name='item')
+        self.assertEqual(
+            getParent(item),
             self.folder
             )
 

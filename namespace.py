@@ -296,8 +296,7 @@ from zope.app.traversing.interfaces import IContainmentRoot
 class etc(SimpleHandler):
 
     def traverse(self, name, ignored):
-        # XXX
-
+        # TODO:
         # This is here now to allow us to get service managers from a
         # separate namespace from the content. We add and etc
         # namespace to allow us to handle misc objects.  We'll apply
@@ -498,7 +497,7 @@ class debug(view):
                 elif flag == 'tal':
                     request.debug.showTAL = True
                 elif flag == 'errors':
-                    # XXX I am not sure this is the best solution.  What
+                    # TODO: I am not sure this is the best solution.  What
                     # if we want to enable tracebacks when also trying to
                     # debug a different skin?
                     request.setPresentationSkin('Debug')

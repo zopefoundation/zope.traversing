@@ -449,7 +449,7 @@ class adapter(SimpleHandler):
            """
         try:
             return capi.getAdapter(self.context, IPathAdapter, name)
-        except:
+        except ComponentLookupError:
             raise TraversalError(self.context, name)
 
 

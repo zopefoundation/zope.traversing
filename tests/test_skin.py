@@ -14,24 +14,29 @@
 """
 
 Revision information:
-$Id: test_skin.py,v 1.4 2003/05/01 19:35:38 faassen Exp $
+$Id: test_skin.py,v 1.5 2003/08/08 18:07:50 jim Exp $
 """
 
 from unittest import TestCase, main, makeSuite
-from zope.testing.cleanup import CleanUp # Base class w registry cleanup
-from zope.publisher.browser import TestRequest
 
-class Test(CleanUp, TestCase):
+class Test(TestCase):
 
     def test(self):
         from zope.app.traversing.namespace import skin
 
-        request = TestRequest()
-        self.assertEqual(request.getPresentationSkin(), '')
+        class FauxRequest:
+            def shiftNameToApplication(self):
+                self.shifted = 1
+            skin = ''
+            def setPresentationSkin(self, skin):
+                self.skin = skin
+
+        request = FauxRequest()
         ob = object()
         ob2 = skin('foo', (), '++skin++foo', ob, request)
         self.assertEqual(ob, ob2)
-        self.assertEqual(request.getPresentationSkin(), 'foo')
+        self.assertEqual(request.skin, 'foo')
+        self.assertEqual(request.shifted, 1)
 
 def test_suite():
     return makeSuite(Test)

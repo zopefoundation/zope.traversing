@@ -14,10 +14,10 @@
 """Test the ObjectName adapter
 
 Revision information:
-$Id: test_objectname.py,v 1.9 2003/06/01 15:59:38 jim Exp $
+$Id: test_objectname.py,v 1.10 2003/06/04 08:46:33 stevea Exp $
 """
 from unittest import TestCase, main, makeSuite
-from zope.interface import Interface
+from zope.interface import Interface, implements
 
 from zope.app.tests.placelesssetup import PlacelessSetup
 from zope.component import getService, getAdapter
@@ -30,7 +30,7 @@ from zope.app.traversing.adapters import ObjectName
 class IRoot(Interface): pass
 
 class Root:
-    __implements__ = IRoot
+    implements(IRoot)
 
 class TrivialContent(object):
     """Trivial content object, used because instances of object are rocks."""

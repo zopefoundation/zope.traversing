@@ -12,7 +12,7 @@
 #
 ##############################################################################
 """
-$Id: adapters.py,v 1.9 2003/06/01 15:59:37 jim Exp $
+$Id: adapters.py,v 1.10 2003/06/04 08:46:33 stevea Exp $
 """
 
 from zope.exceptions import NotFoundError
@@ -29,6 +29,8 @@ from zope.app.traversing.namespace import namespaceLookup
 from zope.app.traversing.namespace import UnexpectedParameters
 from zope.app.traversing.namespace import parameterizedNameParse
 
+from zope.interface import implements
+
 from types import StringTypes
 
 __metaclass__ = type
@@ -37,7 +39,7 @@ _marker = object()  # opaque marker that doesn't get security proxied
 class DefaultTraversable:
     """Traverses objects via attribute and item lookup"""
 
-    __implements__ = ITraversable
+    implements(ITraversable)
 
     def __init__(self, subject):
         self._subject = subject
@@ -58,7 +60,7 @@ class DefaultTraversable:
 
 class ObjectName(object):
 
-    __implements__ = IObjectName
+    implements(IObjectName)
 
     def __init__(self, context):
         self.context = context
@@ -76,7 +78,7 @@ class ObjectName(object):
 
 class SiteObjectName(object):
 
-    __implements__ = IObjectName
+    implements(IObjectName)
 
     def __init__(self, context):
         pass
@@ -89,7 +91,7 @@ class SiteObjectName(object):
 class WrapperPhysicallyLocatable:
     __doc__ = IPhysicallyLocatable.__doc__
 
-    __implements__ =  IPhysicallyLocatable
+    implements(IPhysicallyLocatable)
 
     def __init__(self, context):
         self.context = context
@@ -124,7 +126,7 @@ class WrapperPhysicallyLocatable:
 class RootPhysicallyLocatable:
     __doc__ = IPhysicallyLocatable.__doc__
 
-    __implements__ =  IPhysicallyLocatable
+    implements(IPhysicallyLocatable)
 
     __used_for__ = IContainmentRoot
 
@@ -142,7 +144,7 @@ class RootPhysicallyLocatable:
 class Traverser:
     """Provide traverse features"""
 
-    __implements__ = ITraverser
+    implements(ITraverser)
 
     # This adapter can be used for any object.
 
@@ -222,7 +224,7 @@ def traversePathElement(obj, name, further_path, default=_marker,
         if obj.__class__ == dict:
             # Special-case dicts
             return obj[name]
-        
+
         traversable = queryAdapter(obj, ITraversable, None)
         if traversable is None:
             raise NotFoundError('No traversable adapter found', obj)

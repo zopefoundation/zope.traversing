@@ -14,7 +14,7 @@
 """
 
 Revision information:
-$Id: test_presentation.py,v 1.4 2003/05/01 19:35:38 faassen Exp $
+$Id: test_presentation.py,v 1.5 2003/06/04 08:46:33 stevea Exp $
 """
 
 from unittest import TestCase, main, makeSuite
@@ -22,20 +22,25 @@ from zope.app.tests.placelesssetup import PlacelessSetup
 from zope.component.view import provideView
 from zope.component.resource import provideResource
 from zope.app.traversing.namespace import view, resource
-from zope.interface import Interface
+from zope.interface import Interface, implements
 
-class IContent(Interface): pass
-class IPresentationType(Interface): pass
+class IContent(Interface):
+    pass
 
-class Content: __implements__ = IContent
+class IPresentationType(Interface):
+    pass
+
+class Content:
+    implements(IContent)
 
 class Resource:
+    implements(IPresentationType)
 
-    def __init__(self, request): pass
-    __implements__ = IPresentationType
+    def __init__(self, request):
+        pass
 
 class View:
-    __implements__ = IPresentationType
+    implements(IPresentationType)
 
     def __init__(self, content, request):
         self.content = content

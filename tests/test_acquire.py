@@ -14,7 +14,7 @@
 """
 
 Revision information:
-$Id: test_acquire.py,v 1.6 2003/05/27 14:18:27 jim Exp $
+$Id: test_acquire.py,v 1.7 2003/06/01 15:59:38 jim Exp $
 """
 
 from unittest import TestCase, main, makeSuite
@@ -22,7 +22,7 @@ from zope.app.tests.placelesssetup import PlacelessSetup
 from zope.app.interfaces.traversing import ITraversable
 from zope.app.traversing.adapters import DefaultTraversable
 from zope.component.adapter import provideAdapter
-from zope.context import ContextWrapper
+from zope.app.context import ContextWrapper
 from zope.app.traversing.namespace import acquire
 from zope.exceptions import NotFoundError
 

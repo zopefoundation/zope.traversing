@@ -14,7 +14,7 @@
 """
 
 Revision information:
-$Id: test_namespacetrversal.py,v 1.6 2003/05/28 22:15:47 jim Exp $
+$Id: test_namespacetrversal.py,v 1.7 2003/06/01 15:59:38 jim Exp $
 """
 
 from unittest import TestCase, main, makeSuite
@@ -52,7 +52,8 @@ class Test(CleanUp, TestCase):
     def testSideEffectsContextDetail(self):
         # Check to make sure that when we traverse something in context,
         # that we get the right context for the result.
-        from zope.context import ContextWrapper, getWrapperContainer
+        from zope.app.context import ContextWrapper
+        from zope.context import getWrapperContainer
         from zope.app.traversing.adapters import Traverser
         from zope.publisher.browser import TestRequest
 

@@ -43,15 +43,6 @@ class DefaultTraversable(object):
         __traceback_info__ = (subject, name, furtherPath)
         attr = getattr(subject, name, _marker)
         if attr is not _marker:
-            # TODO: It is pretty obvious that we should call methods.
-            #       That much is expected from page templates.
-            #       What about classmethods / staticmethods / other descriptors?
-            #       What about methods that take several arguments?
-            # We should probably use the inspect module here. The bit about
-            # methods taking arguments is tricky. Maybe it should just not be
-            # allowed.
-            if getattr(attr, '__class__', 0) == MethodType:
-                return attr()
             return attr
 
         if hasattr(subject, '__getitem__'):

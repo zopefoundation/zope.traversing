@@ -13,7 +13,7 @@
 ##############################################################################
 """URL Namespace Implementations
 
-$Id: namespace.py,v 1.25 2004/03/05 22:09:19 jim Exp $
+$Id: namespace.py,v 1.26 2004/03/06 17:48:54 jim Exp $
 """
 import re
 from zope.app import zapi
@@ -114,7 +114,7 @@ def acquire(name, parameters, pname, ob, request):
     origOb = ob
     while i < 200:
         i += 1
-        traversable = zapi.queryAdapter(ob, ITraversable, None)
+        traversable = ITraversable(ob, None)
         if traversable is not None:
 
             try:

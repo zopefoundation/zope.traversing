@@ -12,7 +12,7 @@
 #
 ##############################################################################
 """
-$Id: adapters.py,v 1.17 2004/03/06 16:50:31 jim Exp $
+$Id: adapters.py,v 1.18 2004/03/06 17:48:54 jim Exp $
 """
 
 from zope.exceptions import NotFoundError
@@ -20,8 +20,6 @@ from zope.exceptions import NotFoundError
 from zope.app.interfaces.traversing import IPhysicallyLocatable
 from zope.app.interfaces.traversing import IContainmentRoot
 from zope.app.interfaces.traversing import ITraverser, ITraversable
-
-from zope.component import queryAdapter
 
 from zope.app.traversing.namespace import namespaceLookup
 from zope.app.traversing.namespace import UnexpectedParameters
@@ -170,7 +168,7 @@ def traversePathElement(obj, name, further_path, default=_marker,
             # Special-case dicts
             return obj[name]
 
-        traversable = queryAdapter(obj, ITraversable, None)
+        traversable = ITraversable(obj, None)
         if traversable is None:
             raise NotFoundError('No traversable adapter found', obj)
 

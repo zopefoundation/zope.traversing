@@ -314,7 +314,7 @@ class etc(SimpleHandler):
 
     def traverse(self, name, ignored):
         # TODO:
-        # This is here now to allow us to get service managers from a
+        # This is here now to allow us to get site managers from a
         # separate namespace from the content. We add and etc
         # namespace to allow us to handle misc objects.  We'll apply
         # YAGNI for now and hard code this. We'll want something more
@@ -330,7 +330,7 @@ class etc(SimpleHandler):
             and IContainmentRoot.providedBy(ob)):
             return applicationController
 
-        if name not in ('site', 'Services'):
+        if name not in ('site',):
             raise TraversalError(ob, name)
 
         method_name = "getSiteManager"

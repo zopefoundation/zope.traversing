@@ -32,7 +32,7 @@ _insufficientContext = _("There isn't enough context to get URL information. "
 _safe = '@+' # Characters that we don't want to have quoted
 
 def absoluteURL(ob, request):
-    return str(capi.getMultiAdapter((ob, request), IAbsoluteURL))
+    return capi.getMultiAdapter((ob, request), IAbsoluteURL)()
 
 class AbsoluteURL(BrowserView):
     implements(IAbsoluteURL)

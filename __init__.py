@@ -14,7 +14,7 @@
 """
 Convenience functions for traversing the object tree.
 
-$Id: __init__.py,v 1.24 2003/09/21 17:31:14 jim Exp $
+$Id: __init__.py,v 1.25 2004/03/05 22:09:19 jim Exp $
 """
 
 from zope.interface import moduleProvides
@@ -131,7 +131,7 @@ def getParent(obj):
     parent.
     """
     
-    if IContainmentRoot.isImplementedBy(obj):
+    if IContainmentRoot.providedBy(obj):
         return None
     
     parent = getattr(obj, '__parent__', None)
@@ -149,7 +149,7 @@ def getParents(obj):
     Raises a TypeError if the context doesn't go all the way down to
     a containment root.
     """
-    if IContainmentRoot.isImplementedBy(obj):
+    if IContainmentRoot.providedBy(obj):
         return []
 
     
@@ -161,7 +161,7 @@ def getParents(obj):
             break
         parents.append(w)
 
-    if parents and IContainmentRoot.isImplementedBy(parents[-1]):
+    if parents and IContainmentRoot.providedBy(parents[-1]):
         return parents
 
     raise TypeError, "Not enough context information to get all parents"

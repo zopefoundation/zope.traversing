@@ -13,7 +13,7 @@
 ##############################################################################
 """URL Namespace Implementations
 
-$Id: namespace.py,v 1.24 2004/02/24 16:51:05 philikon Exp $
+$Id: namespace.py,v 1.25 2004/03/05 22:09:19 jim Exp $
 """
 import re
 from zope.app import zapi
@@ -164,7 +164,7 @@ def etc(name, parameters, pname, ob, request):
         raise UnexpectedParameters(parameters)
 
     if (name in ('process', 'ApplicationController')
-        and IContainmentRoot.isImplementedBy(ob)):
+        and IContainmentRoot.providedBy(ob)):
         return applicationController
 
     if name not in ('site', 'Services'):

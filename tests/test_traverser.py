@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: test_traverser.py,v 1.14 2003/11/21 17:12:16 jim Exp $
+$Id: test_traverser.py,v 1.15 2004/03/05 22:09:19 jim Exp $
 """
 
 import unittest
@@ -57,7 +57,7 @@ class TraverserTests(PlacefulSetup, unittest.TestCase):
         self.tr = Traverser(self.item)
 
     def testImplementsITraverser(self):
-        self.failUnless(ITraverser.isImplementedBy(self.tr))
+        self.failUnless(ITraverser.providedBy(self.tr))
 
     def testVerifyInterfaces(self):
         for interface in implementedBy(Traverser):
@@ -197,7 +197,7 @@ class RestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
 
 class DefaultTraversableTests(unittest.TestCase):
     def testImplementsITraversable(self):
-        self.failUnless(ITraversable.isImplementedBy(DefaultTraversable(None)))
+        self.failUnless(ITraversable.providedBy(DefaultTraversable(None)))
 
     def testVerifyInterfaces(self):
         for interface in implementedBy(DefaultTraversable):

@@ -13,12 +13,12 @@
 ##############################################################################
 """
 
-$Id: namespace.py,v 1.11 2003/05/27 14:18:27 jim Exp $
+$Id: namespace.py,v 1.12 2003/05/28 22:15:46 jim Exp $
 """
 
 from zope.interface import Interface
 from zope.exceptions import NotFoundError
-from zope.context import ContextWrapper, getWrapperObject
+from zope.context import ContextWrapper, getWrapperData
 from zope.context import getWrapperContext
 from zope.configuration.action import Action
 from zope.component import queryAdapter, getAdapter, getServiceManager
@@ -74,20 +74,13 @@ def namespaceLookup(name, ns, qname, parameters, object, request=None):
         # different object.  We want to retain the side-effect name
         # for things like URLs.
 
-        # But wait, there's more. The object may be wrapped. If the
-        # object is already wrapped and we return the object in the
-        # context of itself, the containment context will be wrong,
-        # because the inner wrapper will be the original object, so
-        # our added layer with the name we want to preserve will be
-        # ignored when searching containment.
+        # We'll just at the name to the side-effect names stored in
+        # the object's wrapper.
 
-        # For this reason, we'll remove a layer of wrapping from new
-        # before we put it in context.
-
-        new = getWrapperObject(new)
-
-        new = ContextWrapper(new, object, name='.', side_effect_name=name)
-
+        data = getWrapperData(new, create=True)
+        data['side_effect_names'] = (data.get('side_effect_names', ())
+                                     + (name, )
+                                     )
     else:
         new = ContextWrapper(new, object, name=name)
 

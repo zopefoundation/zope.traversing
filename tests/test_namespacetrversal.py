@@ -14,7 +14,7 @@
 """
 
 Revision information:
-$Id: test_namespacetrversal.py,v 1.5 2003/05/27 14:18:27 jim Exp $
+$Id: test_namespacetrversal.py,v 1.6 2003/05/28 22:15:47 jim Exp $
 """
 
 from unittest import TestCase, main, makeSuite
@@ -63,7 +63,7 @@ class Test(CleanUp, TestCase):
         traverser = Traverser(c2c1)
         v = traverser.traverse('++skin++ZopeTop', request=TestRequest())
         self.assertEqual(v, c2)
-        self.failUnless(getWrapperContainer(v) is c2c1)
+        self.failUnless(getWrapperContainer(v) is c1)
 
 
 def test_suite():

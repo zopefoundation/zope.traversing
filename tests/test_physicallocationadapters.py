@@ -12,7 +12,7 @@
 #
 ##############################################################################
 """
-$Id: test_physicallocationadapters.py,v 1.8 2003/05/27 14:18:27 jim Exp $
+$Id: test_physicallocationadapters.py,v 1.9 2003/05/28 22:15:47 jim Exp $
 """
 
 from unittest import TestCase, main, makeSuite
@@ -56,8 +56,9 @@ class Test(PlacelessSetup, TestCase):
                        RootPhysicallyLocatable)
 
         root = Root()
-        root = ContextWrapper(root, root, name='.',
-                              side_effect_name="++skin++ZopeTop")
+        root = ContextWrapper(root, None,
+                              side_effect_names=("++skin++ZopeTop", ),
+                              )
         f1 = ContextWrapper(C(), root, name='f1')
         f2 = ContextWrapper(C(),   f1, name='f2')
         f3 = ContextWrapper(C(),   f2, name='f3')
@@ -78,9 +79,10 @@ class Test(PlacelessSetup, TestCase):
 
         root = Root()
         c = C()
-        f1 = ContextWrapper(c, root, name='f1')
-        f1 = ContextWrapper(c, f1, name='.',
-                            side_effect_name="++skin++ZopeTop")
+        f1 = ContextWrapper(c, root,
+                            name='f1',
+                            side_effect_names=("++skin++ZopeTop", ),
+                            )
         f2 = ContextWrapper(C(),   f1, name='f2')
         f3 = ContextWrapper(C(),   f2, name='f3')
 

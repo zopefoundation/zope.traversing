@@ -55,7 +55,7 @@ class AbsoluteURL(BrowserView):
             raise TypeError, _insufficientContext
 
         url = str(getView(container, 'absolute_url', request))
-        name = getattr(context, '__name__', None)
+        name = self._getContextName(context)
         if name is None:
             raise TypeError, _insufficientContext
 
@@ -65,6 +65,9 @@ class AbsoluteURL(BrowserView):
         return url
 
     __call__ = __str__
+
+    def _getContextName(self, context):
+        return getattr(context, '__name__', None)
 
     def breadcrumbs(self):
         context = self.context

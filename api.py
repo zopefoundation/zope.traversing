@@ -74,8 +74,7 @@ def traverse(object, path, default=_marker, request=None):
     'request' is passed in when traversing from presentation code. This
     allows paths like @@foo to work.
 
-    Raises NotFoundError if path cannot be found
-    Raises TypeError if place is not context wrapped
+    Raises TraversalError if path cannot be found
 
     Note: calling traverse with a path argument taken from an untrusted
           source, such as an HTTP request form variable, is a bad idea.
@@ -102,7 +101,9 @@ def traverseName(obj, name, default=_marker, traversable=None, request=None):
     'request' is passed in when traversing from presentation code. This
     allows paths like @@foo to work.
 
-    Raises NotFoundError if path cannot be found and 'default' was not provided.
+    Raises TraversalError if path cannot be found and 'default' was
+    not provided.
+
     """
     further_path = []
     if default is _marker:

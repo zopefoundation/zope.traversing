@@ -32,7 +32,7 @@ from zope.app.traversing.adapters import RootPhysicallyLocatable
 from zope.security.proxy import Proxy
 from zope.security.checker import selectChecker
 
-from zope.exceptions import NotFoundError
+from zope.app.traversing.interfaces import TraversalError
 from zope.app.container.contained import contained
 
 class C(object):
@@ -112,17 +112,17 @@ class Test(PlacefulSetup, TestCase):
     def testTraverseNameBadValue(self):
         from zope.app.traversing.api import traverseName
         self.assertRaises(
-            NotFoundError,
+            TraversalError,
             traverseName,
             self.folder, '../root'
             )
         self.assertRaises(
-            NotFoundError,
+            TraversalError,
             traverseName,
             self.folder, '/root'
             )
         self.assertRaises(
-            NotFoundError,
+            TraversalError,
             traverseName,
             self.folder, './item'
             )

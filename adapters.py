@@ -17,7 +17,7 @@ $Id$
 """
 from types import StringTypes, MethodType
 
-from zope.exceptions import NotFoundError
+from zope.app.traversing.interfaces import TraversalError
 from zope.interface import implements
 
 from zope.app.traversing.interfaces import IPhysicallyLocatable
@@ -49,7 +49,7 @@ class DefaultTraversable(object):
             # Let exceptions propagate.
             return subject[name]
         else:
-            raise NotFoundError(subject, name)
+            raise TraversalError(subject, name)
 
 class RootPhysicallyLocatable(object):
     __doc__ = IPhysicallyLocatable.__doc__
@@ -114,7 +114,7 @@ class Traverser(object):
                 curr = traversePathElement(curr, name, path, request=request)
 
             return curr
-        except NotFoundError:
+        except TraversalError:
             if default == _marker:
                 raise
             return default
@@ -137,7 +137,9 @@ def traversePathElement(obj, name, further_path, default=_marker,
     'request' is passed in when traversing from presentation code. This
     allows paths like @@foo to work.
 
-    Raises NotFoundError if path cannot be found and 'default' was not provided.
+    Raises TraversalError if path cannot be found and 'default' was
+    not provided.
+
     """
     if name == '.':
         return obj
@@ -161,12 +163,12 @@ def traversePathElement(obj, name, further_path, default=_marker,
 
         traversable = ITraversable(obj, None)
         if traversable is None:
-            raise NotFoundError('No traversable adapter found', obj)
+            raise TraversalError('No traversable adapter found', obj)
 
     try:
         next_item = traversable.traverse(nm, further_path)
         obj = next_item
-    except NotFoundError:
+    except TraversalError:
         if default != _marker:
             return default
         else:

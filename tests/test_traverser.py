@@ -31,7 +31,7 @@ from zope.app.location.traversing import LocationPhysicallyLocatable
 from zope.app.traversing.adapters import RootPhysicallyLocatable
 from zope.app.container.contained import contained
 
-from zope.exceptions import NotFoundError
+from zope.app.traversing.interfaces import TraversalError
 from zope.security.interfaces import Unauthorized
 from zope.app.servicenames import Adapters
 
@@ -81,7 +81,7 @@ class UnrestrictedNoTraverseTests(unittest.TestCase):
         self.tr = Traverser(root)
 
     def testNoTraversable(self):
-        self.assertRaises(NotFoundError, self.tr.traverse,
+        self.assertRaises(TraversalError, self.tr.traverse,
                           'folder')
 
 class UnrestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
@@ -142,7 +142,7 @@ class UnrestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
             'notFound')
 
     def testNotFoundNoDefault(self):
-        self.assertRaises(NotFoundError, self.tr.traverse, 'foo')
+        self.assertRaises(TraversalError, self.tr.traverse, 'foo')
 
 class RestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
     _oldPolicy = None
@@ -227,7 +227,7 @@ class DefaultTraversableTests(unittest.TestCase):
     def testNotFound(self):
         df = DefaultTraversable(C('dummy'))
 
-        self.assertRaises(NotFoundError, df.traverse, 'bar', [])
+        self.assertRaises(TraversalError, df.traverse, 'bar', [])
 
 def test_suite():
     loader = unittest.TestLoader()

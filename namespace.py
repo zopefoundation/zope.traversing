@@ -17,21 +17,22 @@ $Id$
 """
 import re
 
+from zope.component.exceptions import ComponentLookupError
 import zope.interface
 from zope.interface import providedBy, directlyProvides, directlyProvidedBy
 from zope import component
-from zope.exceptions import NotFoundError
+from zope.app.traversing.interfaces import TraversalError
 from zope.publisher.interfaces.browser import ISkin
 from zope.security.proxy import removeSecurityProxy
 
 from zope.app.publisher.browser import applySkin
 from zope.app.traversing.interfaces import ITraversable, IPathAdapter
 
-class UnexpectedParameters(NotFoundError):
+class UnexpectedParameters(TraversalError):
     "Unexpected namespace parameters were provided."
 
-class ExcessiveWrapping(NotFoundError):
-    "Too many levels of acquisition wrapping. We don't believe them."
+class ExcessiveDepth(TraversalError):
+    "Too many levels of containment. We don't believe them."
 
 def namespaceLookup(ns, name, object, request=None):
     """Lookup a value from a namespace
@@ -72,7 +73,7 @@ def namespaceLookup(ns, name, object, request=None):
          >>> namespaceLookup('fiz', 'bar', C())
          Traceback (most recent call last):
          ...
-         NotFoundError: '++fiz++bar'
+         TraversalError: '++fiz++bar'
 
        We'll get the same thing if we provide a request:
 
@@ -81,7 +82,7 @@ def namespaceLookup(ns, name, object, request=None):
          >>> namespaceLookup('foo', 'bar', C(), request)
          Traceback (most recent call last):
          ...
-         NotFoundError: '++foo++bar'
+         TraversalError: '++foo++bar'
 
        We need to provide a view:
 
@@ -105,7 +106,7 @@ def namespaceLookup(ns, name, object, request=None):
         traverser = component.queryAdapter(object, ITraversable, ns)
 
     if traverser is None:
-        raise NotFoundError("++%s++%s" % (ns, name))
+        raise TraversalError("++%s++%s" % (ns, name))
 
     return traverser.traverse(name, ())
 
@@ -158,7 +159,7 @@ def nsParse(name):
 def getResource(site, name, request):
     resource = queryResource(site, name, request)
     if resource is None:
-        raise NotFoundError(site, name)
+        raise TraversalError(site, name)
     return resource
 
 def queryResource(site, name, request, default=None):
@@ -209,7 +210,7 @@ class acquire(SimpleHandler):
              ...     def traverse(self, name, remaining):
              ...         v = getattr(self, name, None)
              ...         if v is None:
-             ...             raise NotFoundError(name)
+             ...             raise TraversalError(name)
              ...         return v
              ...     def __repr__(self):
              ...         return 'splat'
@@ -237,7 +238,7 @@ class acquire(SimpleHandler):
              >>> adapter.traverse('d', ())
              Traceback (most recent call last):
              ...
-             NotFoundError: (splat, 'd')
+             TraversalError: (splat, 'd')
            """
         i = 0
         ob = self.context
@@ -251,16 +252,16 @@ class acquire(SimpleHandler):
                     next = traversable.traverse(name, path)
                     if path:
                         continue
-                except NotFoundError:
+                except TraversalError:
                     pass
                 else:
                     return next
 
             ob = getattr(ob, '__parent__', None)
             if ob is None:
-                raise NotFoundError(self.context, name)
+                raise TraversalError(self.context, name)
 
-        raise ExcessiveWrapping(self.context, name)
+        raise ExcessiveDepth(self.context, name)
 
 class attr(SimpleHandler):
 
@@ -316,14 +317,18 @@ class etc(SimpleHandler):
             return applicationController
 
         if name not in ('site', 'Services'):
-            raise NotFoundError(ob, name)
+            raise TraversalError(ob, name)
 
         method_name = "getSiteManager"
         method = getattr(ob, method_name, None)
         if method is None:
-            raise NotFoundError(ob, name)
+            raise TraversalError(ob, name)
 
-        return method()
+        try:
+            return method()
+        except ComponentLookupError:
+            raise TraversalError(ob, name)
+            
 
 class view(object):
 
@@ -336,7 +341,7 @@ class view(object):
     def traverse(self, name, ignored):
         view = component.queryView(self.context, name, self.request)
         if view is None:
-            raise NotFoundError(self.context, name)
+            raise TraversalError(self.context, name)
 
         return view
 
@@ -419,7 +424,7 @@ class adapter(SimpleHandler):
              2
              >>> try:
              ...     adapter.traverse('bob', ())
-             ... except NotFoundError:
+             ... except TraversalError:
              ...     print 'no adapter'
              no adapter
 
@@ -430,7 +435,7 @@ class adapter(SimpleHandler):
         try:
             return component.getAdapter(self.context, IPathAdapter, name)
         except:
-            raise NotFoundError(self.context, name)
+            raise TraversalError(self.context, name)
 
 
 class debug(view):

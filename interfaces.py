@@ -17,6 +17,12 @@ $Id$
 """
 from zope.interface import Interface
 
+from zope.exceptions import NotFoundError
+
+class TraversalError(NotFoundError):
+    """There is no object for the name given to a traversal
+    """
+
 class IContainmentRoot(Interface):
     """Marker interface to designate root objects
     """
@@ -66,7 +72,7 @@ class ITraversable(Interface):
         """Get the next item on the path
 
         Should return the item corresponding to 'name' or raise
-        NotFoundError where appropriate.
+        TraversalError where appropriate.
 
         furtherPath is a list of names still to be traversed. This method is
         allowed to change the contents of furtherPath.
@@ -134,8 +140,7 @@ class ITraversalAPI(Interface):
         'request' is passed in when traversing from presentation code. This
         allows paths like @@foo to work.
 
-        Raises NotFoundError if path cannot be found
-        Raises TypeError if place is not context wrapped
+        Raises TraversalError if path cannot be found
 
         Note: calling traverse with a path argument taken from an untrusted
               source, such as an HTTP request form variable, is a bad idea.
@@ -159,7 +164,7 @@ class ITraversalAPI(Interface):
         'request' is passed in when traversing from presentation code. This
         allows paths like @@foo to work.
 
-        Raises NotFoundError if path cannot be found and 'default' was
+        Raises TraversalError if path cannot be found and 'default' was
         not provided.
 
         """

@@ -24,6 +24,7 @@ from zope.exceptions import NotFoundError
 from zope.publisher.interfaces.browser import ISkin
 from zope.security.proxy import removeSecurityProxy
 
+from zope.app.publisher.browser import applySkin
 from zope.app.traversing.interfaces import ITraversable, IPathAdapter
 
 class UnexpectedParameters(NotFoundError):
@@ -351,13 +352,7 @@ class skin(view):
     def traverse(self, name, ignored):
         self.request.shiftNameToApplication()
         skin = component.getUtility(ISkin, name)
-        # Remove all existing skin declarations (commonly the default skin).
-        ifaces = [iface
-                  for iface in directlyProvidedBy(self.request)
-                  if not ISkin.providedBy(iface)]
-        # Add the new skin.
-        ifaces.append(skin)
-        directlyProvides(self.request, *ifaces)
+        applySkin(self.request, skin)
         return self.context
 
 class vh(view):

@@ -20,7 +20,7 @@ import zope.interface
 from zope import component
 from zope.component.servicenames import Presentation
 from zope.exceptions import NotFoundError
-from zope.app.traversing.interfaces import ITraversable
+from zope.app.traversing.interfaces import ITraversable, IPathAdapter
 from zope.proxy import removeAllProxies
 
 class UnexpectedParameters(NotFoundError):
@@ -388,3 +388,43 @@ class vh(view):
         request.setVirtualHostRoot(app_names)
 
         return self.context
+
+
+class adapter(SimpleHandler):
+
+    def traverse(self, name, ignored):
+        """Adapter traversal adapter
+
+           This adapter provides traversal to named adapters registered to
+           provide IPathAdapter.
+
+           To demonstrate this, we need to register some adapters:
+
+             >>> from zope.app.tests.placelesssetup import setUp, tearDown
+             >>> setUp()
+             >>> from zope.app.tests import ztapi
+             >>> def adapter1(ob):
+             ...     return 1
+             >>> def adapter2(ob):
+             ...     return 2
+             >>> ztapi.provideAdapter(None, IPathAdapter, adapter1, 'a1')
+             >>> ztapi.provideAdapter(None, IPathAdapter, adapter2, 'a2')
+
+           Now, with these adapters in place, we can use the traversal adapter:
+
+             >>> ob = object()
+             >>> adapter = adapter(ob)
+             >>> adapter.traverse('a1', ())
+             1
+             >>> adapter.traverse('a2', ())
+             2
+             >>> try:
+             ...     adapter.traverse('bob', ())
+             ... except NotFoundError:
+             ...     print 'no adapter'
+             no adapter
+           """
+        try:
+            return component.getAdapter(self.context, IPathAdapter, name=name)
+        except:
+            raise NotFoundError(self.context, name)

@@ -193,3 +193,6 @@ class ITraversalAPI(Interface):
         Raises ValueError if a badly formed path is given.
         """
 
+class IPathAdapter(Interface):
+    """Marker interface for adapters to be used in paths
+    """

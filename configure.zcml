@@ -40,6 +40,18 @@
     />
 
 <adapter
+    name="adapter"
+    provides="zope.app.traversing.interfaces.ITraversable" for="*"
+    factory="zope.app.traversing.namespace.adapter" 
+    />
+<view
+    name="adapter"
+    type="zope.interface.Interface"
+    provides="zope.app.traversing.interfaces.ITraversable" for="*"
+    factory="zope.app.traversing.namespace.adapter" 
+    />
+
+<adapter
     name="item"
     provides="zope.app.traversing.interfaces.ITraversable" for="*"
     factory="zope.app.traversing.namespace.item" 

@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: testConvenienceFunctions.py,v 1.4 2002/07/11 18:21:34 jim Exp $
+$Id: testConvenienceFunctions.py,v 1.5 2002/07/17 16:54:20 jeremy Exp $
 """
 from unittest import TestCase, TestSuite, main, makeSuite
 from Zope.App.OFS.Services.ServiceManager.tests.PlacefulSetup \
@@ -245,9 +245,7 @@ class Test(PlacefulSetup, TestCase):
         self.assertRaises(ValueError, lau, ('foo','bar',''))
 
 def test_suite():
-    return TestSuite((
-        makeSuite(Test),
-        ))
+    return makeSuite(Test)
 
 if __name__=='__main__':
     main(defaultTest='test_suite')

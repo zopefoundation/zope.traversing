@@ -12,7 +12,7 @@
 #
 ##############################################################################
 """
-$Id: testPhysicalLocationAdapters.py,v 1.2 2002/07/13 14:18:36 jim Exp $
+$Id: testPhysicalLocationAdapters.py,v 1.3 2002/07/17 16:54:20 jeremy Exp $
 """
 
 from unittest import TestCase, TestSuite, main, makeSuite
@@ -94,9 +94,7 @@ class Test(PlacelessSetup, TestCase):
         self.assertRaises(TypeError, adapter.getPhysicalRoot)
 
 def test_suite():
-    return TestSuite((
-        makeSuite(Test),
-        ))
+    return makeSuite(Test)
 
 if __name__=='__main__':
     main(defaultTest='test_suite')

@@ -11,7 +11,8 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""
+"""Adapters for the traversing mechanism
+
 $Id$
 """
 from types import StringTypes, MethodType
@@ -27,10 +28,9 @@ from zope.app.traversing.namespace import namespaceLookup
 from zope.app.traversing.namespace import UnexpectedParameters
 from zope.app.traversing.namespace import nsParse
 
-__metaclass__ = type
 _marker = object()  # opaque marker that doesn't get security proxied
 
-class DefaultTraversable:
+class DefaultTraversable(object):
     """Traverses objects via attribute and item lookup"""
 
     implements(ITraversable)
@@ -60,7 +60,7 @@ class DefaultTraversable:
         else:
             raise NotFoundError(subject, name)
 
-class RootPhysicallyLocatable:
+class RootPhysicallyLocatable(object):
     __doc__ = IPhysicallyLocatable.__doc__
 
     implements(IPhysicallyLocatable)
@@ -87,7 +87,7 @@ class RootPhysicallyLocatable:
         return self
 
 
-class Traverser:
+class Traverser(object):
     """Provide traverse features"""
 
     implements(ITraverser)

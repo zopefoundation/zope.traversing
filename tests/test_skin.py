@@ -11,12 +11,10 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
-"""
+"""Test skin traversal.
 
-Revision information:
 $Id$
 """
-
 from unittest import TestCase, main, makeSuite
 
 class Test(TestCase):
@@ -24,7 +22,7 @@ class Test(TestCase):
     def test(self):
         from zope.app.traversing.namespace import skin
 
-        class FauxRequest:
+        class FauxRequest(object):
             def shiftNameToApplication(self):
                 self.shifted = 1
             skin = ''

@@ -27,15 +27,15 @@ from zope.publisher.browser import TestRequest
 class IContent(Interface):
     pass
 
-class Content:
+class Content(object):
     implements(IContent)
 
-class Resource:
+class Resource(object):
 
     def __init__(self, request):
         pass
 
-class View:
+class View(object):
 
     def __init__(self, content, request):
         self.content = content

@@ -11,7 +11,7 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""
+"""Test traversal convenience functions.
 
 $Id$
 """
@@ -35,7 +35,7 @@ from zope.security.checker import selectChecker
 from zope.exceptions import NotFoundError
 from zope.app.container.contained import contained
 
-class C:
+class C(object):
     __parent__ = None
     __name__ = None
     def __init__(self, name):

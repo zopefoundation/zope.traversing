@@ -11,12 +11,10 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
-"""
+"""Test 'etc' namespace
 
-Revision information:
 $Id$
 """
-
 from unittest import TestCase, main, makeSuite
 from zope.testing.cleanup import CleanUp # Base class w registry cleanup
 
@@ -33,7 +31,7 @@ class Test(CleanUp, TestCase):
 
     def testServices(self):
         from zope.app.traversing.namespace import etc
-        class C:
+        class C(object):
             def getSiteManager(self): return 42
 
         self.assertEqual(etc(C()).traverse('site', ()), 42)

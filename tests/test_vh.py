@@ -15,12 +15,9 @@
 
 $Id$
 """
-
 import unittest
 
-__metaclass__ = type
-
-class TestRequest:
+class TestRequest(object):
 
     def __init__(self, names=None, stack=None):
         self._traversal_stack = stack

@@ -15,7 +15,6 @@
 
 $Id$
 """
-
 from unittest import TestCase, main, makeSuite
 from zope.app.container.contained import contained
 from zope.app.tests import ztapi
@@ -32,7 +31,7 @@ from zope.publisher.http import IHTTPRequest, HTTPCharsets
 class IRoot(Interface):
     pass
 
-class Root:
+class Root(object):
     implements(IRoot)
 
 class TrivialContent(object):

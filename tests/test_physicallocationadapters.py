@@ -29,17 +29,17 @@ from zope.component.interfaces import IServiceService
 from zope.app.site.servicecontainer import ServiceManagerContainer
 
 
-class Root:
+class Root(object):
     implements(IContainmentRoot)
 
     __parent__ = None
 
 
-class C:
+class C(object):
     pass
 
 
-class SiteManager:
+class SiteManager(object):
 
     implements(IServiceService)
 

@@ -11,11 +11,10 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""
+"""Traverser Adapter tests.
 
 $Id$
 """
-
 import unittest
 
 from zope.app.tests import ztapi
@@ -41,7 +40,7 @@ from zope.security.checker \
 from zope.security.management import newInteraction
 from zope.app.container.contained import Contained, contained
 
-class ParticipationStub:
+class ParticipationStub(object):
 
     def __init__(self, principal):
         self.principal = principal

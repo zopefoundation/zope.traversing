@@ -463,11 +463,14 @@ class debug(view):
              unknown debugging flag
 
         """
-        request = self.request
-        for flag in name.split(','):
-            if flag == 'source':
-                request.debug.sourceAnnotations = True
-            else:
-                raise ValueError("Unknown debug flag: %s" % flag)
-        return self.context
+        if __debug__:
+            request = self.request
+            for flag in name.split(','):
+                if flag == 'source':
+                    request.debug.sourceAnnotations = True
+                else:
+                    raise ValueError("Unknown debug flag: %s" % flag)
+            return self.context
+        else:
+            raise ValueError("Debug flags only allowed in debug mode")
 

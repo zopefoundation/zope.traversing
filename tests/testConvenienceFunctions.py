@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: testConvenienceFunctions.py,v 1.5 2002/07/17 16:54:20 jeremy Exp $
+$Id: testConvenienceFunctions.py,v 1.6 2002/08/05 16:27:03 gvanrossum Exp $
 """
 from unittest import TestCase, TestSuite, main, makeSuite
 from Zope.App.OFS.Services.ServiceManager.tests.PlacefulSetup \
@@ -199,8 +199,8 @@ class Test(PlacefulSetup, TestCase):
         self.assertRaises(ValueError, lat, ())
         self.assertEqual(lat(('xx',)), (u'xx',))
         self.assertRaises(ValueError, lat, 23)
-        self.assertRaises(UnicodeError, lat, ('', u'123', '£23'))
-        self.assertRaises(UnicodeError, lat, '£23')
+        self.assertRaises(UnicodeError, lat, ('', u'123', '\xa323'))
+        self.assertRaises(UnicodeError, lat, '\xa323')
         self.assertEqual(lat(u'xx/yy/zz'), loc)
         self.assertEqual(lat(u'/xx/yy/zz'), (u'',)+loc)
         self.assertEqual(lat('xx/yy/zz'), loc)
@@ -226,8 +226,8 @@ class Test(PlacefulSetup, TestCase):
         self.assertRaises(ValueError, lau, ())
         self.assertEqual(lau(('xx',)), u'xx')
         self.assertRaises(ValueError, lau, 23)
-        self.assertRaises(UnicodeError, lau, ('', u'123', '£23'))
-        self.assertRaises(UnicodeError, lau, '£23')
+        self.assertRaises(UnicodeError, lau, ('', u'123', '\xa323'))
+        self.assertRaises(UnicodeError, lau, '\xa323')
         self.assertEqual(lau(u'xx/yy/zz'), loc)
         self.assertEqual(lau(u'/xx/yy/zz'), u'/'+loc)
         self.assertEqual(lau('xx/yy/zz'), loc)

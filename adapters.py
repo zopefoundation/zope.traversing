@@ -12,7 +12,7 @@
 #
 ##############################################################################
 """
-$Id: adapters.py,v 1.13 2003/06/21 21:20:36 jim Exp $
+$Id: adapters.py,v 1.14 2003/08/16 00:44:19 srichter Exp $
 """
 
 from zope.exceptions import NotFoundError
@@ -187,7 +187,6 @@ def traversePathElement(obj, name, further_path, default=_marker,
 
     Raises NotFoundError if path cannot be found and 'default' was not provided.
     """
-
     if name == '.':
         return obj
 

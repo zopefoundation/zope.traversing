@@ -11,10 +11,10 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""
-$Id: test_physicallocationadapters.py,v 1.17 2004/03/06 16:50:32 jim Exp $
-"""
+"""Physical Location Adapter Tests
 
+$Id: test_physicallocationadapters.py,v 1.18 2004/03/13 15:21:36 srichter Exp $
+"""
 from unittest import TestCase, main, makeSuite
 from zope.app.tests.placelesssetup import PlacelessSetup
 from zope.app.tests import ztapi
@@ -26,7 +26,7 @@ from zope.app.location import LocationPhysicallyLocatable
 from zope.app.traversing.adapters import RootPhysicallyLocatable
 from zope.app.container.contained import contained
 from zope.component.interfaces import IServiceService
-from zope.app.services.servicecontainer import ServiceManagerContainer
+from zope.app.site.servicecontainer import ServiceManagerContainer
 
 
 class Root:

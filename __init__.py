@@ -28,6 +28,9 @@ _marker = object()
 def traverse(place, path, default=_marker, request=None):
     """Traverse 'path' relative to 'place'
     
+    'path' can be a string with path segments separated by '/'
+    or a sequence of path segments.
+    
     Raises NotFoundError if path cannot be found
     Raises TypeError if place is not context wrapped
     
@@ -35,6 +38,7 @@ def traverse(place, path, default=_marker, request=None):
           source, such as an HTTP request form variable, is a bad idea.
           It could allow a maliciously constructed request to call 
           code unexpectedly.
+          Consider using traverseName instead.
     """
     if not _isWrapper(place):
         raise TypeError, "Not enough context information to traverse"
@@ -43,6 +47,20 @@ def traverse(place, path, default=_marker, request=None):
         return traverser.traverse(path, request=request)
     else:
         return traverser.traverse(path, default=default, request=request)
+
+def traverseName(obj, name, default=_marker):
+    """Traverse a single step 'name' relative to 'place'
+    
+    'name' must be a string. 'name' will be treated as a single
+    path segment, no matter what characters it contains.
+    
+    Raises NotFoundError if path cannot be found
+    Raises TypeError if place is not context wrapped
+    """
+    # by passing [name] to traverse (above), we ensure that name is
+    # treated as a single path segment, regardless of any '/' characters
+    return traverse(obj, [name], default=default)
+
 
 def objectName(obj):
     """Get the name an object was traversed via

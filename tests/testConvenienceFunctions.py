@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: testConvenienceFunctions.py,v 1.1 2002/06/15 20:38:18 stevea Exp $
+$Id: testConvenienceFunctions.py,v 1.2 2002/06/18 22:14:16 stevea Exp $
 """
 from unittest import TestCase, TestSuite, main, makeSuite
 from Zope.App.OFS.Services.ServiceManager.tests.PlacefulSetup \
@@ -25,6 +25,7 @@ from Zope.App.Traversing.ITraverser import ITraverser
 from Zope.App.Traversing.ITraversable import ITraversable
 from Zope.App.Traversing.DefaultTraversable import DefaultTraversable
 from Zope.App.Traversing.ObjectName import IObjectName, ObjectName
+from Zope.Exceptions import NotFoundError
 
 class C:
     def __init__(self, name):
@@ -70,7 +71,45 @@ class Test(PlacefulSetup, TestCase):
             traverse,
             self.unwrapped_item, '/folder/item'
             )
-        
+
+    def testTraverseName(self):
+        from Zope.App.Traversing import traverseName
+        self.assertEqual(
+            traverseName(self.folder, 'item'),
+            self.tr.traverse('/folder/item')
+            )
+        self.assertEqual(
+            traverseName(self.item, '.'),
+            self.tr.traverse('/folder/item')
+            )
+
+            
+    def testTraverseNameUnwrapped(self):
+        from Zope.App.Traversing import traverseName
+        self.assertRaises(
+            TypeError,
+            traverseName,
+            self.unwrapped_item, 'item'
+            )
+            
+    def testTraverseNameBadValue(self):
+        from Zope.App.Traversing import traverseName
+        self.assertRaises(
+            NotFoundError,
+            traverseName,
+            self.folder, '../root'
+            )
+        self.assertRaises(
+            NotFoundError,
+            traverseName,
+            self.folder, '/root'
+            )
+        self.assertRaises(
+            NotFoundError,
+            traverseName,
+            self.folder, './item'
+            )
+
     def testObjectName(self):
         from Zope.App.Traversing import objectName
         self.assertEqual(

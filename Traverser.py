@@ -13,7 +13,7 @@
 ##############################################################################
 """Default implementation of ITraverser.
 
-$Id: Traverser.py,v 1.4 2002/07/13 14:18:36 jim Exp $
+$Id: Traverser.py,v 1.5 2002/11/11 14:32:16 stevea Exp $
 """
 
 from Zope.ComponentArchitecture import getAdapter
@@ -105,8 +105,7 @@ class Traverser:
                 curr = ContextWrapper(next, curr, name=name)
 
             return curr
-
-        except:
+        except NotFoundError:
             if default == _marker:
                 raise
             return default

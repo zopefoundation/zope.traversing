@@ -22,7 +22,7 @@ from zope.app.tests.functional import BrowserTestCase
 from zope.app.folder import Folder
 from transaction import get_transaction
 from zope.app.publisher.browser.resource import Resource
-from zope.app.traversing import traverse
+from zope.app.traversing.api import traverse
 from zope.security.checker import defineChecker, NoProxy
 from zope.app.container.contained import Contained
 from zope.app.zptpage.zptpage import ZPTPage

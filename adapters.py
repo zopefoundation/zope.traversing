@@ -12,7 +12,7 @@
 #
 ##############################################################################
 """
-$Id: adapters.py,v 1.2 2002/12/30 16:11:57 stevea Exp $
+$Id: adapters.py,v 1.3 2003/03/19 17:55:37 alga Exp $
 """
 
 from zope.exceptions import NotFoundError
@@ -94,12 +94,12 @@ class WrapperPhysicallyLocatable:
     def __init__(self, context):
         self.context = context
 
-    def getPhysicalRoot(self):
+    def getRoot(self):
         "See IPhysicallyLocatable"
         container = getWrapperContainer(self.context)
         if container is None:
             raise TypeError("Not enough context to determine location root")
-        return getAdapter(container, IPhysicallyLocatable).getPhysicalRoot()
+        return getAdapter(container, IPhysicallyLocatable).getRoot()
 
     def getPhysicalPath(self):
         "See IPhysicallyLocatable"
@@ -132,7 +132,7 @@ class RootPhysicallyLocatable:
         "See IPhysicallyLocatable"
         return ('', )
 
-    def getPhysicalRoot(self):
+    def getRoot(self):
         "See IPhysicallyLocatable"
         return self.context
 
@@ -166,7 +166,7 @@ class Traverser:
             # Start at the root
             pop()
             curr = getAdapter(self.context, IPhysicallyLocatable
-                              ).getPhysicalRoot()
+                              ).getRoot()
         try:
             while path:
                 name = pop()

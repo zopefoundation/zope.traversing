@@ -12,7 +12,7 @@
 #
 ##############################################################################
 """
-$Id: test_physicallocationadapters.py,v 1.4 2002/12/28 17:49:34 stevea Exp $
+$Id: test_physicallocationadapters.py,v 1.5 2003/03/19 17:55:37 alga Exp $
 """
 
 from unittest import TestCase, TestSuite, main, makeSuite
@@ -44,11 +44,11 @@ class Test(PlacelessSetup, TestCase):
         adapter = getAdapter(f3, IPhysicallyLocatable)
 
         self.assertEqual(adapter.getPhysicalPath(), ('', 'f1', 'f2', 'f3'))
-        self.assertEqual(adapter.getPhysicalRoot(), root)
+        self.assertEqual(adapter.getRoot(), root)
 
         adapter = getAdapter(C(), IPhysicallyLocatable)
         self.assertRaises(TypeError, adapter.getPhysicalPath)
-        self.assertRaises(TypeError, adapter.getPhysicalRoot)
+        self.assertRaises(TypeError, adapter.getRoot)
 
     def testWSideEffectDataInFront(self):
         provideAdapter(None, IPhysicallyLocatable, WrapperPhysicallyLocatable)
@@ -65,11 +65,11 @@ class Test(PlacelessSetup, TestCase):
         adapter = getAdapter(f3, IPhysicallyLocatable)
 
         self.assertEqual(adapter.getPhysicalPath(), ('', 'f1', 'f2', 'f3'))
-        self.assertEqual(adapter.getPhysicalRoot(), root)
+        self.assertEqual(adapter.getRoot(), root)
 
         adapter = getAdapter(C(), IPhysicallyLocatable)
         self.assertRaises(TypeError, adapter.getPhysicalPath)
-        self.assertRaises(TypeError, adapter.getPhysicalRoot)
+        self.assertRaises(TypeError, adapter.getRoot)
 
     def testWSideEffectDataInMiddle(self):
         provideAdapter(None, IPhysicallyLocatable, WrapperPhysicallyLocatable)
@@ -87,11 +87,11 @@ class Test(PlacelessSetup, TestCase):
         adapter = getAdapter(f3, IPhysicallyLocatable)
 
         self.assertEqual(adapter.getPhysicalPath(), ('', 'f1', 'f2', 'f3'))
-        self.assertEqual(adapter.getPhysicalRoot(), root)
+        self.assertEqual(adapter.getRoot(), root)
 
         adapter = getAdapter(C(), IPhysicallyLocatable)
         self.assertRaises(TypeError, adapter.getPhysicalPath)
-        self.assertRaises(TypeError, adapter.getPhysicalRoot)
+        self.assertRaises(TypeError, adapter.getRoot)
 
 def test_suite():
     return makeSuite(Test)

@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: test_conveniencefunctions.py,v 1.9 2003/02/26 16:56:00 alga Exp $
+$Id: test_conveniencefunctions.py,v 1.10 2003/03/19 17:55:37 alga Exp $
 """
 from unittest import TestCase, main, makeSuite
 from zope.app.services.tests.placefulsetup import PlacefulSetup
@@ -235,9 +235,9 @@ class Test(PlacefulSetup, TestCase):
             )
 
     def testGetPhysicalRoot(self):
-        from zope.app.traversing import getPhysicalRoot
+        from zope.app.traversing import getRoot
         self.assertEqual(
-            getPhysicalRoot(self.item),
+            getRoot(self.item),
             self.root
             )
 

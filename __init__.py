@@ -22,7 +22,7 @@ from types import StringTypes
 
 __all__ = ['traverse', 'traverseName', 'objectName', 'getParent',
            'getParents', 'getPhysicalPath', 'getPhysicalPathString',
-           'getPhysicalRoot', 'locationAsTuple', 'locationAsUnicode']
+           'getRoot', 'locationAsTuple', 'locationAsUnicode']
 
 _marker = object()
 
@@ -37,10 +37,10 @@ def getPhysicalPathString(obj):
     path = getAdapter(obj, IPhysicallyLocatable).getPhysicalPath()
     return locationAsUnicode(path)
 
-def getPhysicalRoot(obj):
+def getRoot(obj):
     """Returns the root of the traversal for the given object.
     """
-    return getAdapter(obj, IPhysicallyLocatable).getPhysicalRoot()
+    return getAdapter(obj, IPhysicallyLocatable).getRoot()
 
 def traverse(place, path, default=_marker, request=None):
     """Traverse 'path' relative to 'place'

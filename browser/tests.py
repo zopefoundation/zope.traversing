@@ -25,6 +25,7 @@ from zope.app.traversing.browser.interfaces import IAbsoluteURL
 from zope.component import getService, getView
 from zope.i18n.interfaces import IUserPreferredCharsets
 from zope.interface import Interface, implements
+from zope.interface.verify import verifyObject
 from zope.publisher.browser import TestRequest
 from zope.publisher.http import IHTTPRequest, HTTPCharsets
 
@@ -48,6 +49,13 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
         ztapi.browserView(IRoot, '', SiteAbsoluteURL, providing=IAbsoluteURL)
         ztapi.provideAdapter(IHTTPRequest, IUserPreferredCharsets,
                              HTTPCharsets)
+
+    def test_interface(self):
+        request = TestRequest()
+        content = contained(TrivialContent(), Root(), name='a')
+        view = getView(content, 'absolute_url', request)
+        
+        verifyObject(IAbsoluteURL, view)
 
     def testBadObject(self):
         request = TestRequest()
@@ -78,6 +86,38 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
                           {'name': 'a', 'url': 'http://127.0.0.1/a'},
                           {'name': 'b', 'url': 'http://127.0.0.1/a/b'},
                           {'name': 'c', 'url': 'http://127.0.0.1/a/b/c'},
+                          ))
+
+    def testBasicContext_unicode(self):
+        #Tests so that AbsoluteURL handle unicode names as well
+        request = TestRequest()
+        root = Root()
+        root.__name__ = u'\u0439'
+
+        content = contained(TrivialContent(), root, name=u'\u0442')
+        content = contained(TrivialContent(), content, name=u'\u0435')
+        content = contained(TrivialContent(), content, name=u'\u0441')
+        view = getView(content, 'absolute_url', request)
+        self.assertEqual(str(view),
+                         'http://127.0.0.1/%D0%B9/%D1%82/%D0%B5/%D1%81')
+        self.assertEqual(view(),
+                         'http://127.0.0.1/%D0%B9/%D1%82/%D0%B5/%D1%81')
+        self.assertEqual(unicode(view),
+                         u'http://127.0.0.1/\u0439/\u0442/\u0435/\u0441')
+        self.assertEqual(absoluteURL(content, request),
+                         'http://127.0.0.1/%D0%B9/%D1%82/%D0%B5/%D1%81')
+
+        breadcrumbs = view.breadcrumbs()
+        self.assertEqual(breadcrumbs,
+                         ({'name':  '', 'url': 'http://127.0.0.1'},
+                          {'name': u'\u0439', 'url': 'http://127.0.0.1/%D0%B9'},
+                          {'name': u'\u0442',
+                           'url': 'http://127.0.0.1/%D0%B9/%D1%82'},
+                          {'name': u'\u0435',
+                           'url': 'http://127.0.0.1/%D0%B9/%D1%82/%D0%B5'},
+                          {'name': u'\u0441',
+                           'url':
+                           'http://127.0.0.1/%D0%B9/%D1%82/%D0%B5/%D1%81'},
                           ))
 
     def testRetainSkin(self):

@@ -19,20 +19,20 @@ from zope.interface import Interface
 
 class IAbsoluteURL(Interface):
 
+    def __unicode__():
+        """Returns the URL as a unicode string."""
+
     def __str__():
-        """Get a human-readable string representation
-        """
+        """Returns an ASCII string with all unicode characters url quoted."""
 
     def __repr__():
-        """Get a string representation
-        """
+        """Get a string representation """
 
     def __call__():
-        """Get a string representation
-        """
+        """Returns an ASCII string with all unicode characters url quoted."""
 
     def breadcrumbs():
-        """Return a tuple like ({'name':name, 'url':url}, ...)
+        """Returns a tuple like ({'name':name, 'url':url}, ...)
 
         Name is the name to display for that segment of the breadcrumbs.
         URL is the link for that segment of the breadcrumbs.
@@ -41,5 +41,4 @@ class IAbsoluteURL(Interface):
 class IAbsoluteURLAPI(Interface):
 
     def absoluteURL(ob, request):
-        """Compute the absolute URL of an object
-        """
+        """Compute the absolute URL of an object """

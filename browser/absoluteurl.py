@@ -15,6 +15,7 @@
 
 $Id$
 """
+import urllib
 
 from zope.app.i18n import ZopeMessageIDFactory as _
 from zope.component import getViewProviding, getView
@@ -28,11 +29,16 @@ _insufficientContext = _("There isn't enough context to get URL information. "
                        "This is probably due to a bug in setting up location "
                        "information.")
 
+_safe = '@+' # Characters that we don't want to have quoted
+
 def absoluteURL(ob, request):
     return str(getViewProviding(ob, IAbsoluteURL, request))
 
 class AbsoluteURL(BrowserView):
     implements(IAbsoluteURL)
+
+    def __unicode__(self):
+        return urllib.unquote(self.__str__()).decode('utf-8')
 
     def __str__(self):
         context = self.context
@@ -54,7 +60,7 @@ class AbsoluteURL(BrowserView):
             raise TypeError, _insufficientContext
 
         if name:
-            url += '/'+name
+            url += '/' + urllib.quote(name.encode('utf-8'), _safe)
 
         return url
 
@@ -81,13 +87,18 @@ class AbsoluteURL(BrowserView):
 
         if name:
             base += ({'name': name,
-                      'url': ("%s/%s" % (base[-1]['url'], name))
+                      'url': ("%s/%s" % (base[-1]['url'],
+                                         urllib.quote(name.encode('utf-8'),
+                                                      _safe)))
                       }, )
 
         return base
 
 class SiteAbsoluteURL(BrowserView):
     implements(IAbsoluteURL)
+
+    def __unicode__(self):
+        return urllib.unquote(self.__str__()).decode('utf-8')
 
     def __str__(self):
         context = self.context
@@ -99,7 +110,7 @@ class SiteAbsoluteURL(BrowserView):
         url = request.getApplicationURL()
         name = getattr(context, '__name__', None)
         if name:
-            url += '/'+name
+            url += '/' + urllib.quote(name.encode('utf-8'), _safe)
 
         return url
 
@@ -114,11 +125,12 @@ class SiteAbsoluteURL(BrowserView):
 
         base = ({'name':'', 'url': self.request.getApplicationURL()}, )
 
-
         name = getattr(context, '__name__', None)
         if name:
             base += ({'name': name,
-                      'url': ("%s/%s" % (base[-1]['url'], name))
+                      'url': ("%s/%s" % (base[-1]['url'],
+                                         urllib.quote(name.encode('utf-8'),
+                                                      _safe)))
                       }, )
 
         return base

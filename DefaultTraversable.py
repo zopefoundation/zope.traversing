@@ -15,6 +15,7 @@ from ITraversable import ITraversable
 from Zope.Exceptions import NotFoundError
 from Exceptions import UnexpectedParameters
 
+_marker = object()  # opaque marker that doesn't get security proxied
 class DefaultTraversable:
     """Traverses objects via attribute and item lookup"""
 
@@ -27,8 +28,8 @@ class DefaultTraversable:
         if parameters:
             raise UnexpectedParameters(parameters)
         subject = self._subject
-        r = getattr(subject, name, self) # self used as marker
-        if r is not self:
+        r = getattr(subject, name, _marker)
+        if r is not _marker:
             return r
         
         if hasattr(subject, '__getitem__'):

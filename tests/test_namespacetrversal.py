@@ -13,7 +13,7 @@
 ##############################################################################
 """Traversal Namespace Tests
 
-$Id: test_namespacetrversal.py,v 1.9 2003/08/08 18:07:44 jim Exp $
+$Id: test_namespacetrversal.py,v 1.10 2004/04/17 17:15:35 jim Exp $
 """
 
 from unittest import TestCase, main, makeSuite
@@ -28,7 +28,7 @@ class C:
 
 c=C()
 
-def noop(name, parameters, pname, ob, request):
+def noop(name, ob, request):
     return ob
 
 
@@ -60,7 +60,12 @@ class Test(CleanUp, TestCase):
 
 
 def test_suite():
-    return makeSuite(Test)
+    suite = makeSuite(Test)
+    from doctest import DocTestSuite
+    suite.addTest(DocTestSuite('zope.app.traversing.namespace'))
+    return suite
+
+
 
 
 if __name__ == '__main__':

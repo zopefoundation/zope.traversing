@@ -14,7 +14,7 @@
 """
 
 Revision information:
-$Id: test_skin.py,v 1.5 2003/08/08 18:07:50 jim Exp $
+$Id: test_skin.py,v 1.6 2004/04/17 17:15:35 jim Exp $
 """
 
 from unittest import TestCase, main, makeSuite
@@ -33,7 +33,7 @@ class Test(TestCase):
 
         request = FauxRequest()
         ob = object()
-        ob2 = skin('foo', (), '++skin++foo', ob, request)
+        ob2 = skin('foo', ob, request)
         self.assertEqual(ob, ob2)
         self.assertEqual(request.skin, 'foo')
         self.assertEqual(request.shifted, 1)

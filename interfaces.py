@@ -13,7 +13,7 @@
 ##############################################################################
 """Interfaces to do with traversing.
 
-$Id: interfaces.py,v 1.1 2004/03/13 21:03:23 srichter Exp $
+$Id: interfaces.py,v 1.2 2004/04/17 17:15:34 jim Exp $
 """
 from zope.interface import Interface
 
@@ -23,7 +23,7 @@ class IContainmentRoot(Interface):
 
 class INamespaceHandler(Interface):
 
-    def __call__(name, parameters, pname, object, request):
+    def __call__(name, object, request):
         """Access a name in a namespace
 
         The name lookup usually depends on an object and/or a
@@ -61,15 +61,11 @@ class IPhysicallyLocatable(Interface):
 class ITraversable(Interface):
     """To traverse an object, this interface must be provided"""
 
-    def traverse(name, parameters, pname, furtherPath):
+    def traverse(name, furtherPath):
         """Get the next item on the path
 
         Should return the item corresponding to 'name' or raise
         NotFoundError where appropriate.
-
-        The parameters provided, are passed as a sequence of
-        name, value items.  The 'pname' argument has the original name
-        before parameters were removed.
 
         furtherPath is a list of names still to be traversed. This method is
         allowed to change the contents of furtherPath.

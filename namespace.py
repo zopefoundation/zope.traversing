@@ -13,7 +13,7 @@
 ##############################################################################
 """URL Namespace Implementations
 
-$Id: namespace.py,v 1.27 2004/03/13 21:03:23 srichter Exp $
+$Id: namespace.py,v 1.28 2004/04/17 17:15:34 jim Exp $
 """
 import re
 from zope.app import zapi
@@ -36,12 +36,12 @@ _namespace_handlers = {}
 def provideNamespaceHandler(ns, handler):
     _namespace_handlers[ns] = handler
 
-def namespaceLookup(name, ns, qname, parameters, object, request=None):
+def namespaceLookup(ns, qname, object, request=None):
     """Lookup a value from a namespace
 
     name -- the original name
     ns -- The namespace
-    qname -- The name without any parameters
+    qname -- The name without the namespace
 
     The resulting object is returned in the context of the original.
     This means that the caller should *not* wrap the result.
@@ -51,23 +51,42 @@ def namespaceLookup(name, ns, qname, parameters, object, request=None):
     if handler is None:
         raise NotFoundError(name)
 
-    new = handler(qname, parameters, name, object, request)
+    new = handler(qname, object, request)
 
     return new
 
 
 namespace_pattern = re.compile('[+][+]([a-zA-Z0-9_]+)[+][+]')
 
-def parameterizedNameParse(name):
-    """Parse a name with parameters, including namespace parameters.
+def nsParse(name):
+    """Parse a namespace-qualified name into a namespace name and a name
 
-    Return:
+    Returns the namespace name and a name.
 
-    - namespace, or None if there isn't one.
+    A namespace-qualified name is usually of the form ++ns++name, as in:
 
-    - unparameterized name.
+    >>> nsParse('++acquire++foo')
+    ('acquire', 'foo')
 
-    - sequence of parameters, as name-value pairs.
+    The part inside the +s must be an identifier, so:
+
+    >>> nsParse('++hello world++foo')
+    ('', '++hello world++foo')
+    >>> nsParse('+++acquire+++foo')
+    ('', '+++acquire+++foo')
+    
+
+    But it may also be a @@foo, which implies the view namespace:
+    
+    >>> nsParse('@@foo')
+    ('view', 'foo')
+
+    >>> nsParse('@@@foo')
+    ('view', '@foo')
+
+    >>> nsParse('@foo')
+    ('', '@foo')
+
     """
 
     ns = ''
@@ -80,7 +99,7 @@ def parameterizedNameParse(name):
             prefix, ns = match.group(0, 1)
             name = name[len(prefix):]
 
-    return ns, name, ()
+    return ns, name
 
 def getResourceInContext(ob, name, request):
     resource = queryResourceInContext(ob, name, request)
@@ -106,10 +125,7 @@ def queryResourceInContext(ob, name, request, default=None):
 
 # ---- namespace processors below ----
 
-def acquire(name, parameters, pname, ob, request):
-    if parameters:
-        raise UnexpectedParameters(parameters)
-
+def acquire(name, ob, request):
     i = 0
     origOb = ob
     while i < 200:
@@ -120,7 +136,7 @@ def acquire(name, parameters, pname, ob, request):
             try:
                 # XXX what do we do if the path gets bigger?
                 path = []
-                next = traversable.traverse(name, parameters, pname, path)
+                next = traversable.traverse(name, path)
                 if path:
                     continue
             except NotFoundError:
@@ -130,24 +146,20 @@ def acquire(name, parameters, pname, ob, request):
 
         ob = getattr(ob, '__parent__', None)
         if ob is None:
-            raise NotFoundError(origOb, pname)
+            raise NotFoundError(origOb, name)
 
-    raise ExcessiveWrapping(origOb, pname)
+    raise ExcessiveWrapping(origOb, name)
 
-def attr(name, parameters, pname, ob, request):
-    if parameters:
-        raise UnexpectedParameters(parameters)
+def attr(name, ob, request):
     return getattr(ob, name)
 
-def item(name, parameters, pname, ob, request):
-    if parameters:
-        raise UnexpectedParameters(parameters)
+def item(name, ob, request):
     return ob[name]
 
 from zope.app.applicationcontrol.applicationcontrol \
     import applicationController
 from zope.app.traversing.interfaces import IContainmentRoot
-def etc(name, parameters, pname, ob, request):
+def etc(name, ob, request):
     # XXX
 
     # This is here now to allow us to get service managers from a
@@ -160,30 +172,25 @@ def etc(name, parameters, pname, ob, request):
     # not all get methods may satisfy this assumption. It might be
     # best to introduce some sort of etc registry.
 
-    if parameters:
-        raise UnexpectedParameters(parameters)
-
     if (name in ('process', 'ApplicationController')
         and IContainmentRoot.providedBy(ob)):
         return applicationController
 
     if name not in ('site', 'Services'):
-        raise NotFoundError(ob, pname, request)
+        raise NotFoundError(ob, name, request)
 
     method_name = "getSiteManager"
     method = getattr(ob, method_name, None)
     if method is None:
-        raise NotFoundError(ob, pname, request)
+        raise NotFoundError(ob, name, request)
 
     return method()
 
-def help(name, parameters, pname, ob, request):
+def help(name, ob, request):
     """Used to traverse to an online help topic."""
     return zapi.getService(ob, 'OnlineHelp')
 
-def view(name, parameters, pname, ob, request):
-    if parameters:
-        raise UnexpectedParameters(parameters)
+def view(name, ob, request):
     if not request:
         raise NoRequest(pname)
     view = zapi.queryView(ob, name, request)
@@ -192,23 +199,17 @@ def view(name, parameters, pname, ob, request):
 
     return view
 
-def resource(name, parameters, pname, ob, request):
-    if parameters:
-        raise UnexpectedParameters(parameters)
+def resource(name, ob, request):
     if not request:
         raise NoRequest(pname)
 
     resource = queryResourceInContext(ob, name, request)
     if resource is None:
-        raise NotFoundError(ob, pname)
+        raise NotFoundError(ob, name)
 
     return resource
 
-def skin(name, parameters, pname, ob, request):
-
-    if parameters:
-        raise UnexpectedParameters(parameters)
-
+def skin(name, ob, request):
     if not request:
         raise NoRequest(pname)
 
@@ -217,7 +218,7 @@ def skin(name, parameters, pname, ob, request):
 
     return ob
 
-def vh(name, parameters, pname, ob, request):
+def vh(name, ob, request):
 
     traversal_stack = request.getTraversalStack()
     app_names = []

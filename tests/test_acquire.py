@@ -14,7 +14,7 @@
 """
 
 Revision information:
-$Id: test_acquire.py,v 1.10 2004/03/13 21:03:23 srichter Exp $
+$Id: test_acquire.py,v 1.11 2004/04/17 17:15:35 jim Exp $
 """
 
 from unittest import TestCase, main, makeSuite
@@ -44,12 +44,11 @@ class Test(PlacelessSetup, TestCase):
         a21 = a.a2.a21
         a211 = a.a2.a21.a211
 
-        acquired = acquire('a1', (), 'a1;acquire', a211, None)
+        acquired = acquire('a1', a211, None)
 
         self.assertEqual(acquired.name, 'a1')
 
-        self.assertRaises(NotFoundError,
-                          acquire, 'a3', (), 'a1;acquire', a211, None)
+        self.assertRaises(NotFoundError, acquire, 'a3', a211, None)
 
 
 

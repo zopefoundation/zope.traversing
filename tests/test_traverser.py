@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: test_traverser.py,v 1.18 2004/03/13 23:55:28 srichter Exp $
+$Id: test_traverser.py,v 1.19 2004/04/17 17:15:35 jim Exp $
 """
 
 import unittest
@@ -210,7 +210,7 @@ class DefaultTraversableTests(unittest.TestCase):
         df = DefaultTraversable(root)
 
         further = []
-        next = df.traverse('item', (), 'item', further)
+        next = df.traverse('item', further)
         self.failUnless(next is item)
         self.assertEquals(further, [])
 
@@ -221,14 +221,14 @@ class DefaultTraversableTests(unittest.TestCase):
         df = DefaultTraversable(dict)
 
         further = []
-        next = df.traverse('foo', (), 'foo', further)
+        next = df.traverse('foo', further)
         self.failUnless(next is foo)
         self.assertEquals(further, [])
 
     def testNotFound(self):
         df = DefaultTraversable(C('dummy'))
 
-        self.assertRaises(NotFoundError, df.traverse, 'bar', (), 'bar', [])
+        self.assertRaises(NotFoundError, df.traverse, 'bar', [])
 
 def test_suite():
     loader = unittest.TestLoader()

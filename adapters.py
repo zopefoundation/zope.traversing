@@ -12,7 +12,7 @@
 #
 ##############################################################################
 """
-$Id: adapters.py,v 1.19 2004/03/13 21:03:23 srichter Exp $
+$Id: adapters.py,v 1.20 2004/04/17 17:15:34 jim Exp $
 """
 
 from zope.exceptions import NotFoundError
@@ -23,7 +23,7 @@ from zope.app.traversing.interfaces import ITraverser, ITraversable
 
 from zope.app.traversing.namespace import namespaceLookup
 from zope.app.traversing.namespace import UnexpectedParameters
-from zope.app.traversing.namespace import parameterizedNameParse
+from zope.app.traversing.namespace import nsParse
 
 from zope.interface import implements
 
@@ -40,9 +40,7 @@ class DefaultTraversable:
     def __init__(self, subject):
         self._subject = subject
 
-    def traverse(self, name, parameters, pname, furtherPath):
-        if parameters:
-            raise UnexpectedParameters(parameters)
+    def traverse(self, name, furtherPath):
         subject = self._subject
         r = getattr(subject, name, _marker)
         if r is not _marker:
@@ -156,9 +154,9 @@ def traversePathElement(obj, name, further_path, default=_marker,
         return obj
 
     if name and name[:1] in '@+':
-        ns, nm, parms = parameterizedNameParse(name)
+        ns, nm = nsParse(name)
         if ns:
-            return namespaceLookup(name, ns, nm, parms, obj, request)
+            return namespaceLookup(ns, nm, obj, request)
     else:
         parms = ()
         nm = name
@@ -173,7 +171,7 @@ def traversePathElement(obj, name, further_path, default=_marker,
             raise NotFoundError('No traversable adapter found', obj)
 
     try:
-        next_item = traversable.traverse(nm, parms, name, further_path)
+        next_item = traversable.traverse(nm, further_path)
         obj = next_item
     except NotFoundError:
         if default != _marker:

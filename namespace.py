@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: namespace.py,v 1.7 2003/03/06 22:13:29 jim Exp $
+$Id: namespace.py,v 1.8 2003/03/13 17:10:38 gvanrossum Exp $
 """
 
 from zope.interface import Interface
@@ -26,7 +26,7 @@ from zope.component import queryDefaultViewName, queryView, getService
 from zope.app.services.servicenames import Resources
 
 from zope.app.interfaces.traversing import ITraversable
-from zope.app.interfaces.services.service import INameResolver
+from zope.app.interfaces.services.module import IModuleService
 
 import re
 
@@ -209,7 +209,7 @@ def etc(name, parameters, pname, ob, request):
 def module(name, parameters, pname, ob, request):
     """Used to traverse to a module (in dot notation)"""
     servicemanager = getServiceManager(ob)
-    adapter = getAdapter(servicemanager, INameResolver)
+    adapter = getAdapter(servicemanager, IModuleService)
     if adapter is not None:
         ob = adapter.resolve(name)
     if queryDefaultViewName(ob, request) is None:

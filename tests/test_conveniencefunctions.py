@@ -13,14 +13,14 @@
 ##############################################################################
 """
 
-$Id: test_conveniencefunctions.py,v 1.7 2003/02/11 16:00:03 sidnei Exp $
+$Id: test_conveniencefunctions.py,v 1.8 2003/02/12 02:17:40 seanb Exp $
 """
 from unittest import TestCase, main, makeSuite
 from zope.app.services.tests.placefulsetup import PlacefulSetup
 from zope.proxy.context import ContextWrapper
 from zope.app.traversing.adapters import Traverser
 from zope.component import getService
-from zope.component.servicenames import Adapters
+from zope.app.services.servicenames import Adapters
 from zope.app.interfaces.traversing import ITraverser, ITraversable
 from zope.app.interfaces.traversing import IObjectName
 from zope.app.traversing.adapters import DefaultTraversable, ObjectName

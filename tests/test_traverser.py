@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: test_traverser.py,v 1.7 2003/02/11 16:00:03 sidnei Exp $
+$Id: test_traverser.py,v 1.8 2003/02/12 02:17:40 seanb Exp $
 """
 
 import unittest
@@ -28,7 +28,7 @@ from zope.app.traversing.adapters import RootPhysicallyLocatable
 from zope.proxy.context import ContextWrapper
 from zope.exceptions import NotFoundError, Unauthorized
 from zope.component import getService
-from zope.component.servicenames import Adapters
+from zope.app.services.servicenames import Adapters
 
 from zope.interface.verify import verifyClass
 from zope.interface.implements import instancesOfObjectImplements

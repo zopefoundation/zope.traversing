@@ -14,7 +14,7 @@
 """
 
 Revision information:
-$Id: ParameterParsing.py,v 1.3 2002/10/28 11:34:04 stevea Exp $
+$Id: ParameterParsing.py,v 1.4 2002/12/17 19:04:04 stevea Exp $
 """
 
 import re
@@ -28,7 +28,7 @@ def parameterizedNameParse(name):
     
     - namespace, or None if there isn't one.
     
-    - unparameterized name
+    - unparameterized name.
     
     - sequence of parameters, as name-value pairs.
     """

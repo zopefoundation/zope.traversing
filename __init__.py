@@ -14,7 +14,7 @@
 """
 Convenience functions for traversing the object tree.
 
-$Id: __init__.py,v 1.27 2004/03/13 21:03:23 srichter Exp $
+$Id$
 """
 
 from zope.interface import moduleProvides

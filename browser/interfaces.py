@@ -13,7 +13,7 @@
 ##############################################################################
 """Browser traversal interfaces
 
-$Id: interfaces.py,v 1.3 2004/04/27 10:53:50 jim Exp $
+$Id$
 """
 from zope.interface import Interface
 

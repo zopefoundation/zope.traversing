@@ -13,7 +13,7 @@
 ##############################################################################
 """Traversal Namespace Tests
 
-$Id: test_namespacetrversal.py,v 1.11 2004/04/18 16:00:34 jim Exp $
+$Id$
 """
 
 def test_suite():

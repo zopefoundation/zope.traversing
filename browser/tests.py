@@ -13,7 +13,7 @@
 ##############################################################################
 """Test the AbsoluteURL view
 
-$Id: tests.py,v 1.2 2004/05/10 06:35:42 philikon Exp $
+$Id$
 """
 
 from unittest import TestCase, main, makeSuite

@@ -13,7 +13,7 @@
 ##############################################################################
 """Absolute URL View components
 
-$Id: __init__.py,v 1.5 2004/04/27 10:53:48 jim Exp $
+$Id$
 """
 
 from zope.app.traversing.browser.absoluteurl import AbsoluteURL

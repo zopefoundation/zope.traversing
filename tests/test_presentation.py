@@ -14,7 +14,7 @@
 """
 
 Revision information:
-$Id: test_presentation.py,v 1.9 2004/04/18 16:00:35 jim Exp $
+$Id$
 """
 
 from unittest import TestCase, main, makeSuite

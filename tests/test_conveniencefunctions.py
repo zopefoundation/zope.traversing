@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: test_conveniencefunctions.py,v 1.24 2004/03/13 23:55:28 srichter Exp $
+$Id$
 """
 from unittest import TestCase, main, makeSuite
 from zope.app.tests import ztapi

@@ -13,7 +13,7 @@
 ##############################################################################
 """Virtual hosting namespace tests.
 
-$Id: test_vh.py,v 1.4 2004/04/18 16:00:35 jim Exp $
+$Id$
 """
 
 import unittest

@@ -13,7 +13,7 @@
 ##############################################################################
 """Physical Location Adapter Tests
 
-$Id: test_physicallocationadapters.py,v 1.19 2004/03/13 21:03:23 srichter Exp $
+$Id$
 """
 from unittest import TestCase, main, makeSuite
 from zope.app.tests.placelesssetup import PlacelessSetup

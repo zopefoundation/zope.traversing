@@ -12,7 +12,7 @@
 #
 ##############################################################################
 """
-$Id: adapters.py,v 1.21 2004/05/05 08:38:03 philikon Exp $
+$Id$
 """
 from types import StringTypes, MethodType
 

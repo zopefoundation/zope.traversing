@@ -13,7 +13,7 @@
 ##############################################################################
 """Functional tests for virtual hosting.
 
-$Id: test_vhosting.py,v 1.12 2004/04/06 20:58:11 jim Exp $
+$Id$
 """
 
 import unittest

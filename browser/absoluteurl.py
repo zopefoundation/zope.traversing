@@ -13,7 +13,7 @@
 ##############################################################################
 """Absolute URL View components
 
-$Id: absoluteurl.py,v 1.2 2004/05/10 06:35:42 philikon Exp $
+$Id$
 """
 
 from zope.app.i18n import ZopeMessageIDFactory as _

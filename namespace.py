@@ -13,7 +13,7 @@
 ##############################################################################
 """URL Namespace Implementations
 
-$Id: namespace.py,v 1.29 2004/04/18 16:00:33 jim Exp $
+$Id$
 """
 import re
 import zope.interface

@@ -13,7 +13,7 @@
 ##############################################################################
 """Test the AbsoluteURL view
 
-$Id: tests.py,v 1.1 2004/04/27 10:53:55 jim Exp $
+$Id: tests.py,v 1.2 2004/05/10 06:35:42 philikon Exp $
 """
 
 from unittest import TestCase, main, makeSuite
@@ -28,9 +28,8 @@ from zope.interface import Interface, implements
 from zope.publisher.browser import TestRequest
 from zope.publisher.http import IHTTPRequest, HTTPCharsets
 
-
-
-class IRoot(Interface): pass
+class IRoot(Interface):
+    pass
 
 class Root:
     implements(IRoot)

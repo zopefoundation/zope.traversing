@@ -13,7 +13,7 @@
 ##############################################################################
 """Absolute URL View components
 
-$Id: absoluteurl.py,v 1.1 2004/04/27 10:53:49 jim Exp $
+$Id: absoluteurl.py,v 1.2 2004/05/10 06:35:42 philikon Exp $
 """
 
 from zope.app.i18n import ZopeMessageIDFactory as _
@@ -28,7 +28,6 @@ _insufficientContext = _("There isn't enough context to get URL information. "
                        "This is probably due to a bug in setting up location "
                        "information.")
 
-
 def absoluteURL(ob, request):
     return str(getViewProviding(ob, IAbsoluteURL, request))
 
@@ -38,7 +37,6 @@ class AbsoluteURL(BrowserView):
     def __str__(self):
         context = self.context
         request = self.request
-
 
         # The application URL contains all the namespaces that are at the
         # beginning of the URL, such as skins, virtual host specifications and
@@ -51,7 +49,6 @@ class AbsoluteURL(BrowserView):
             raise TypeError, _insufficientContext
 
         url = str(getView(container, 'absolute_url', request))
-
         name = getattr(context, '__name__', None)
         if name is None:
             raise TypeError, _insufficientContext
@@ -100,7 +97,6 @@ class SiteAbsoluteURL(BrowserView):
             return request.getApplicationURL()
 
         url = request.getApplicationURL()
-
         name = getattr(context, '__name__', None)
         if name:
             url += '/'+name

@@ -22,7 +22,7 @@ from zope.app.folder import Folder
 from transaction import get_transaction
 from zope.app.publisher.browser.resource import Resource
 from zope.app.traversing.api import traverse
-from zope.security.checker import defineChecker, NoProxy
+from zope.security.checker import defineChecker, NamesChecker, NoProxy
 from zope.app.container.contained import Contained
 from zope.app.zptpage.zptpage import ZPTPage
 
@@ -125,6 +125,7 @@ class TestVirtualHosting(BrowserTestCase):
 
     def test_resources(self):
         ztapi.browserResource('quux', Resource)
+        defineChecker(Resource, NamesChecker(['__call__']))
         self.addPage('/foo/bar/pt',
                      u'<span tal:replace="context/++resource++quux" />')
         self.verify('/foo/bar/pt', 'http://localhost/@@/quux\n')

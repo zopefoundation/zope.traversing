@@ -13,13 +13,13 @@
 ##############################################################################
 """URL Namespace Implementations
 
-$Id: namespace.py,v 1.23 2004/02/24 14:11:17 srichter Exp $
+$Id: namespace.py,v 1.24 2004/02/24 16:51:05 philikon Exp $
 """
+import re
 from zope.app import zapi
 from zope.exceptions import NotFoundError
 from zope.app.interfaces.traversing import ITraversable
 from zope.proxy import removeAllProxies
-import re
 
 class UnexpectedParameters(NotFoundError):
     "Unexpected namespace parameters were provided."
@@ -146,7 +146,7 @@ def item(name, parameters, pname, ob, request):
 
 from zope.app.applicationcontrol.applicationcontrol \
     import applicationController
-from zope.app.interfaces.content.folder import IRootFolder
+from zope.app.interfaces.traversing import IContainmentRoot
 def etc(name, parameters, pname, ob, request):
     # XXX
 
@@ -164,7 +164,7 @@ def etc(name, parameters, pname, ob, request):
         raise UnexpectedParameters(parameters)
 
     if (name in ('process', 'ApplicationController')
-        and IRootFolder.isImplementedBy(ob)):
+        and IContainmentRoot.isImplementedBy(ob)):
         return applicationController
 
     if name not in ('site', 'Services'):

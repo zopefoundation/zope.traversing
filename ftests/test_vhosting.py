@@ -13,7 +13,7 @@
 ##############################################################################
 """Functional tests for virtual hosting.
 
-$Id: test_vhosting.py,v 1.8 2003/09/02 20:47:18 jim Exp $
+$Id: test_vhosting.py,v 1.9 2003/09/21 17:33:46 jim Exp $
 """
 
 import unittest
@@ -26,14 +26,13 @@ from zope.publisher.interfaces.browser import IBrowserPresentation
 from zope.app.publisher.browser.resource import Resource
 from zope.app.traversing import traverse
 from zope.security.checker import defineChecker, NoProxy
-from zope.context import ContextMethod
+from zope.app.container.contained import Contained
 
 __metaclass__ = type
 
-class MyObj:
-    def __getitem__(wrapped_self, key):
-        return traverse(wrapped_self, '/foo/bar/' + key)
-    __getitem__ = ContextMethod(__getitem__)
+class MyObj(Contained):
+    def __getitem__(self, key):
+        return traverse(self, '/foo/bar/' + key)
 
 defineChecker(MyObj, NoProxy)
 
@@ -132,9 +131,9 @@ class TestVirtualHosting(BrowserTestCase):
         provideResource('quux', IBrowserPresentation, Resource)
         self.addPage('/foo/bar/pt',
                      u'<span tal:replace="context/++resource++quux" />')
-        self.verify('/foo/bar/pt', '/@@/quux\n')
+        self.verify('/foo/bar/pt', 'http://localhost/@@/quux\n')
         self.verify('/foo/++vh++https:otherhost:443/fake/folders/++/bar/pt',
-                    '/fake/folders/@@/quux\n')
+                    'https://otherhost/fake/folders/@@/quux\n')
 
     def createFolders(self, path):
         """addFolders('/a/b/c/d') would traverse and/or create three nested
@@ -148,13 +147,13 @@ class TestVirtualHosting(BrowserTestCase):
             try:
                 folder = folder[id]
             except KeyError:
-                folder.setObject(id, Folder())
+                folder[id] = Folder()
                 folder = folder[id]
         return folder, path[-1]
 
     def createObject(self, path, obj):
         folder, id = self.createFolders(path)
-        folder.setObject(id, obj)
+        folder[id] = obj
         get_transaction().commit()
 
     def addPage(self, path, content):

@@ -14,9 +14,9 @@
 """Test the ObjectName adapter
 
 Revision information:
-$Id: test_objectname.py,v 1.6 2003/02/12 02:17:40 seanb Exp $
+$Id: test_objectname.py,v 1.7 2003/05/01 19:35:38 faassen Exp $
 """
-from unittest import TestCase, TestSuite, main, makeSuite
+from unittest import TestCase, main, makeSuite
 from zope.interface import Interface
 
 from zope.app.tests.placelesssetup import PlacelessSetup
@@ -25,7 +25,7 @@ from zope.app.services.servicenames import Adapters
 
 from zope.proxy.context import ContextWrapper
 from zope.app.interfaces.traversing import IObjectName
-from zope.app.traversing.adapters import ObjectName, SiteObjectName
+from zope.app.traversing.adapters import ObjectName
 
 class IRoot(Interface): pass
 

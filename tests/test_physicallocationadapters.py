@@ -12,10 +12,10 @@
 #
 ##############################################################################
 """
-$Id: test_physicallocationadapters.py,v 1.6 2003/03/19 19:57:34 alga Exp $
+$Id: test_physicallocationadapters.py,v 1.7 2003/05/01 19:35:38 faassen Exp $
 """
 
-from unittest import TestCase, TestSuite, main, makeSuite
+from unittest import TestCase, main, makeSuite
 from zope.app.tests.placelesssetup import PlacelessSetup
 from zope.component.adapter import provideAdapter
 from zope.component import getAdapter

@@ -14,15 +14,15 @@
 """
 
 Revision information:
-$Id: test_acquire.py,v 1.4 2002/12/28 17:49:34 stevea Exp $
+$Id: test_acquire.py,v 1.5 2003/05/01 19:35:38 faassen Exp $
 """
 
-from unittest import TestCase, TestSuite, main, makeSuite
+from unittest import TestCase, main, makeSuite
 from zope.app.tests.placelesssetup import PlacelessSetup
 from zope.app.interfaces.traversing import ITraversable
 from zope.app.traversing.adapters import DefaultTraversable
 from zope.component.adapter import provideAdapter
-from zope.proxy.context import ContextWrapper, getWrapperContext
+from zope.proxy.context import ContextWrapper
 from zope.app.traversing.namespace import acquire
 from zope.exceptions import NotFoundError
 

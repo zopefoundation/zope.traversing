@@ -14,10 +14,10 @@
 """
 
 Revision information:
-$Id: test_namespacetrversal.py,v 1.3 2002/12/28 17:49:34 stevea Exp $
+$Id: test_namespacetrversal.py,v 1.4 2003/05/01 19:35:38 faassen Exp $
 """
 
-from unittest import TestCase, TestSuite, main, makeSuite
+from unittest import TestCase, main, makeSuite
 from zope.testing.cleanup import CleanUp # Base class w registry cleanup
 
 class C:

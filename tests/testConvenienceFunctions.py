@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: testConvenienceFunctions.py,v 1.7 2002/11/26 13:14:50 stevea Exp $
+$Id: testConvenienceFunctions.py,v 1.8 2002/11/26 19:00:21 stevea Exp $
 """
 from unittest import TestCase, TestSuite, main, makeSuite
 from Zope.App.OFS.Services.ServiceManager.tests.PlacefulSetup \
@@ -49,7 +49,7 @@ class Test(PlacefulSetup, TestCase):
         folder = C('folder')
         item = C('item')
         
-        self.root =   root
+        self.root =   ContextWrapper(root, None)
         self.folder = ContextWrapper(folder, self.root,   name='folder')
         self.item =   ContextWrapper(item,   self.folder, name='item')
         self.unwrapped_item = item
@@ -119,7 +119,7 @@ class Test(PlacefulSetup, TestCase):
         self.assertEqual(
             objectName(self.item),
             'item'
-            )  
+            )
 
     def testObjectNameFromUnwrapped(self):
         from Zope.App.Traversing import objectName
@@ -127,14 +127,14 @@ class Test(PlacefulSetup, TestCase):
             TypeError,
             objectName,
             self.unwrapped_item
-            )  
+            )
 
     def testGetParent(self):
         from Zope.App.Traversing import getParent
         self.assertEqual(
             getParent(self.item),
             self.folder
-            )  
+            ) 
 
     def testGetParentFromUnwrapped(self):
         from Zope.App.Traversing import getParent
@@ -142,7 +142,7 @@ class Test(PlacefulSetup, TestCase):
             TypeError,
             getParent,
             self.unwrapped_item
-            )  
+            )
 
     def testGetParents(self):
         from Zope.App.Traversing import getParents
@@ -164,6 +164,27 @@ class Test(PlacefulSetup, TestCase):
         self.assertEqual(
             getPhysicalPath(self.item),
             ('', 'folder', 'item')
+            )
+
+    def testGetPhysicalPathString(self):
+        from Zope.App.Traversing import getPhysicalPathString
+        self.assertEqual(
+            getPhysicalPathString(self.item),
+            u'/folder/item'
+            )
+
+    def testGetPhysicalPathOfRoot(self):
+        from Zope.App.Traversing import getPhysicalPath
+        self.assertEqual(
+            getPhysicalPath(self.root),
+            ('',)
+            )
+
+    def testGetPhysicalPathStringOfRoot(self):
+        from Zope.App.Traversing import getPhysicalPathString
+        self.assertEqual(
+            getPhysicalPathString(self.root),
+            u'/',
             )
 
     def testGetPhysicalPathFromUnwrapped(self):

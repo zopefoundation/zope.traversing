@@ -113,7 +113,7 @@ def getPhysicalPathString(obj):
         raise TypeError, "Not enough context information to traverse"
     
     path = _getAdapter(obj, _IPhysicallyLocatable).getPhysicalPath()
-    return '/'.join(path)
+    return locationAsUnicode(path)
     
     
 def getPhysicalRoot(obj):

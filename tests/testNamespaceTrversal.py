@@ -14,7 +14,7 @@
 """
 
 Revision information:
-$Id: testNamespaceTrversal.py,v 1.3 2002/07/12 19:28:33 jim Exp $
+$Id: testNamespaceTrversal.py,v 1.4 2002/07/13 14:18:36 jim Exp $
 """
 
 from unittest import TestCase, TestSuite, main, makeSuite
@@ -32,8 +32,10 @@ class Test(CleanUp, TestCase):
     def setUp(self):
         from Zope.App.Traversing.Namespaces import provideNamespaceHandler
         from Zope.App.Traversing.AttrItemNamespaces import attr, item
+        from Zope.App.Traversing.SkinNamespace import skin
         provideNamespaceHandler('attribute', attr)
         provideNamespaceHandler('item', item)
+        provideNamespaceHandler('skin', skin)
 
 
     def testAttr(self):
@@ -47,6 +49,24 @@ class Test(CleanUp, TestCase):
         traverser = Traverser(c)
         v = traverser.traverse('++item++a')
         self.assertEqual(v, 'avalue')
+
+    def testSideEffectsContextDetail(self):
+        """Check to make sure that when we traverse something in context,
+        that we get the right context for the result."""
+        from Zope.Proxy.ContextWrapper \
+             import ContextWrapper, getWrapperContainer
+        from Zope.App.Traversing.Traverser import Traverser
+        from Zope.Publisher.Browser.BrowserRequest import TestRequest
+        
+        c1 = C()
+        c2 = C()
+        c2c1 = ContextWrapper(c2, c1)
+        
+        traverser = Traverser(c2c1)
+        v = traverser.traverse('++skin++ZopeTop', request=TestRequest())
+        self.assertEqual(v, c2)
+        self.failUnless(getWrapperContainer(v) is c2c1)
+        
         
         
 

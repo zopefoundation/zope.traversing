@@ -12,7 +12,7 @@
 #
 ##############################################################################
 """
-$Id: testPhysicalLocationAdapters.py,v 1.1 2002/07/11 18:21:34 jim Exp $
+$Id: testPhysicalLocationAdapters.py,v 1.2 2002/07/13 14:18:36 jim Exp $
 """
 
 from unittest import TestCase, TestSuite, main, makeSuite
@@ -38,6 +38,49 @@ class Test(PlacelessSetup, TestCase):
 
         root = Root()
         f1 = ContextWrapper(C(), root, name='f1')
+        f2 = ContextWrapper(C(),   f1, name='f2')
+        f3 = ContextWrapper(C(),   f2, name='f3')
+
+        adapter = getAdapter(f3, IPhysicallyLocatable)
+
+        self.assertEqual(adapter.getPhysicalPath(), ('', 'f1', 'f2', 'f3'))
+        self.assertEqual(adapter.getPhysicalRoot(), root)
+        
+        adapter = getAdapter(C(), IPhysicallyLocatable)
+        self.assertRaises(TypeError, adapter.getPhysicalPath)
+        self.assertRaises(TypeError, adapter.getPhysicalRoot)
+
+    def testWSideEffectDataInFront(self):
+        provideAdapter(None, IPhysicallyLocatable, WrapperPhysicallyLocatable)
+        provideAdapter(IContainmentRoot, IPhysicallyLocatable,
+                       RootPhysicallyLocatable)
+
+        root = Root()
+        root = ContextWrapper(root, root, name='.',
+                              side_effect_name="++skin++ZopeTop")
+        f1 = ContextWrapper(C(), root, name='f1')
+        f2 = ContextWrapper(C(),   f1, name='f2')
+        f3 = ContextWrapper(C(),   f2, name='f3')
+
+        adapter = getAdapter(f3, IPhysicallyLocatable)
+
+        self.assertEqual(adapter.getPhysicalPath(), ('', 'f1', 'f2', 'f3'))
+        self.assertEqual(adapter.getPhysicalRoot(), root)
+        
+        adapter = getAdapter(C(), IPhysicallyLocatable)
+        self.assertRaises(TypeError, adapter.getPhysicalPath)
+        self.assertRaises(TypeError, adapter.getPhysicalRoot)
+
+    def testWSideEffectDataInMiddle(self):
+        provideAdapter(None, IPhysicallyLocatable, WrapperPhysicallyLocatable)
+        provideAdapter(IContainmentRoot, IPhysicallyLocatable,
+                       RootPhysicallyLocatable)
+
+        root = Root()
+        c = C()
+        f1 = ContextWrapper(c, root, name='f1')
+        f1 = ContextWrapper(c, f1, name='.',
+                            side_effect_name="++skin++ZopeTop")
         f2 = ContextWrapper(C(),   f1, name='f2')
         f3 = ContextWrapper(C(),   f2, name='f3')
 

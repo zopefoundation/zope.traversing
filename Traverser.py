@@ -13,7 +13,7 @@
 ##############################################################################
 """Default implementation of ITraverser.
 
-$Id: Traverser.py,v 1.3 2002/07/11 18:21:34 jim Exp $
+$Id: Traverser.py,v 1.4 2002/07/13 14:18:36 jim Exp $
 """
 
 from Zope.ComponentArchitecture import getAdapter
@@ -81,6 +81,7 @@ class Traverser:
                     continue
 
                 if name == '..':
+                    # XXX This doesn't look right. Why fall back to curr?
                     curr = getWrapperContainer(curr) or curr
                     continue
 

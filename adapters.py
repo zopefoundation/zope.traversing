@@ -12,7 +12,7 @@
 #
 ##############################################################################
 """
-$Id: adapters.py,v 1.4 2003/03/19 19:57:33 alga Exp $
+$Id: adapters.py,v 1.5 2003/03/24 16:42:22 mgedmin Exp $
 """
 
 from zope.exceptions import NotFoundError
@@ -173,37 +173,64 @@ class Traverser:
         try:
             while path:
                 name = pop()
-
-                if name == '.':
-                    continue
-
-                if name == '..':
-                    # XXX This doesn't look right. Why fall back to curr?
-                    curr = getWrapperContainer(curr) or curr
-                    continue
-
-
-                if name and name[:1] in '@+':
-                    ns, nm, parms = parameterizedNameParse(name)
-                    if ns:
-                        curr = namespaceLookup(name, ns, nm, parms,
-                                               curr, request)
-                        continue
-                else:
-                    parms = ()
-                    nm = name
-
-                traversable = queryAdapter(curr, ITraversable, None)
-                if traversable is None:
-                    raise NotFoundError(
-                        'No traversable adapter found', curr)
-
-                next = traversable.traverse(nm, parms, name, path)
-                curr = ContextWrapper(next, curr, name=name)
+                curr = traversePathElement(curr, name, path, request=request)
 
             return curr
         except NotFoundError:
             if default == _marker:
                 raise
             return default
+
+
+def traversePathElement(obj, name, further_path, default=_marker,
+                        traversable=None, request=None):
+    """Traverse a single step 'name' relative to the given object.
+
+    'name' must be a string. '.' and '..' are treated specially, as well as
+    names starting with '@' or '+'. Otherwise 'name' will be treated as a
+    single path segment.
+
+    'further_path' is a list of names still to be traversed.  This method
+    is allowed to change the contents of 'further_path'.
+
+    You can explicitly pass in an ITraversable as the 'traversable'
+    argument. If you do not, the given object will be adapted to ITraversable.
+
+    'request' is passed in when traversing from presentation code. This
+    allows paths like @@foo to work.
+
+    Raises NotFoundError if path cannot be found and 'default' was not provided.
+    """
+
+    if name == '.':
+        return obj
+
+    if name == '..':
+        # XXX This doesn't look right. Why fall back to obj?
+        obj = getWrapperContainer(obj) or obj
+        return obj
+
+    if name and name[:1] in '@+':
+        ns, nm, parms = parameterizedNameParse(name)
+        if ns:
+            return namespaceLookup(name, ns, nm, parms, obj, request)
+    else:
+        parms = ()
+        nm = name
+
+    if traversable is None:
+        traversable = queryAdapter(obj, ITraversable, None)
+        if traversable is None:
+            raise NotFoundError('No traversable adapter found', obj)
+
+    try:
+        next_item = traversable.traverse(nm, parms, name, further_path)
+        obj = ContextWrapper(next_item, obj, name=name)
+    except NotFoundError:
+        if default != _marker:
+            return default
+        else:
+            raise
+
+    return obj
 

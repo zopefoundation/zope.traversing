@@ -13,11 +13,11 @@
 ##############################################################################
 """
 
-$Id: test_conveniencefunctions.py,v 1.12 2003/03/21 15:29:10 alga Exp $
+$Id: test_conveniencefunctions.py,v 1.13 2003/03/24 16:42:22 mgedmin Exp $
 """
 from unittest import TestCase, main, makeSuite
 from zope.app.services.tests.placefulsetup import PlacefulSetup
-from zope.proxy.context import ContextWrapper
+from zope.proxy.context import ContextWrapper, isWrapper
 from zope.app.traversing.adapters import Traverser
 from zope.component import getService
 from zope.app.services.servicenames import Adapters
@@ -103,6 +103,12 @@ class Test(PlacefulSetup, TestCase):
             traverseName(self.item, '.'),
             self.tr.traverse('/folder/item')
             )
+        self.assertEqual(
+            traverseName(self.item, '..'),
+            self.tr.traverse('/folder')
+            )
+        self.assert_(isWrapper(traverseName(self.folder, 'item')))
+        # XXX test that ++names++ and @@names work too
 
     def testTraverseNameBadValue(self):
         from zope.app.traversing import traverseName
@@ -228,22 +234,20 @@ class Test(PlacefulSetup, TestCase):
             )
 
     _bad_locations = (
-        (UnicodeError, ('',u'123','\xa323')),
         (UnicodeError, '\xa323'),
-        (ValueError, ()),
-        (ValueError, 23),
         (ValueError, ''),
         (ValueError, '//'),
         (ValueError, '/foo//bar'),
 
-        # regarding the next four errors:
+        # regarding the next two errors:
         # having a trailing slash on a location is undefined.
         # we might want to give it a particular meaning for zope3 later
         # for now, it is an invalid location identifier
         (ValueError, '/foo/bar/'),
         (ValueError, 'foo/bar/'),
-        (ValueError, ('','foo','bar','')),
-        (ValueError, ('foo','bar',''))
+
+        (IndexError, '/a/../..'),
+        (ValueError, '/a//v'),
         )
 
     # sequence of N-tuples:
@@ -252,39 +256,24 @@ class Test(PlacefulSetup, TestCase):
     # specification for output.
 
     _good_locations = (
-        # location returned as string   location returned as tuple
-        ( u'xx/yy/zz',                  (u'xx',u'yy',u'zz'),
+        # location returned as string
+        ( u'/xx/yy/zz',
             # arguments to try in addition to the above
-            ('xx','yy','zz'),
-            'xx/yy/zz',
-        ),
-        ( u'/xx/yy/zz',                 (u'',u'xx',u'yy',u'zz'),
-            ('','xx','yy','zz'),
             '/xx/yy/zz',
-            _proxied('','xx','yy','zz'),
+            '/xx/./yy/ww/../zz',
         ),
-        ( u'xx',                        (u'xx',),
-            ('xx',),
-            'xx',
+        ( u'/xx/yy/zz',
+            '/xx/yy/zz',
         ),
-        ( u'/',                         (u'',),
-            ('',),
+        ( u'/xx',
+            '/xx',
+        ),
+        ( u'/',
             '/',
         ),
     )
 
-    def testLocationAsTuple(self):
-        from zope.app.traversing import locationAsTuple as lat
-
-        for error_type, value in self._bad_locations:
-            self.assertRaises(error_type, lat, value)
-
-        for spec in self._good_locations:
-            correct_answer = spec[1]
-            for argument in spec:
-                self.applyAssertEqual(lat, argument, correct_answer)
-
-    def testLocationAsUnicode(self):
+    def testCanonicalPath(self):
         from zope.app.traversing import canonicalPath
 
         for error_type, value in self._bad_locations:
@@ -293,14 +282,9 @@ class Test(PlacefulSetup, TestCase):
         for spec in self._good_locations:
             correct_answer = spec[0]
             for argument in spec:
-                self.applyAssertEqual(canonicalPath, argument, correct_answer)
+                self.assertEqual(canonicalPath(argument), correct_answer,
+                                 "failure on %s" % argument)
 
-    def applyAssertEqual(self, func, arg, answer):
-        try:
-            self.assertEqual(func(arg), answer)
-        except:
-            print "Failure on ", arg
-            raise
 
 def test_suite():
     return makeSuite(Test)

@@ -18,11 +18,9 @@ from zope.component import getAdapter
 from zope.app.interfaces.traversing import IObjectName, IContainmentRoot
 from zope.app.interfaces.traversing import ITraverser, IPhysicallyLocatable
 from zope.proxy.context import getWrapperContainer, isWrapper
-from types import StringTypes
 
 __all__ = ['traverse', 'traverseName', 'objectName', 'getParent',
-           'getParents', 'getPath', 'getRoot', 'locationAsTuple',
-           'canonicalPath']
+           'getParents', 'getPath', 'getRoot', 'canonicalPath']
 
 _marker = object()
 
@@ -36,11 +34,10 @@ def getRoot(obj):
     """
     return getAdapter(obj, IPhysicallyLocatable).getRoot()
 
-def traverse(place, path, default=_marker, request=None):
-    """Traverse 'path' relative to 'place'
+def traverse(object, path, default=_marker, request=None):
+    """Traverse 'path' relative to the given object.
 
-    'path' can be a string with path segments separated by '/'
-    or a sequence of path segments.
+    'path' is a string with path segments separated by '/'.
 
     'request' is passed in when traversing from presentation code. This
     allows paths like @@foo to work.
@@ -54,28 +51,38 @@ def traverse(place, path, default=_marker, request=None):
           code unexpectedly.
           Consider using traverseName instead.
     """
-    traverser = Traverser(place)
+    traverser = getAdapter(object, ITraverser)
     if default is _marker:
         return traverser.traverse(path, request=request)
     else:
         return traverser.traverse(path, default=default, request=request)
 
-# XXX This should have an additional optional argument where you
-#     can pass an ITraversable to use, otherwise it should get
-#     an adapter for ITraversable from the object and use that to
-#     traverse one step.
-def traverseName(obj, name, default=_marker):
-    """Traverse a single step 'name' relative to 'place'
+def traverseName(obj, name, default=_marker, traversable=None, request=None):
+    """Traverse a single step 'name' relative to the given object.
 
-    'name' must be a string. 'name' will be treated as a single
-    path segment, no matter what characters it contains.
+    'name' must be a string. '.' and '..' are treated specially, as well as
+    names starting with '@' or '+'. Otherwise 'name' will be treated as a
+    single path segment.
 
-    Raises NotFoundError if path cannot be found
-    Raises TypeError if place is not context wrapped
+    You can explicitly pass in an ITraversable as the 'traversable'
+    argument. If you do not, the given object will be adapted to ITraversable.
+
+    'request' is passed in when traversing from presentation code. This
+    allows paths like @@foo to work.
+
+    Raises NotFoundError if path cannot be found and 'default' was not provided.
     """
-    # by passing [name] to traverse (above), we ensure that name is
-    # treated as a single path segment, regardless of any '/' characters
-    return traverse(obj, [name], default=default)
+    further_path = []
+    if default is _marker:
+        obj = traversePathElement(obj, name, further_path,
+                                  traversable=traversable, request=request)
+    else:
+        obj = traversePathElement(obj, name, further_path, default=default,
+                                  traversable=traversable, request=request)
+    if further_path:
+        raise NotImplementedError('further_path returned from traverse')
+    else:
+        return obj
 
 def objectName(obj):
     """Get the name an object was traversed via
@@ -121,58 +128,45 @@ def getParents(obj):
             return parents
     raise TypeError, "Not enough context information to get all parents"
 
-def locationAsTuple(location):
-    """Given a location as a unicode or ascii string or as a tuple of
-    unicode or ascii strings, returns the location as a tuple of
-    unicode strings.
+def canonicalPath(path_or_object):
+    """Returns a canonical absolute unicode path for the given path or object.
 
-    Raises a ValueError if a poorly formed location is given.
+    Resolves segments that are '.' or '..'.
+
+    Raises ValueError if a badly formed path is given.
     """
-    if not location:
-        raise ValueError("location must be non-empty: %s" % repr(location))
-    if isinstance(location, StringTypes):
-        if location == u'/':  # matches '/' or u'/'
-            return (u'',)
-        t = tuple(location.split(u'/'))
-    elif location.__class__ == tuple:
-        # isinstance doesn't work when tuple is security-wrapped
-        t = tuple(map(unicode, location))
+    if isinstance(path_or_object, (str, unicode)):
+        path = path_or_object
+        if not path:
+            raise ValueError("path must be non-empty: %s" % path)
     else:
-        raise ValueError("location must be a string or a tuple of strings: %s"
-                         % repr(location))
+        path = getPath(path_or_object)
 
-    if len(t) > 1 and t[-1] == u'':  # matches '' or u''
-        raise ValueError("location tuple must not end with empty string: %s"
-                         % repr(t))
-    if '' in t[1:]:
-        raise ValueError("location tuple must not contain '' except at the"
-                         " start: %s" % repr(t))
-    return t
+    path = unicode(path)
 
-def canonicalPath(location):
-    """Given a location as a unicode or ascii string or as a tuple of
-    unicode or ascii strings, returns the location as a slash-separated
-    unicode string.
+    # Special case for the root path.
+    if path == u'/':
+        return path
 
-    Raises ValueError if a poorly formed location is given.
-    """
-    if not location:
-        raise ValueError("location must be non-empty: %s" % repr(location))
-    if isinstance(location, StringTypes):
-        u = unicode(location)
-    elif location.__class__ == tuple:
-        # isinstance doesn't work when tuple is security-wrapped
-        u = u'/'.join(location)
-        if not u:  # special case for u''
-            return u'/'
-    else:
-        raise ValueError("location must be a string or a tuple of strings: %s"
-                         % repr(location))
-    if u != '/' and u[-1] == u'/':
-        raise ValueError("location must not end with a slash: %s" % u)
-    if u.find(u'//') != -1:
-        raise ValueError("location must not contain // : %s" % u)
-    return u
+    if path[0] != u'/':
+        raise ValueError('canonical path must start with a "/": %s' % path)
+    if path[-1] == u'/':
+        raise ValueError('path must not end with a "/": %s' % path)
+
+    # Break path into segments. Process '.' and '..' segments.
+    new_segments = []
+    for segment in path.split(u'/')[1:]:  # skip empty segment at the start
+        if segment == u'.':
+            continue
+        if segment == u'..':
+            new_segments.pop()  # raises IndexError if there is nothing to pop
+            continue
+        if not segment:
+            raise ValueError('path must not contain empty segments: %s'
+                             % path)
+        new_segments.append(segment)
+
+    return u'/' + (u'/'.join(new_segments))
 
 # import this down here to avoid circular imports
-from zope.app.traversing.adapters import Traverser
+from zope.app.traversing.adapters import traversePathElement

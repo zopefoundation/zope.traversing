@@ -12,7 +12,7 @@
 #
 ##############################################################################
 """
-$Id: test_physicallocationadapters.py,v 1.12 2003/06/13 17:41:21 stevea Exp $
+$Id: test_physicallocationadapters.py,v 1.13 2003/08/08 18:07:11 jim Exp $
 """
 
 from unittest import TestCase, main, makeSuite
@@ -56,54 +56,6 @@ class Test(PlacelessSetup, TestCase):
         self.assertRaises(TypeError, adapter.getName)
         self.assertRaises(TypeError, adapter.getRoot)
 
-    def testWSideEffectDataInFront(self):
-        provideAdapter(None, IPhysicallyLocatable, WrapperPhysicallyLocatable)
-        provideAdapter(IContainmentRoot, IPhysicallyLocatable,
-                       RootPhysicallyLocatable)
-
-        root = Root()
-        root = ContextWrapper(root, None,
-                              side_effect_names=("++skin++ZopeTop", ),
-                              )
-        f1 = ContextWrapper(C(), root, name='f1')
-        f2 = ContextWrapper(C(),   f1, name='f2')
-        f3 = ContextWrapper(C(),   f2, name='f3')
-
-        adapter = getAdapter(f3, IPhysicallyLocatable)
-
-        self.assertEqual(adapter.getPath(), '/f1/f2/f3')
-        self.assertEqual(adapter.getName(), 'f3')
-        self.assertEqual(adapter.getRoot(), root)
-
-        adapter = getAdapter(C(), IPhysicallyLocatable)
-        self.assertRaises(TypeError, adapter.getPath)
-        self.assertRaises(TypeError, adapter.getName)
-        self.assertRaises(TypeError, adapter.getRoot)
-
-    def testWSideEffectDataInMiddle(self):
-        provideAdapter(None, IPhysicallyLocatable, WrapperPhysicallyLocatable)
-        provideAdapter(IContainmentRoot, IPhysicallyLocatable,
-                       RootPhysicallyLocatable)
-
-        root = Root()
-        c = C()
-        f1 = ContextWrapper(c, root,
-                            name='f1',
-                            side_effect_names=("++skin++ZopeTop", ),
-                            )
-        f2 = ContextWrapper(C(),   f1, name='f2')
-        f3 = ContextWrapper(C(),   f2, name='f3')
-
-        adapter = getAdapter(f3, IPhysicallyLocatable)
-
-        self.assertEqual(adapter.getPath(), '/f1/f2/f3')
-        self.assertEqual(adapter.getName(), 'f3')
-        self.assertEqual(adapter.getRoot(), root)
-
-        adapter = getAdapter(C(), IPhysicallyLocatable)
-        self.assertRaises(TypeError, adapter.getPath)
-        self.assertRaises(TypeError, adapter.getName)
-        self.assertRaises(TypeError, adapter.getRoot)
 
 def test_suite():
     return makeSuite(Test)

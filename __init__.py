@@ -20,16 +20,17 @@ from zope.app.interfaces.traversing import ITraverser, IPhysicallyLocatable
 from zope.proxy.context import getWrapperContainer, isWrapper
 
 __all__ = ['traverse', 'traverseName', 'objectName', 'getParent',
-           'getParents', 'getPath', 'getRoot', 'canonicalPath']
+           'getParents', 'getPath', 'getRoot', 'canonicalPath', 'joinPath']
 
 _marker = object()
 
 def joinPath(path, *args):
     """Concatenate a path and various args with slashes"""
-    for arg in args:
-        path = path.endswith('/') and '%s%s' % (path, arg) \
-               or '%s/%s' % (path, arg)
-    return path
+    if not args:
+        return unicode(path)
+    if path != u'/':
+        path += u'/'
+    return path + u'/'.join(args)
 
 def getPath(obj):
     """Returns a string representing the physical path to the object.

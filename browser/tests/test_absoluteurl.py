@@ -13,7 +13,7 @@
 ##############################################################################
 """Test the AbsoluteURL view
 
-$Id: test_absoluteurl.py,v 1.2 2004/03/15 20:42:10 jim Exp $
+$Id: test_absoluteurl.py,v 1.3 2004/03/18 20:33:56 srichter Exp $
 """
 
 from unittest import TestCase, main, makeSuite
@@ -75,6 +75,27 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
                           {'name': 'b', 'url': 'http://127.0.0.1/a/b'},
                           {'name': 'c', 'url': 'http://127.0.0.1/a/b/c'},
                           ))
+
+    def testRetainSkin(self):
+        request = TestRequest()
+        request._traversed_names = ('a', 'b')
+        request._app_names = ('++skin++test', )
+
+        content = contained(TrivialContent(), Root(), name='a')
+        content = contained(TrivialContent(), content, name='b')
+        content = contained(TrivialContent(), content, name='c')
+        view = getView(content, 'absolute_url', request)
+        base = 'http://127.0.0.1/++skin++test'
+        self.assertEqual(str(view), base + '/a/b/c')
+
+        breadcrumbs = view.breadcrumbs()
+        self.assertEqual(breadcrumbs,
+                         ({'name':  '', 'url': base + ''},
+                          {'name': 'a', 'url': base + '/a'},
+                          {'name': 'b', 'url': base + '/a/b'},
+                          {'name': 'c', 'url': base + '/a/b/c'},
+                          ))
+        
 
     def testVirtualHosting(self):
         request = TestRequest()

@@ -13,9 +13,10 @@
 ##############################################################################
 """
 
-$Id: test_conveniencefunctions.py,v 1.15 2003/04/08 18:26:34 alga Exp $
+$Id: test_conveniencefunctions.py,v 1.16 2003/04/18 22:12:29 jim Exp $
 """
 from unittest import TestCase, main, makeSuite
+from zope.interface import directlyProvides
 from zope.app.services.tests.placefulsetup import PlacefulSetup
 from zope.proxy.context import ContextWrapper, isWrapper
 from zope.app.traversing.adapters import Traverser
@@ -49,7 +50,7 @@ class Test(PlacefulSetup, TestCase):
         PlacefulSetup.setUp(self)
         # Build up a wrapper chain
         root = C('root')
-        root.__implements__ = IContainmentRoot
+        directlyProvides(root, IContainmentRoot)
         folder = C('folder')
         item = C('item')
 

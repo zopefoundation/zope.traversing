@@ -13,10 +13,15 @@
 ##############################################################################
 """
 
-$Id: test_traverser.py,v 1.8 2003/02/12 02:17:40 seanb Exp $
+$Id: test_traverser.py,v 1.9 2003/04/18 22:12:29 jim Exp $
 """
 
 import unittest
+
+from zope.interface import directlyProvides
+from zope.interface.verify import verifyClass
+from zope.interface.implements import instancesOfObjectImplements
+
 from zope.app.interfaces.traversing import ITraverser, ITraversable
 from zope.app.traversing.adapters import Traverser, DefaultTraversable
 
@@ -30,8 +35,6 @@ from zope.exceptions import NotFoundError, Unauthorized
 from zope.component import getService
 from zope.app.services.servicenames import Adapters
 
-from zope.interface.verify import verifyClass
-from zope.interface.implements import instancesOfObjectImplements
 from zope.app.services.tests.placefulsetup import PlacefulSetup
 from zope.security.checker \
     import ProxyFactory, defineChecker, CheckerPublic, Checker
@@ -61,7 +64,7 @@ class TraverserTests(PlacefulSetup, unittest.TestCase):
 class UnrestrictedNoTraverseTests(unittest.TestCase):
     def setUp(self):
         self.root = root = C('root')
-        self.root.__implements__ = IContainmentRoot
+        directlyProvides(self.root, IContainmentRoot)
         self.folder = folder = C('folder')
         self.item = item = C('item')
 
@@ -87,7 +90,7 @@ class UnrestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
               IContainmentRoot, IPhysicallyLocatable, RootPhysicallyLocatable)
 
         self.root = root = C('root')
-        self.root.__implements__ = IContainmentRoot
+        directlyProvides(self.root, IContainmentRoot)
         self.folder = folder = C('folder')
         self.item = item = C('item')
 
@@ -161,7 +164,7 @@ class RestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
               IContainmentRoot, IPhysicallyLocatable, RootPhysicallyLocatable)
 
         self.root = root = C('root')
-        root.__implements__ = IContainmentRoot
+        directlyProvides(root, IContainmentRoot)
         self.folder = folder = C('folder')
         self.item = item = C('item')
 

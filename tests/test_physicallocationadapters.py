@@ -12,13 +12,12 @@
 #
 ##############################################################################
 """
-$Id: test_physicallocationadapters.py,v 1.16 2003/12/07 11:31:14 zagy Exp $
+$Id: test_physicallocationadapters.py,v 1.17 2004/03/06 16:50:32 jim Exp $
 """
 
 from unittest import TestCase, main, makeSuite
 from zope.app.tests.placelesssetup import PlacelessSetup
 from zope.app.tests import ztapi
-from zope.component import getAdapter
 from zope.interface import implements
 
 from zope.app.interfaces.traversing import IContainmentRoot
@@ -67,7 +66,7 @@ class Test(PlacelessSetup, TestCase):
         f2 = contained(ServiceManagerContainer(),   f1, name='f2')
         f3 = contained(C(),   f2, name='f3')
         
-        adapter = getAdapter(f3, IPhysicallyLocatable)
+        adapter = IPhysicallyLocatable(f3)
 
         self.assertEqual(adapter.getPath(), '/f1/f2/f3')
         self.assertEqual(adapter.getName(), 'f3')

@@ -12,7 +12,7 @@
 #
 ##############################################################################
 """
-$Id: adapters.py,v 1.16 2003/12/07 11:31:13 zagy Exp $
+$Id: adapters.py,v 1.17 2004/03/06 16:50:31 jim Exp $
 """
 
 from zope.exceptions import NotFoundError
@@ -21,7 +21,7 @@ from zope.app.interfaces.traversing import IPhysicallyLocatable
 from zope.app.interfaces.traversing import IContainmentRoot
 from zope.app.interfaces.traversing import ITraverser, ITraversable
 
-from zope.component import getAdapter, queryAdapter
+from zope.component import queryAdapter
 
 from zope.app.traversing.namespace import namespaceLookup
 from zope.app.traversing.namespace import UnexpectedParameters
@@ -118,8 +118,7 @@ class Traverser:
         if not path[-1]:
             # Start at the root
             pop()
-            curr = getAdapter(self.context, IPhysicallyLocatable
-                              ).getRoot()
+            curr = IPhysicallyLocatable(self.context).getRoot()
         try:
             while path:
                 name = pop()

@@ -14,11 +14,10 @@
 """
 Convenience functions for traversing the object tree.
 
-$Id: __init__.py,v 1.25 2004/03/05 22:09:19 jim Exp $
+$Id: __init__.py,v 1.26 2004/03/06 16:50:31 jim Exp $
 """
 
 from zope.interface import moduleProvides
-from zope.component import getAdapter
 from zope.app.interfaces.traversing import IContainmentRoot, ITraversalAPI
 from zope.app.interfaces.traversing import ITraverser, IPhysicallyLocatable
 
@@ -61,12 +60,12 @@ def joinPath(path, *args):
 def getPath(obj):
     """Returns a string representing the physical path to the object.
     """
-    return getAdapter(obj, IPhysicallyLocatable).getPath()
+    return IPhysicallyLocatable(obj).getPath()
 
 def getRoot(obj):
     """Returns the root of the traversal for the given object.
     """
-    return getAdapter(obj, IPhysicallyLocatable).getRoot()
+    return IPhysicallyLocatable(obj).getRoot()
 
 def traverse(object, path, default=_marker, request=None):
     """Traverse 'path' relative to the given object.
@@ -85,7 +84,7 @@ def traverse(object, path, default=_marker, request=None):
           code unexpectedly.
           Consider using traverseName instead.
     """
-    traverser = getAdapter(object, ITraverser)
+    traverser = ITraverser(object)
     if default is _marker:
         return traverser.traverse(path, request=request)
     else:
@@ -121,7 +120,7 @@ def traverseName(obj, name, default=_marker, traversable=None, request=None):
 def getName(obj):
     """Get the name an object was traversed via
     """
-    return getAdapter(obj, IPhysicallyLocatable).getName()
+    return IPhysicallyLocatable(obj).getName()
 
 def getParent(obj):
     """Returns the container the object was traversed via.

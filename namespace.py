@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: namespace.py,v 1.1 2002/12/28 17:49:33 stevea Exp $
+$Id: namespace.py,v 1.2 2002/12/30 16:11:57 stevea Exp $
 """
 
 from zope.interface import Interface
@@ -25,9 +25,6 @@ from zope.component import queryAdapter, getAdapter, getServiceManager
 from zope.component import queryDefaultViewName, getView, getService
 
 from zope.app.interfaces.traversing import ITraversable
-from zope.app.applicationcontrol.applicationcontrol \
-    import applicationController
-from zope.app.content.folder import RootFolder
 from zope.app.interfaces.services.service import INameResolver
 
 import re
@@ -175,6 +172,9 @@ def item(name, parameters, pname, ob, request):
         raise UnexpectedParameters(parameters)
     return ob[name]
 
+from zope.app.applicationcontrol.applicationcontrol \
+    import applicationController
+from zope.app.content.folder import RootFolder
 def etc(name, parameters, pname, ob, request):
     # XXX
 

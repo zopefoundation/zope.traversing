@@ -17,8 +17,6 @@ Convenience functions for traversing the object tree.
 from zope.component import getAdapter
 from zope.app.interfaces.traversing import IObjectName, IContainmentRoot
 from zope.app.interfaces.traversing import ITraverser, IPhysicallyLocatable
-# XXX moved to later on to avoid byzantine circular import
-#from zope.app.traversing.adapters import Traverser
 from zope.proxy.context import getWrapperContext, isWrapper
 from zope.proxy.context import getWrapperContainer
 from types import StringTypes
@@ -28,6 +26,22 @@ __all__ = ['traverse', 'traverseName', 'objectName', 'getParent',
            'getPhysicalRoot', 'locationAsTuple', 'locationAsUnicode']
 
 _marker = object()
+
+def getPhysicalPath(obj):
+    """Returns a tuple of names representing the physical path to the object.
+    """
+    return getAdapter(obj, IPhysicallyLocatable).getPhysicalPath()
+
+def getPhysicalPathString(obj):
+    """Returns a string representing the physical path to the object.
+    """
+    path = getAdapter(obj, IPhysicallyLocatable).getPhysicalPath()
+    return locationAsUnicode(path)
+
+def getPhysicalRoot(obj):
+    """Returns the root of the traversal for the given object.
+    """
+    return getAdapter(obj, IPhysicallyLocatable).getPhysicalRoot()
 
 def traverse(place, path, default=_marker, request=None):
     """Traverse 'path' relative to 'place'
@@ -47,7 +61,6 @@ def traverse(place, path, default=_marker, request=None):
           code unexpectedly.
           Consider using traverseName instead.
     """
-    from zope.app.traversing.adapters import Traverser
     traverser = Traverser(place)
     if default is _marker:
         return traverser.traverse(path, request=request)
@@ -115,22 +128,6 @@ def getParents(obj):
             return parents
     raise TypeError, "Not enough context information to get all parents"
 
-def getPhysicalPath(obj):
-    """Returns a tuple of names representing the physical path to the object.
-    """
-    return getAdapter(obj, IPhysicallyLocatable).getPhysicalPath()
-
-def getPhysicalPathString(obj):
-    """Returns a string representing the physical path to the object.
-    """
-    path = getAdapter(obj, IPhysicallyLocatable).getPhysicalPath()
-    return locationAsUnicode(path)
-
-def getPhysicalRoot(obj):
-    """Returns the root of the traversal for the given object.
-    """
-    return getAdapter(obj, IPhysicallyLocatable).getPhysicalRoot()
-
 def locationAsTuple(location):
     """Given a location as a unicode or ascii string or as a tuple of
     unicode or ascii strings, returns the location as a tuple of
@@ -184,3 +181,5 @@ def locationAsUnicode(location):
         raise ValueError("location must not contain // : %s" % u)
     return u
 
+# import this down here to avoid circular imports
+from zope.app.traversing.adapters import Traverser

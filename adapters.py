@@ -12,7 +12,7 @@
 #
 ##############################################################################
 """
-$Id: adapters.py,v 1.1 2002/12/28 17:49:33 stevea Exp $
+$Id: adapters.py,v 1.2 2002/12/30 16:11:57 stevea Exp $
 """
 
 from zope.exceptions import NotFoundError
@@ -203,3 +203,4 @@ class Traverser:
             if default == _marker:
                 raise
             return default
+

@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: namespace.py,v 1.2 2002/12/30 16:11:57 stevea Exp $
+$Id: namespace.py,v 1.3 2003/01/07 12:27:55 srichter Exp $
 """
 
 from zope.interface import Interface
@@ -214,6 +214,10 @@ def module(name, parameters, pname, ob, request):
     if queryDefaultViewName(ob, request) is None:
         return Interface
     return ob
+
+def help(name, parameters, pname, ob, request):
+    """Used to traverse to an online help topic."""
+    return getService(ob, 'OnlineHelp')
 
 def view(name, parameters, pname, ob, request):
     if parameters:

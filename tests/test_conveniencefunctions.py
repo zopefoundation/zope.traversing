@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: test_conveniencefunctions.py,v 1.10 2003/03/19 17:55:37 alga Exp $
+$Id: test_conveniencefunctions.py,v 1.11 2003/03/19 19:57:34 alga Exp $
 """
 from unittest import TestCase, main, makeSuite
 from zope.app.services.tests.placefulsetup import PlacefulSetup
@@ -58,7 +58,7 @@ class Test(PlacefulSetup, TestCase):
         self.item =   ContextWrapper(item,   self.folder, name='item')
         self.unwrapped_item = item
         self.broken_chain_folder = ContextWrapper(folder, None)
-        self.broken_chain_item = ContextWrapper(item, 
+        self.broken_chain_item = ContextWrapper(item,
                                     self.broken_chain_folder,
                                     name='item'
                                     )
@@ -206,31 +206,17 @@ class Test(PlacefulSetup, TestCase):
             self.unwrapped_item
             )
 
-    def testGetPhysicalPath(self):
-        from zope.app.traversing import getPhysicalPath
-        self.assertEqual(
-            getPhysicalPath(self.item),
-            ('', 'folder', 'item')
-            )
-
     def testGetPhysicalPathString(self):
-        from zope.app.traversing import getPhysicalPathString
+        from zope.app.traversing import getPath
         self.assertEqual(
-            getPhysicalPathString(self.item),
+            getPath(self.item),
             u'/folder/item'
             )
 
-    def testGetPhysicalPathOfRoot(self):
-        from zope.app.traversing import getPhysicalPath
-        self.assertEqual(
-            getPhysicalPath(self.root),
-            ('',)
-            )
-
     def testGetPhysicalPathStringOfRoot(self):
-        from zope.app.traversing import getPhysicalPathString
+        from zope.app.traversing import getPath
         self.assertEqual(
-            getPhysicalPathString(self.root),
+            getPath(self.root),
             u'/',
             )
 

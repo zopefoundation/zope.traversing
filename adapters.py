@@ -12,7 +12,7 @@
 #
 ##############################################################################
 """
-$Id: adapters.py,v 1.3 2003/03/19 17:55:37 alga Exp $
+$Id: adapters.py,v 1.4 2003/03/19 19:57:33 alga Exp $
 """
 
 from zope.exceptions import NotFoundError
@@ -101,7 +101,7 @@ class WrapperPhysicallyLocatable:
             raise TypeError("Not enough context to determine location root")
         return getAdapter(container, IPhysicallyLocatable).getRoot()
 
-    def getPhysicalPath(self):
+    def getPath(self):
         "See IPhysicallyLocatable"
         context = self.context
         container = getWrapperContainer(context)
@@ -110,13 +110,16 @@ class WrapperPhysicallyLocatable:
         name = getInnerWrapperData(context)['name']
 
         container = getAdapter(container, IPhysicallyLocatable)
-        container_path = container.getPhysicalPath()
+        container_path = container.getPath()
 
         if name == '.':
             # skip
             return container_path
 
-        return container_path + (name, )
+        if container_path == u'/':
+            return u'/' + name
+        else:
+            return container_path + u'/' + name
 
 class RootPhysicallyLocatable:
     __doc__ = IPhysicallyLocatable.__doc__
@@ -128,9 +131,9 @@ class RootPhysicallyLocatable:
     def __init__(self, context):
         self.context = context
 
-    def getPhysicalPath(self):
+    def getPath(self):
         "See IPhysicallyLocatable"
-        return ('', )
+        return u'/'
 
     def getRoot(self):
         "See IPhysicallyLocatable"

@@ -12,7 +12,7 @@
 #
 ##############################################################################
 """
-$Id: test_physicallocationadapters.py,v 1.5 2003/03/19 17:55:37 alga Exp $
+$Id: test_physicallocationadapters.py,v 1.6 2003/03/19 19:57:34 alga Exp $
 """
 
 from unittest import TestCase, TestSuite, main, makeSuite
@@ -43,11 +43,11 @@ class Test(PlacelessSetup, TestCase):
 
         adapter = getAdapter(f3, IPhysicallyLocatable)
 
-        self.assertEqual(adapter.getPhysicalPath(), ('', 'f1', 'f2', 'f3'))
+        self.assertEqual(adapter.getPath(), '/f1/f2/f3')
         self.assertEqual(adapter.getRoot(), root)
 
         adapter = getAdapter(C(), IPhysicallyLocatable)
-        self.assertRaises(TypeError, adapter.getPhysicalPath)
+        self.assertRaises(TypeError, adapter.getPath)
         self.assertRaises(TypeError, adapter.getRoot)
 
     def testWSideEffectDataInFront(self):
@@ -64,11 +64,11 @@ class Test(PlacelessSetup, TestCase):
 
         adapter = getAdapter(f3, IPhysicallyLocatable)
 
-        self.assertEqual(adapter.getPhysicalPath(), ('', 'f1', 'f2', 'f3'))
+        self.assertEqual(adapter.getPath(), '/f1/f2/f3')
         self.assertEqual(adapter.getRoot(), root)
 
         adapter = getAdapter(C(), IPhysicallyLocatable)
-        self.assertRaises(TypeError, adapter.getPhysicalPath)
+        self.assertRaises(TypeError, adapter.getPath)
         self.assertRaises(TypeError, adapter.getRoot)
 
     def testWSideEffectDataInMiddle(self):
@@ -86,11 +86,11 @@ class Test(PlacelessSetup, TestCase):
 
         adapter = getAdapter(f3, IPhysicallyLocatable)
 
-        self.assertEqual(adapter.getPhysicalPath(), ('', 'f1', 'f2', 'f3'))
+        self.assertEqual(adapter.getPath(), '/f1/f2/f3')
         self.assertEqual(adapter.getRoot(), root)
 
         adapter = getAdapter(C(), IPhysicallyLocatable)
-        self.assertRaises(TypeError, adapter.getPhysicalPath)
+        self.assertRaises(TypeError, adapter.getPath)
         self.assertRaises(TypeError, adapter.getRoot)
 
 def test_suite():

@@ -21,21 +21,15 @@ from zope.proxy.context import getWrapperContainer, isWrapper
 from types import StringTypes
 
 __all__ = ['traverse', 'traverseName', 'objectName', 'getParent',
-           'getParents', 'getPhysicalPath', 'getPhysicalPathString',
-           'getRoot', 'locationAsTuple', 'locationAsUnicode']
+           'getParents', 'getPath', 'getRoot', 'locationAsTuple',
+           'locationAsUnicode']
 
 _marker = object()
 
-def getPhysicalPath(obj):
-    """Returns a tuple of names representing the physical path to the object.
-    """
-    return getAdapter(obj, IPhysicallyLocatable).getPhysicalPath()
-
-def getPhysicalPathString(obj):
+def getPath(obj):
     """Returns a string representing the physical path to the object.
     """
-    path = getAdapter(obj, IPhysicallyLocatable).getPhysicalPath()
-    return locationAsUnicode(path)
+    return getAdapter(obj, IPhysicallyLocatable).getPath()
 
 def getRoot(obj):
     """Returns the root of the traversal for the given object.

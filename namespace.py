@@ -429,7 +429,7 @@ class adapter(SimpleHandler):
              >>> tearDown()
            """
         try:
-            return component.getAdapter(self.context, IPathAdapter, name=name)
+            return component.getAdapter(self.context, IPathAdapter, name)
         except:
             raise NotFoundError(self.context, name)
 

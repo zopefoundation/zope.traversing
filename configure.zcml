@@ -4,14 +4,14 @@
 >
 
 <adapter factory="zope.app.traversing.traverser.Traverser"
-         provides="zope.app.interfaces.traversing.traverser.ITraverser"
+         provides="zope.app.interfaces.traversing.ITraverser"
          />
     <!-- Ultimately, this should be registered only for IWrapper, but that
          won't work like that just now.
          for="zope.proxy.interfaces.context.IWrapper" /> -->
 
 <adapter factory="zope.app.traversing.defaulttraversable.DefaultTraversable"
-         provides="zope.app.interfaces.traversing.traversable.ITraversable" />
+         provides="zope.app.interfaces.traversing.ITraversable" />
 
 <adapter
     factory="zope.app.traversing.objectname.ObjectName"
@@ -27,13 +27,13 @@
     />
 
 <adapter 
-    provides="zope.app.interfaces.traversing.physicallylocatable.IPhysicallyLocatable"
+    provides="zope.app.interfaces.traversing.IPhysicallyLocatable"
     factory="zope.app.traversing.physicallocationadapters.WrapperPhysicallyLocatable" 
     />
 
 <adapter 
-    provides="zope.app.interfaces.traversing.physicallylocatable.IPhysicallyLocatable"
-    for="zope.app.interfaces.traversing.containmentroot.IContainmentRoot"
+    provides="zope.app.interfaces.traversing.IPhysicallyLocatable"
+    for="zope.app.interfaces.traversing.IContainmentRoot"
     factory="zope.app.traversing.physicallocationadapters.RootPhysicallyLocatable" 
     />
 

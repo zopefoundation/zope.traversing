@@ -12,7 +12,7 @@
 #
 ##############################################################################
 """
-$Id: adapters.py,v 1.11 2003/06/13 17:41:20 stevea Exp $
+$Id: adapters.py,v 1.12 2003/06/20 06:53:56 stevea Exp $
 """
 
 from zope.exceptions import NotFoundError
@@ -31,7 +31,7 @@ from zope.app.traversing.namespace import parameterizedNameParse
 
 from zope.interface import implements
 
-from types import StringTypes
+from types import StringTypes, MethodType
 
 __metaclass__ = type
 _marker = object()  # opaque marker that doesn't get security proxied
@@ -50,6 +50,12 @@ class DefaultTraversable:
         subject = self._subject
         r = getattr(subject, name, _marker)
         if r is not _marker:
+            # XXX It is pretty obvious that we should call methods.
+            #     That much is expected from page templates.
+            #     What about classmethods / staticmethods / other descriptors?
+            #     What about methods that take several arguments?
+            if r.__class__ == MethodType:
+                return r()
             return r
 
         if hasattr(subject, '__getitem__'):

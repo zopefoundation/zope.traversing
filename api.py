@@ -18,7 +18,11 @@ $Id$
 
 from zope.interface import moduleProvides
 from interfaces import IContainmentRoot, ITraversalAPI
-from interfaces import ITraverser, IPhysicallyLocatable
+from interfaces import ITraverser, IPhysicallyLocatable, TraversalError
+
+# BBB Backward Compatibility (Can go away in 3.3)
+from zope.exceptions import NotFoundError
+import warnings
 
 moduleProvides(ITraversalAPI)
 __all__ = tuple(ITraversalAPI)
@@ -83,10 +87,29 @@ def traverse(object, path, default=_marker, request=None):
           Consider using traverseName instead.
     """
     traverser = ITraverser(object)
-    if default is _marker:
-        return traverser.traverse(path, request=request)
-    else:
-        return traverser.traverse(path, default=default, request=request)
+    try:
+        if default is _marker:
+            return traverser.traverse(path, request=request)
+        else:
+            return traverser.traverse(path, default=default, request=request)
+
+    # BBB Backward Compatibility, can go away in 3.3
+    #
+    except TraversalError:
+        raise
+    except NotFoundError, v: 
+        import pdb; pdb.set_trace()
+        warnings.warn(
+            "A %s instance raised a NotFoundError in "
+            "traverse.  Raising NotFoundError in this "
+            "method is deprecated and will no-longer be supported "
+            "staring in ZopeX3 3.3.  TraversalError should "
+            "be raised instead."
+            % traverser.__class__.__name__,
+            DeprecationWarning)
+        raise TraversalError(*tuple(v))
+    #
+    ###############################################################
 
 def traverseName(obj, name, default=_marker, traversable=None, request=None):
     """Traverse a single step 'name' relative to the given object.

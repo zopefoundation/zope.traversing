@@ -28,6 +28,10 @@ from zope.app.traversing.namespace import namespaceLookup
 from zope.app.traversing.namespace import UnexpectedParameters
 from zope.app.traversing.namespace import nsParse
 
+# BBB Backward Compatibility (Can go away in 3.3)
+from zope.exceptions import NotFoundError
+import warnings
+
 _marker = object()  # opaque marker that doesn't get security proxied
 
 class DefaultTraversable(object):
@@ -169,6 +173,19 @@ def traversePathElement(obj, name, further_path, default=_marker,
         next_item = traversable.traverse(nm, further_path)
         obj = next_item
     except TraversalError:
+        if default != _marker:
+            return default
+        else:
+            raise
+    except NotFoundError, v: # BBB Backward Compatibility
+        warnings.warn(
+            "A %s instance raised a NotFoundError in "
+            "traverse.  Raising NotFoundError in this "
+            "method is deprecated and will no-longer be supported "
+            "staring in ZopeX3 3.3.  TraversalError should "
+            "be raised instead."
+            % traversable.__class__.__name__,
+            DeprecationWarning)
         if default != _marker:
             return default
         else:

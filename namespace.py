@@ -28,6 +28,10 @@ from zope.security.proxy import removeSecurityProxy
 from zope.app.publisher.browser import applySkin
 from zope.app.traversing.interfaces import ITraversable, IPathAdapter
 
+# BBB Backward Compatibility
+from zope.exceptions import NotFoundError
+import warnings
+
 class UnexpectedParameters(TraversalError):
     "Unexpected namespace parameters were provided."
 
@@ -254,6 +258,16 @@ class acquire(SimpleHandler):
                         continue
                 except TraversalError:
                     pass
+
+                except NotFoundError, v: # BBB Backward Compatibility
+                    warnings.warn(
+                        "A %s instance raised a NotFoundError in "
+                        "traverse.  Raising NotFoundError in this "
+                        "method is deprecated and will no-longer be supported "
+                        "staring in ZopeX3 3.3.  TraversalError should "
+                        "be raised instead."
+                        % traversable.__class__.__name__,
+                        DeprecationWarning)
                 else:
                     return next
 

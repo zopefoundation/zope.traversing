@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: namespace.py,v 1.16 2003/08/02 18:17:25 srichter Exp $
+$Id: namespace.py,v 1.17 2003/08/08 18:07:33 jim Exp $
 """
 
 from zope.exceptions import NotFoundError
@@ -59,19 +59,7 @@ def namespaceLookup(name, ns, qname, parameters, object, request=None):
         raise NotFoundError(name)
 
     new = handler(qname, parameters, name, object, request)
-    if new is object:
-        # The handler had a side effect only and didn't look up a
-        # different object.  We want to retain the side-effect name
-        # for things like URLs.
-
-        # We'll just at the name to the side-effect names stored in
-        # the object's wrapper.
-
-        data = getWrapperData(new, create=True)
-        data['side_effect_names'] = (data.get('side_effect_names', ())
-                                     + (name, )
-                                     )
-    else:
+    if new is not object:
         new = ContextWrapper(new, object, name=name)
 
     return new
@@ -224,7 +212,8 @@ def skin(name, parameters, pname, ob, request):
     if not request:
         raise NoRequest(pname)
 
-    request.setViewSkin(name)
+    request.shiftNameToApplication()
+    request.setPresentationSkin(name)
 
     return ob
 
@@ -248,7 +237,9 @@ def vh(name, parameters, pname, ob, request):
             app_names.append(segment)
             segment = traversal_stack.pop()
         request.setTraversalStack(traversal_stack)
+    else:
+        raise ValueError("Must have a path element '++' after a virtual host "
+                         "directive.")
 
-    request.setApplicationNames(app_names)
-    request.setVirtualHostRoot()
+    request.setVirtualHostRoot(app_names)
     return ob

@@ -3,17 +3,17 @@
    xmlns:browser='http://namespaces.zope.org/browser'
 >
 
-<adapter factory="zope.app.traversing.adapters.Traverser"
+<adapter for="*"
+         factory="zope.app.traversing.adapters.Traverser"
          provides="zope.app.interfaces.traversing.ITraverser"
          />
-    <!-- Ultimately, this should be registered only for IWrapper, but that
-         won't work like that just now.
-         for="zope.proxy.interfaces.context.IWrapper" /> -->
 
-<adapter factory="zope.app.traversing.adapters.DefaultTraversable"
+<adapter for="*"
+         factory="zope.app.traversing.adapters.DefaultTraversable"
          provides="zope.app.interfaces.traversing.ITraversable" />
 
 <adapter
+    for="*"
     factory="zope.app.traversing.adapters.ObjectName"
     provides="zope.app.interfaces.traversing.IObjectName"
     permission='zope.Public'
@@ -27,6 +27,7 @@
     />
 
 <adapter 
+    for="*"
     provides="zope.app.interfaces.traversing.IPhysicallyLocatable"
     factory="zope.app.traversing.adapters.WrapperPhysicallyLocatable" 
     />

@@ -13,7 +13,7 @@
 ##############################################################################
 """Functional tests for virtual hosting.
 
-$Id: test_vhosting.py,v 1.7 2003/08/08 18:07:40 jim Exp $
+$Id: test_vhosting.py,v 1.8 2003/09/02 20:47:18 jim Exp $
 """
 
 import unittest
@@ -131,7 +131,7 @@ class TestVirtualHosting(BrowserTestCase):
     def test_resources(self):
         provideResource('quux', IBrowserPresentation, Resource)
         self.addPage('/foo/bar/pt',
-                     u'<span tal:replace="context/@@/quux" />')
+                     u'<span tal:replace="context/++resource++quux" />')
         self.verify('/foo/bar/pt', '/@@/quux\n')
         self.verify('/foo/++vh++https:otherhost:443/fake/folders/++/bar/pt',
                     '/fake/folders/@@/quux\n')

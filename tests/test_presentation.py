@@ -14,7 +14,7 @@
 """
 
 Revision information:
-$Id: test_presentation.py,v 1.6 2003/11/21 17:12:16 jim Exp $
+$Id: test_presentation.py,v 1.7 2004/03/15 20:42:10 jim Exp $
 """
 
 from unittest import TestCase, main, makeSuite
@@ -44,7 +44,7 @@ class View:
 class Test(PlacelessSetup, TestCase):
 
     def testView(self):
-        ztapi.browserView(IContent, 'foo', [View])
+        ztapi.browserView(IContent, 'foo', View)
 
         ob = Content()
         v = view('foo', (), '@@foo', ob, TestRequest())

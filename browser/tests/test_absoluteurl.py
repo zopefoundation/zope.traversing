@@ -13,8 +13,9 @@
 ##############################################################################
 """Test the AbsoluteURL view
 
-$Id: test_absoluteurl.py,v 1.1 2004/03/14 03:44:09 srichter Exp $
+$Id: test_absoluteurl.py,v 1.2 2004/03/15 20:42:10 jim Exp $
 """
+
 from unittest import TestCase, main, makeSuite
 
 from zope.app.tests import ztapi
@@ -43,8 +44,8 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
     def setUp(self):
         super(TestAbsoluteURL, self).setUp()
         from zope.app.traversing.browser import AbsoluteURL, SiteAbsoluteURL
-        ztapi.browserView(None, 'absolute_url', [AbsoluteURL])
-        ztapi.browserView(IRoot, 'absolute_url', [SiteAbsoluteURL])
+        ztapi.browserView(None, 'absolute_url', AbsoluteURL)
+        ztapi.browserView(IRoot, 'absolute_url', SiteAbsoluteURL)
         ztapi.provideAdapter(IHTTPRequest, IUserPreferredCharsets,
                              HTTPCharsets)
 

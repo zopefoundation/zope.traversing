@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: Namespaces.py,v 1.2 2002/06/10 23:28:17 jim Exp $
+$Id: Namespaces.py,v 1.3 2002/06/23 17:03:44 jim Exp $
 """
 
 from Zope.Exceptions import NotFoundError
@@ -39,6 +39,7 @@ def namespaceLookup(name, ns, qname, parameters, object, request=None):
                          object, name=name)
     return new
 
+# XXX should get this from zcml
 # Register the etc, view, and resource namespaces
 import EtcNamespace, PresentationNamespaces, AttrItemNamespaces
-import CreateNamespace, AcquireNamespace
+import AcquireNamespace

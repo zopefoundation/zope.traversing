@@ -13,10 +13,10 @@
 ##############################################################################
 """Absolute URL View components
 
-$Id: __init__.py,v 1.3 2004/03/18 20:33:52 srichter Exp $
+$Id: __init__.py,v 1.4 2004/03/19 20:26:37 srichter Exp $
 """
 from zope.interface import implements
-from zope.publisher.browser import BrowserView
+from zope.app.publisher.browser import BrowserView
 from zope.proxy import sameProxiedObjects
 
 from zope.app import zapi

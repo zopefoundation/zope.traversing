@@ -12,7 +12,7 @@
 #
 ##############################################################################
 """
-$Id: adapters.py,v 1.5 2003/03/24 16:42:22 mgedmin Exp $
+$Id: adapters.py,v 1.6 2003/04/28 13:18:38 mgedmin Exp $
 """
 
 from zope.exceptions import NotFoundError
@@ -52,9 +52,9 @@ class DefaultTraversable:
 
         if hasattr(subject, '__getitem__'):
             # Let exceptions propagate.
-            return self._subject[name]
+            return subject[name]
         else:
-            raise NotFoundError(self._subject, name)
+            raise NotFoundError(subject, name)
 
 class ObjectName(object):
 
@@ -233,4 +233,3 @@ def traversePathElement(obj, name, further_path, default=_marker,
             raise
 
     return obj
-

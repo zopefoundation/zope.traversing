@@ -33,7 +33,9 @@ class INamespaceHandler(Interface):
         name, value items.  The 'pname' argument has the original name
         before parameters were removed.
 
-        It is not the respoonsibility of the handler to wrap the return value.
+        It is not the responsibility of the handler to wrap the return value.
+
+        XXX is this "wrap" comment still relevant?
         """
 
 class IPhysicallyLocatable(Interface):

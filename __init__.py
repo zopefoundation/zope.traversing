@@ -14,7 +14,7 @@
 """
 Convenience functions for traversing the object tree.
 
-$Id: __init__.py,v 1.19 2003/04/12 10:47:46 stevea Exp $
+$Id: __init__.py,v 1.20 2003/04/12 10:49:09 stevea Exp $
 """
 from zope.component import getAdapter
 from zope.app.interfaces.traversing import IObjectName, IContainmentRoot
@@ -46,6 +46,7 @@ def joinPath(path, *args):
     """
 
     if not args:
+        # Concatenating u'' is much quicker than unicode(path)
         return u'' + path
     if path != '/' and path.endswith('/'):
         raise ValueError('path must not end with a "/": %s' % path)

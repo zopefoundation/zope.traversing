@@ -12,7 +12,7 @@
 #
 ##############################################################################
 """
-$Id: namespace.py,v 1.20 2003/09/21 17:33:39 jim Exp $
+$Id: namespace.py,v 1.21 2003/10/06 22:08:53 sidnei Exp $
 """
 
 from zope.exceptions import NotFoundError
@@ -99,7 +99,7 @@ def queryResourceInContext(ob, name, request, default=None):
     # We need to set the __parent__ and __name__. We need the unproxied
     # resource to do this.  we will still return the proxied resource.
     r = removeAllProxies(resource)
-    
+
     r.__parent__ = ob
     r.__name__ = name
 

@@ -22,7 +22,7 @@ from types import StringTypes
 
 __all__ = ['traverse', 'traverseName', 'objectName', 'getParent',
            'getParents', 'getPath', 'getRoot', 'locationAsTuple',
-           'locationAsUnicode']
+           'canonicalPath']
 
 _marker = object()
 
@@ -149,7 +149,7 @@ def locationAsTuple(location):
                          " start: %s" % repr(t))
     return t
 
-def locationAsUnicode(location):
+def canonicalPath(location):
     """Given a location as a unicode or ascii string or as a tuple of
     unicode or ascii strings, returns the location as a slash-separated
     unicode string.

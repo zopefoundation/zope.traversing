@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: test_conveniencefunctions.py,v 1.11 2003/03/19 19:57:34 alga Exp $
+$Id: test_conveniencefunctions.py,v 1.12 2003/03/21 15:29:10 alga Exp $
 """
 from unittest import TestCase, main, makeSuite
 from zope.app.services.tests.placefulsetup import PlacefulSetup
@@ -285,15 +285,15 @@ class Test(PlacefulSetup, TestCase):
                 self.applyAssertEqual(lat, argument, correct_answer)
 
     def testLocationAsUnicode(self):
-        from zope.app.traversing import locationAsUnicode as lau
+        from zope.app.traversing import canonicalPath
 
         for error_type, value in self._bad_locations:
-            self.assertRaises(error_type, lau, value)
+            self.assertRaises(error_type, canonicalPath, value)
 
         for spec in self._good_locations:
             correct_answer = spec[0]
             for argument in spec:
-                self.applyAssertEqual(lau, argument, correct_answer)
+                self.applyAssertEqual(canonicalPath, argument, correct_answer)
 
     def applyAssertEqual(self, func, arg, answer):
         try:

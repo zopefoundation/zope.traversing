@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: testConvenienceFunctions.py,v 1.10 2002/12/05 14:29:22 stevea Exp $
+$Id: testConvenienceFunctions.py,v 1.11 2002/12/12 11:32:35 mgedmin Exp $
 """
 from unittest import TestCase, TestSuite, main, makeSuite
 from Zope.App.OFS.Services.ServiceManager.tests.PlacefulSetup \
@@ -32,12 +32,18 @@ from Zope.App.Traversing.IContainmentRoot import IContainmentRoot
 from Zope.App.Traversing.PhysicalLocationAdapters \
      import WrapperPhysicallyLocatable, RootPhysicallyLocatable
 
+from Zope.Security.Proxy import Proxy
+from Zope.Security.Checker import selectChecker
 
 from Zope.Exceptions import NotFoundError
 
 class C:
     def __init__(self, name):
         self.name = name
+
+def _proxied(*args):
+    return Proxy(args, selectChecker(args))
+
 
 class Test(PlacefulSetup, TestCase):
 
@@ -237,6 +243,7 @@ class Test(PlacefulSetup, TestCase):
         ( u'/xx/yy/zz',                 (u'',u'xx',u'yy',u'zz'),      
             ('','xx','yy','zz'),
             '/xx/yy/zz',
+            _proxied('','xx','yy','zz'),
         ),
         ( u'xx',                        (u'xx',),
             ('xx',),

@@ -127,12 +127,13 @@ def locationAsTuple(location):
     """
     if not location:
         raise ValueError, "location must be non-empty: %s" % repr(location)
-    if isinstance(location, tuple):
-        t = tuple(map(unicode, location))
-    elif isinstance(location, StringTypes):
+    if isinstance(location, StringTypes):
         if location == u'/':  # matches '/' or u'/'
             return (u'',)
         t = tuple(location.split(u'/'))
+    elif location.__class__ == tuple:
+        # isinstance doesn't work when tuple is security-wrapped
+        t = tuple(map(unicode, location))
     else:
         raise ValueError, \
             "location %s must be a string or a tuple of strings." % (location,)
@@ -153,12 +154,13 @@ def locationAsUnicode(location):
     """
     if not location:
         raise ValueError, "location must be non-empty."
-    if isinstance(location, tuple):
+    if isinstance(location, StringTypes):
+        u = unicode(location)
+    elif location.__class__ == tuple:
+        # isinstance doesn't work when tuple is security-wrapped
         u = u'/'.join(location)
         if not u:  # special case for u''
             return u'/'
-    elif isinstance(location, StringTypes):
-        u = unicode(location)
     else:
         raise ValueError, \
             "location %s must be a string or a tuple of strings." % (location,)

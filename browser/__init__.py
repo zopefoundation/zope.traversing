@@ -13,7 +13,7 @@
 ##############################################################################
 """Absolute URL View components
 
-$Id: __init__.py,v 1.2 2004/03/18 11:15:34 philikon Exp $
+$Id: __init__.py,v 1.3 2004/03/18 20:33:52 srichter Exp $
 """
 from zope.interface import implements
 from zope.publisher.browser import BrowserView
@@ -36,6 +36,9 @@ class AbsoluteURL(BrowserView):
         request = self.request
 
 
+        # The application URL contains all the namespaces that are at the
+        # beginning of the URL, such as skins, virtual host specifications and
+        # so on.
         if sameProxiedObjects(context, request.getVirtualHostRoot()):
             return request.getApplicationURL()
 

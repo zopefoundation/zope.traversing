@@ -439,28 +439,55 @@ class debug(view):
     def traverse(self, name, ignored):
         """Debug traversal adapter
 
-           This adapter allows debugging flags to be set in the request.
-           See IDebugFlags.
+        This adapter allows debugging flags to be set in the request.
+        See IDebugFlags.
 
-           Demonstration:
+        Setup for demonstration:
 
-             >>> from zope.publisher.browser import TestRequest
-             >>> request = TestRequest()
-             >>> ob = object()
-             >>> adapter = debug(ob, request)
-             >>> request.debug.sourceAnnotations
-             False
-             >>> adapter.traverse('source', ()) is ob
-             True
-             >>> request.debug.sourceAnnotations
-             True
-             >>> adapter.traverse('source,tal', ()) is ob
-             True
-             >>> try:
-             ...     adapter.traverse('badflag', ())
-             ... except ValueError:
-             ...     print 'unknown debugging flag'
-             unknown debugging flag
+            >>> from zope.publisher.browser import TestRequest
+            >>> request = TestRequest()
+            >>> ob = object()
+            >>> adapter = debug(ob, request)
+
+        ++debug++source enables source annotations
+
+            >>> request.debug.sourceAnnotations
+            False
+            >>> adapter.traverse('source', ()) is ob
+            True
+            >>> request.debug.sourceAnnotations
+            True
+
+        ++debug++tal enables TAL markup in output
+
+            >>> request.debug.showTAL
+            False
+            >>> adapter.traverse('tal', ()) is ob
+            True
+            >>> request.debug.showTAL
+            True
+
+        ++debug++errors enables tracebacks (by switching to debug skin)
+
+            >>> request.getPresentationSkin()
+            'default'
+            >>> adapter.traverse('errors', ()) is ob
+            True
+            >>> request.getPresentationSkin()
+            'Debug'
+
+        You can specify several flags separated by commas
+
+            >>> adapter.traverse('source,tal', ()) is ob
+            True
+
+        Unknown flag names cause exceptions
+
+            >>> try:
+            ...     adapter.traverse('badflag', ())
+            ... except ValueError:
+            ...     print 'unknown debugging flag'
+            unknown debugging flag
 
         """
         if __debug__:
@@ -470,6 +497,11 @@ class debug(view):
                     request.debug.sourceAnnotations = True
                 elif flag == 'tal':
                     request.debug.showTAL = True
+                elif flag == 'errors':
+                    # XXX I am not sure this is the best solution.  What
+                    # if we want to enable tracebacks when also trying to
+                    # debug a different skin?
+                    request.setPresentationSkin('Debug')
                 else:
                     raise ValueError("Unknown debug flag: %s" % flag)
             return self.context

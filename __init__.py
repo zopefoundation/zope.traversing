@@ -101,7 +101,7 @@ def getParent(obj):
     if IContainmentRoot.isImplementedBy(obj):
         return None
     if isWrapper(obj):
-        parent = getWrapperContext(obj)
+        parent = getWrapperContainer(obj)
         if parent is not None:
             return parent
     raise TypeError("Not enough context information to get parent", obj)
@@ -109,7 +109,7 @@ def getParent(obj):
 def getParents(obj):
     """Returns a list starting with the given object's parent followed by
     each of its parents.
-    
+
     Raises a TypeError if the context doesn't go all the way down to
     a containment root.
     """
@@ -123,7 +123,7 @@ def getParents(obj):
             if w is None:
                 break
             parents.append(w)
-            
+
         if parents and IContainmentRoot.isImplementedBy(parents[-1]):
             return parents
     raise TypeError, "Not enough context information to get all parents"

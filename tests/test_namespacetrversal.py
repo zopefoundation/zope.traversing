@@ -18,7 +18,7 @@ $Id$
 from unittest import main
 from zope.testing.doctestunit import DocTestSuite
 
-from zope.app.tests.placelesssetup import setUp, tearDown
+from zope.app.testing.placelesssetup import setUp, tearDown
 
 def test_suite():
     return DocTestSuite('zope.app.traversing.namespace',

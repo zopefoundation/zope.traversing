@@ -16,11 +16,10 @@
 $Id$
 """
 from unittest import TestCase, main, makeSuite
-from zope.app.tests import ztapi
+from zope.app.testing import ztapi
 from zope.interface import directlyProvides
-from zope.app.site.tests.placefulsetup import PlacefulSetup
+from zope.app.component.testing import PlacefulSetup
 from zope.app.traversing.adapters import Traverser
-from zope.app.servicenames import Adapters
 from zope.app.traversing.interfaces import ITraverser, ITraversable
 from zope.app.traversing.adapters import DefaultTraversable
 

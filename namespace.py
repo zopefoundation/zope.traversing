@@ -17,16 +17,16 @@ $Id$
 """
 import re
 
-from zope.component.exceptions import ComponentLookupError
+import zope.component as capi
 import zope.interface
+from zope.component.exceptions import ComponentLookupError
 from zope.interface import providedBy, directlyProvides, directlyProvidedBy
-from zope import component
-from zope.app.traversing.interfaces import TraversalError
 from zope.publisher.interfaces.browser import ISkin
 from zope.security.proxy import removeSecurityProxy
 
 from zope.app.publisher.browser import applySkin
 from zope.app.traversing.interfaces import ITraversable, IPathAdapter
+from zope.app.traversing.interfaces import TraversalError
 
 # BBB Backward Compatibility
 from zope.exceptions import NotFoundError
@@ -47,7 +47,7 @@ def namespaceLookup(ns, name, object, request=None):
        Let's start with adapter-based transersal. We're going to use the
        component architecture, so we'll need to initialize it:
 
-         >>> from zope.app.tests.placelesssetup import setUp, tearDown
+         >>> from zope.app.testing.placelesssetup import setUp, tearDown
          >>> setUp()
 
          >>> class I(zope.interface.Interface):
@@ -63,7 +63,7 @@ def namespaceLookup(ns, name, object, request=None):
          ...     def traverse(self, name, remaining):
          ...         return name+'42'
 
-         >>> from zope.app.tests import ztapi
+         >>> from zope.app.testing import ztapi
          >>> ztapi.provideAdapter(I, ITraversable, Adapter, 'foo')
 
        Then given an object, we can traverse it with a
@@ -81,7 +81,7 @@ def namespaceLookup(ns, name, object, request=None):
 
        We'll get the same thing if we provide a request:
 
-         >>> from zope.publisher.browser import TestRequest
+       >>> from zope.publisher.browser import TestRequest
          >>> request = TestRequest()
          >>> namespaceLookup('foo', 'bar', C(), request)
          Traceback (most recent call last):
@@ -104,10 +104,10 @@ def namespaceLookup(ns, name, object, request=None):
        """
 
     if request is not None:
-        traverser = component.queryView(object, ns, request,
-                                        providing=ITraversable)
+        traverser = capi.queryMultiAdapter((object, request), 
+                                           ITraversable, ns)
     else:
-        traverser = component.queryAdapter(object, ITraversable, ns)
+        traverser = capi.queryAdapter(object, ITraversable, ns)
 
     if traverser is None:
         raise TraversalError("++%s++%s" % (ns, name))
@@ -167,7 +167,7 @@ def getResource(site, name, request):
     return resource
 
 def queryResource(site, name, request, default=None):
-    resource = component.queryResource(name, request)
+    resource = capi.queryAdapter(request, name=name)
     if resource is None:
         return default
 
@@ -314,7 +314,7 @@ class etc(SimpleHandler):
 
     def traverse(self, name, ignored):
         # TODO:
-        # This is here now to allow us to get service managers from a
+        # This is here now to allow us to get site managers from a
         # separate namespace from the content. We add and etc
         # namespace to allow us to handle misc objects.  We'll apply
         # YAGNI for now and hard code this. We'll want something more
@@ -330,7 +330,7 @@ class etc(SimpleHandler):
             and IContainmentRoot.providedBy(ob)):
             return applicationController
 
-        if name not in ('site', 'Services'):
+        if name not in ('site',):
             raise TraversalError(ob, name)
 
         method_name = "getSiteManager"
@@ -353,7 +353,8 @@ class view(object):
         self.request = request
 
     def traverse(self, name, ignored):
-        view = component.queryView(self.context, name, self.request)
+        view = capi.queryMultiAdapter((self.context, self.request),
+                                           name=name)
         if view is None:
             raise TraversalError(self.context, name)
 
@@ -370,7 +371,7 @@ class skin(view):
 
     def traverse(self, name, ignored):
         self.request.shiftNameToApplication()
-        skin = component.getUtility(ISkin, name)
+        skin = capi.getUtility(ISkin, name)
         applySkin(self.request, skin)
         return self.context
 
@@ -418,9 +419,9 @@ class adapter(SimpleHandler):
 
            To demonstrate this, we need to register some adapters:
 
-             >>> from zope.app.tests.placelesssetup import setUp, tearDown
+             >>> from zope.app.testing.placelesssetup import setUp, tearDown
              >>> setUp()
-             >>> from zope.app.tests import ztapi
+             >>> from zope.app.testing import ztapi
              >>> def adapter1(ob):
              ...     return 1
              >>> def adapter2(ob):
@@ -447,7 +448,7 @@ class adapter(SimpleHandler):
              >>> tearDown()
            """
         try:
-            return component.getAdapter(self.context, IPathAdapter, name)
+            return capi.getAdapter(self.context, IPathAdapter, name)
         except ComponentLookupError:
             raise TraversalError(self.context, name)
 
@@ -487,7 +488,7 @@ class debug(view):
 
         ++debug++errors enables tracebacks (by switching to debug skin)
 
-            >>> from zope.app.tests import ztapi
+            >>> from zope.app.testing import ztapi
             >>> from zope.publisher.interfaces.browser import IBrowserRequest
 
             >>> class Debug(IBrowserRequest):
@@ -527,7 +528,7 @@ class debug(view):
                     # TODO: I am not sure this is the best solution.  What
                     # if we want to enable tracebacks when also trying to
                     # debug a different skin?
-                    skin = component.getUtility(ISkin, 'Debug')
+                    skin = capi.getUtility(ISkin, 'Debug')
                     directlyProvides(request, providedBy(request)+skin)
                 else:
                     raise ValueError("Unknown debug flag: %s" % flag)

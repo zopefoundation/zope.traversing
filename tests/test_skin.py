@@ -19,8 +19,8 @@ from unittest import TestCase, main, makeSuite
 from zope.interface import Interface, directlyProvides
 
 from zope.publisher.interfaces.browser import ISkin
-from zope.app.tests import ztapi
-from zope.app.tests.placelesssetup import PlacelessSetup
+from zope.app.testing import ztapi
+from zope.app.testing.placelesssetup import PlacelessSetup
 
 
 class FauxRequest(object):

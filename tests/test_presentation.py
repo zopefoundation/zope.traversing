@@ -16,8 +16,8 @@
 $Id$
 """
 from unittest import TestCase, main, makeSuite
-from zope.app.tests import ztapi
-from zope.app.tests.placelesssetup import PlacelessSetup
+from zope.app.testing import ztapi
+from zope.app.testing.placelesssetup import PlacelessSetup
 from zope.app.traversing.namespace import view, resource
 from zope.interface import Interface, implements
 from zope.publisher.browser import TestRequest

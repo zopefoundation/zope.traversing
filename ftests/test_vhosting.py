@@ -16,8 +16,7 @@
 $Id$
 """
 import unittest
-from zope.app.tests import ztapi
-from zope.app.tests.functional import BrowserTestCase
+from zope.app.testing import ztapi, functional
 from zope.app.folder import Folder
 from transaction import get_transaction
 from zope.app.publisher.browser.resource import Resource
@@ -32,7 +31,7 @@ class MyObj(Contained):
 
 defineChecker(MyObj, NoProxy)
 
-class TestVirtualHosting(BrowserTestCase):
+class TestVirtualHosting(functional.BrowserTestCase):
 
     def test_request_url(self):
         self.addPage('/pt', u'<span tal:replace="request/URL"/>')

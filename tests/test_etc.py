@@ -29,7 +29,7 @@ class Test(CleanUp, TestCase):
             etc(applicationControllerRoot).traverse('process', ()),
             applicationController)
 
-    def testServices(self):
+    def testSiteManager(self):
         from zope.app.traversing.namespace import etc
         class C(object):
             def getSiteManager(self): return 42

@@ -16,17 +16,14 @@
 $Id$
 """
 from unittest import TestCase, main, makeSuite
-from zope.app.tests.placelesssetup import PlacelessSetup
-from zope.app.tests import ztapi
+from zope.app.testing.placelesssetup import PlacelessSetup
+from zope.app.testing import ztapi, setup
 from zope.interface import implements
 
 from zope.app.traversing.interfaces import IContainmentRoot
 from zope.app.traversing.interfaces import IPhysicallyLocatable
-from zope.app.location.traversing import LocationPhysicallyLocatable
-from zope.app.traversing.adapters import RootPhysicallyLocatable
 from zope.app.container.contained import contained
-from zope.component.interfaces import IServiceService
-from zope.app.site.servicecontainer import ServiceManagerContainer
+from zope.app.component.site import SiteManagerContainer
 
 
 class Root(object):
@@ -39,32 +36,15 @@ class C(object):
     pass
 
 
-class SiteManager(object):
-
-    implements(IServiceService)
-
-    def getService(self, object, name):
-        '''See interface IServiceService'''
-        raise ComponentLookupError(name)
-
-    def getServiceDefinitions(self):
-        '''See interface IServiceService'''
-        return ()
-
-
-
 class Test(PlacelessSetup, TestCase):
 
     def test(self):
-        ztapi.provideAdapter(None, IPhysicallyLocatable,
-                             LocationPhysicallyLocatable)
-        ztapi.provideAdapter(IContainmentRoot, IPhysicallyLocatable,
-                             RootPhysicallyLocatable)
+        setup.setUpTraversal()
 
         root = Root()
         f1 = contained(C(), root, name='f1')
-        f2 = contained(ServiceManagerContainer(),   f1, name='f2')
-        f3 = contained(C(),   f2, name='f3')
+        f2 = contained(SiteManagerContainer(), f1, name='f2')
+        f3 = contained(C(), f2, name='f3')
         
         adapter = IPhysicallyLocatable(f3)
 
@@ -73,7 +53,7 @@ class Test(PlacelessSetup, TestCase):
         self.assertEqual(adapter.getRoot(), root)
         self.assertEqual(adapter.getNearestSite(), root)
 
-        f2.setSiteManager(SiteManager())
+        setup.createSiteManager(f2)
         self.assertEqual(adapter.getNearestSite(), f2)
 
         

@@ -17,7 +17,7 @@ $Id$
 """
 import unittest
 
-from zope.app.tests import ztapi
+from zope.app.testing import ztapi
 from zope.interface import directlyProvides
 from zope.interface.verify import verifyClass
 from zope.interface import implementedBy
@@ -33,9 +33,8 @@ from zope.app.container.contained import contained
 
 from zope.app.traversing.interfaces import TraversalError
 from zope.security.interfaces import Unauthorized
-from zope.app.servicenames import Adapters
 
-from zope.app.site.tests.placefulsetup import PlacefulSetup
+from zope.app.component.testing import PlacefulSetup
 from zope.security.checker \
     import ProxyFactory, defineChecker, CheckerPublic, Checker
 from zope.security.management import newInteraction, endInteraction

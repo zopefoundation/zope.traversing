@@ -42,7 +42,7 @@
 <traversalNamespace name="resource"
                     handler=".PresentationNamespaces.resource" />
 <traversalNamespace name="attribute" handler=".AttrItemNamespaces.attr" />
-<traversalNamespace name="item" handler=".AttrItemNamespaces.attr" />
+<traversalNamespace name="item" handler=".AttrItemNamespaces.item" />
 <traversalNamespace name="acquire" handler=".AcquireNamespace.acquire" />
 <traversalNamespace name="skin" handler=".SkinNamespace.skin" />
 

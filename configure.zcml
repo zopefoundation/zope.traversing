@@ -11,11 +11,6 @@
     provides="zope.app.interfaces.traversing.ITraversable" />
 
 <adapter 
-    for="*"
-    provides="zope.app.interfaces.traversing.IPhysicallyLocatable"
-    factory="zope.app.traversing.adapters.WrapperPhysicallyLocatable" />
-
-<adapter 
     provides="zope.app.interfaces.traversing.IPhysicallyLocatable"
     for="zope.app.interfaces.traversing.IContainmentRoot"
     factory="zope.app.traversing.adapters.RootPhysicallyLocatable" />

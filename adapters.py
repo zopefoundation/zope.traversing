@@ -12,7 +12,7 @@
 #
 ##############################################################################
 """
-$Id: adapters.py,v 1.14 2003/08/16 00:44:19 srichter Exp $
+$Id: adapters.py,v 1.15 2003/09/21 17:31:14 jim Exp $
 """
 
 from zope.exceptions import NotFoundError
@@ -22,8 +22,6 @@ from zope.app.interfaces.traversing import IContainmentRoot
 from zope.app.interfaces.traversing import ITraverser, ITraversable
 
 from zope.component import getAdapter, queryAdapter
-from zope.context import getInnerWrapperData, getWrapperContainer
-from zope.app.context import ContextWrapper
 
 from zope.app.traversing.namespace import namespaceLookup
 from zope.app.traversing.namespace import UnexpectedParameters
@@ -63,45 +61,6 @@ class DefaultTraversable:
             return subject[name]
         else:
             raise NotFoundError(subject, name)
-
-class WrapperPhysicallyLocatable:
-    __doc__ = IPhysicallyLocatable.__doc__
-
-    implements(IPhysicallyLocatable)
-
-    def __init__(self, context):
-        self.context = context
-
-    def getRoot(self):
-        "See IPhysicallyLocatable"
-        container = getWrapperContainer(self.context)
-        if container is None:
-            raise TypeError("Not enough context to determine location root")
-        return getAdapter(container, IPhysicallyLocatable).getRoot()
-
-    def getPath(self):
-        "See IPhysicallyLocatable"
-        context = self.context
-        container = getWrapperContainer(context)
-        if container is None:
-            raise TypeError("Not enough context to determine location")
-        name = getInnerWrapperData(context)['name']
-
-        container = getAdapter(container, IPhysicallyLocatable)
-        container_path = container.getPath()
-
-        if name == '.':
-            # skip
-            return container_path
-
-        if container_path == u'/':
-            return u'/' + name
-        else:
-            return container_path + u'/' + name
-
-    def getName(self):
-        "See IPhysicallyLocatable"
-        return getInnerWrapperData(self.context)['name']
 
 class RootPhysicallyLocatable:
     __doc__ = IPhysicallyLocatable.__doc__
@@ -191,8 +150,7 @@ def traversePathElement(obj, name, further_path, default=_marker,
         return obj
 
     if name == '..':
-        # XXX This doesn't look right. Why fall back to obj?
-        obj = getWrapperContainer(obj) or obj
+        obj = obj.__parent__
         return obj
 
     if name and name[:1] in '@+':
@@ -214,7 +172,7 @@ def traversePathElement(obj, name, further_path, default=_marker,
 
     try:
         next_item = traversable.traverse(nm, parms, name, further_path)
-        obj = ContextWrapper(next_item, obj, name=name)
+        obj = next_item
     except NotFoundError:
         if default != _marker:
             return default

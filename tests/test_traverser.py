@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: test_traverser.py,v 1.12 2003/06/07 06:54:24 stevea Exp $
+$Id: test_traverser.py,v 1.13 2003/09/21 17:31:14 jim Exp $
 """
 
 import unittest
@@ -27,10 +27,10 @@ from zope.app.traversing.adapters import Traverser, DefaultTraversable
 
 from zope.app.interfaces.traversing import IPhysicallyLocatable
 from zope.app.interfaces.traversing import IContainmentRoot
-from zope.app.traversing.adapters import WrapperPhysicallyLocatable
+from zope.app.location import LocationPhysicallyLocatable
 from zope.app.traversing.adapters import RootPhysicallyLocatable
+from zope.app.container.contained import contained
 
-from zope.app.context import ContextWrapper
 from zope.exceptions import NotFoundError, Unauthorized
 from zope.component import getService
 from zope.app.services.servicenames import Adapters
@@ -39,8 +39,9 @@ from zope.app.services.tests.placefulsetup import PlacefulSetup
 from zope.security.checker \
     import ProxyFactory, defineChecker, CheckerPublic, Checker
 from zope.security.management import newSecurityManager
+from zope.app.container.contained import Contained, contained
 
-class C:
+class C(Contained):
     def __init__(self, name):
         self.name = name
 
@@ -50,8 +51,8 @@ class TraverserTests(PlacefulSetup, unittest.TestCase):
         PlacefulSetup.setUp(self)
         # Build up a wrapper chain
         self.root =   C('root')
-        self.folder = ContextWrapper(C('folder'), self.root,   name='folder')
-        self.item =   ContextWrapper(C('item'),   self.folder, name='item')
+        self.folder = contained(C('folder'), self.root,   name='folder')
+        self.item =   contained(C('item'),   self.folder, name='item')
         self.tr = Traverser(self.item)
 
     def testImplementsITraverser(self):
@@ -85,14 +86,14 @@ class UnrestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
         getService(None, Adapters).provideAdapter(
               None, ITraversable, DefaultTraversable)
         getService(None, Adapters).provideAdapter(
-              None, IPhysicallyLocatable, WrapperPhysicallyLocatable)
+              None, IPhysicallyLocatable, LocationPhysicallyLocatable)
         getService(None, Adapters).provideAdapter(
               IContainmentRoot, IPhysicallyLocatable, RootPhysicallyLocatable)
 
         self.root = root = C('root')
         directlyProvides(self.root, IContainmentRoot)
-        self.folder = folder = C('folder')
-        self.item = item = C('item')
+        self.folder = folder = contained(C('folder'), root, 'folder')
+        self.item = item = contained(C('item'), folder, 'item')
 
         root.folder = folder
         folder.item = item
@@ -129,9 +130,6 @@ class UnrestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
 
         self.assertEquals(tr.traverse('/folder/../folder/./item'),
             item)
-        self.assertEquals(tr.traverse(
-            '/../folder/../../folder/item'), item)
-        self.assertEquals(tr.traverse('../../folder/item'), item)
 
     def testNotFoundDefault(self):
         self.assertEquals(self.tr.traverse('foo', 'notFound'),
@@ -159,14 +157,14 @@ class RestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
         getService(None,Adapters).provideAdapter(
              None, ITraversable, DefaultTraversable)
         getService(None, Adapters).provideAdapter(
-              None, IPhysicallyLocatable, WrapperPhysicallyLocatable)
+              None, IPhysicallyLocatable, LocationPhysicallyLocatable)
         getService(None, Adapters).provideAdapter(
               IContainmentRoot, IPhysicallyLocatable, RootPhysicallyLocatable)
 
         self.root = root = C('root')
         directlyProvides(root, IContainmentRoot)
-        self.folder = folder = C('folder')
-        self.item = item = C('item')
+        self.folder = folder = contained(C('folder'), root, 'folder')
+        self.item = item = contained(C('item'), folder, 'item')
 
         root.folder = folder
         folder.item = item

@@ -12,7 +12,7 @@
 #
 ##############################################################################
 """
-$Id: test_physicallocationadapters.py,v 1.13 2003/08/08 18:07:11 jim Exp $
+$Id: test_physicallocationadapters.py,v 1.14 2003/09/21 17:31:14 jim Exp $
 """
 
 from unittest import TestCase, main, makeSuite
@@ -23,9 +23,9 @@ from zope.interface import implements
 
 from zope.app.interfaces.traversing import IContainmentRoot
 from zope.app.interfaces.traversing import IPhysicallyLocatable
-from zope.app.traversing.adapters import WrapperPhysicallyLocatable
+from zope.app.location import LocationPhysicallyLocatable
 from zope.app.traversing.adapters import RootPhysicallyLocatable
-from zope.app.context import ContextWrapper
+from zope.app.container.contained import contained
 
 class Root:
     implements(IContainmentRoot)
@@ -36,25 +36,20 @@ class C:
 class Test(PlacelessSetup, TestCase):
 
     def test(self):
-        provideAdapter(None, IPhysicallyLocatable, WrapperPhysicallyLocatable)
+        provideAdapter(None, IPhysicallyLocatable, LocationPhysicallyLocatable)
         provideAdapter(IContainmentRoot, IPhysicallyLocatable,
                        RootPhysicallyLocatable)
 
         root = Root()
-        f1 = ContextWrapper(C(), root, name='f1')
-        f2 = ContextWrapper(C(),   f1, name='f2')
-        f3 = ContextWrapper(C(),   f2, name='f3')
+        f1 = contained(C(), root, name='f1')
+        f2 = contained(C(),   f1, name='f2')
+        f3 = contained(C(),   f2, name='f3')
 
         adapter = getAdapter(f3, IPhysicallyLocatable)
 
         self.assertEqual(adapter.getPath(), '/f1/f2/f3')
         self.assertEqual(adapter.getName(), 'f3')
         self.assertEqual(adapter.getRoot(), root)
-
-        adapter = getAdapter(C(), IPhysicallyLocatable)
-        self.assertRaises(TypeError, adapter.getPath)
-        self.assertRaises(TypeError, adapter.getName)
-        self.assertRaises(TypeError, adapter.getRoot)
 
 
 def test_suite():

@@ -14,14 +14,13 @@
 """
 Convenience functions for traversing the object tree.
 
-$Id: __init__.py,v 1.23 2003/06/13 17:41:20 stevea Exp $
+$Id: __init__.py,v 1.24 2003/09/21 17:31:14 jim Exp $
 """
 
 from zope.interface import moduleProvides
 from zope.component import getAdapter
 from zope.app.interfaces.traversing import IContainmentRoot, ITraversalAPI
 from zope.app.interfaces.traversing import ITraverser, IPhysicallyLocatable
-from zope.context import getWrapperContainer, isWrapper
 
 moduleProvides(ITraversalAPI)
 __all__ = tuple(ITraversalAPI)
@@ -131,13 +130,17 @@ def getParent(obj):
     Raises TypeError if the object doesn't have enough context to get the
     parent.
     """
+    
     if IContainmentRoot.isImplementedBy(obj):
         return None
-    if isWrapper(obj):
-        parent = getWrapperContainer(obj)
-        if parent is not None:
-            return parent
+    
+    parent = getattr(obj, '__parent__', None)
+    if parent is not None:
+        return parent
+
     raise TypeError("Not enough context information to get parent", obj)
+
+
 
 def getParents(obj):
     """Returns a list starting with the given object's parent followed by
@@ -148,17 +151,19 @@ def getParents(obj):
     """
     if IContainmentRoot.isImplementedBy(obj):
         return []
-    if isWrapper(obj):
-        parents = []
-        w = obj
-        while 1:
-            w = getWrapperContainer(w)
-            if w is None:
-                break
-            parents.append(w)
 
-        if parents and IContainmentRoot.isImplementedBy(parents[-1]):
-            return parents
+    
+    parents = []
+    w = obj
+    while 1:
+        w = w.__parent__
+        if w is None:
+            break
+        parents.append(w)
+
+    if parents and IContainmentRoot.isImplementedBy(parents[-1]):
+        return parents
+
     raise TypeError, "Not enough context information to get all parents"
 
 

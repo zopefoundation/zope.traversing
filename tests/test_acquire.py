@@ -14,7 +14,7 @@
 """
 
 Revision information:
-$Id: test_acquire.py,v 1.7 2003/06/01 15:59:38 jim Exp $
+$Id: test_acquire.py,v 1.8 2003/09/21 17:31:14 jim Exp $
 """
 
 from unittest import TestCase, main, makeSuite
@@ -22,7 +22,6 @@ from zope.app.tests.placelesssetup import PlacelessSetup
 from zope.app.interfaces.traversing import ITraversable
 from zope.app.traversing.adapters import DefaultTraversable
 from zope.component.adapter import provideAdapter
-from zope.app.context import ContextWrapper
 from zope.app.traversing.namespace import acquire
 from zope.exceptions import NotFoundError
 
@@ -37,13 +36,13 @@ class Test(PlacelessSetup, TestCase):
 
         a = C('a')
         a.a1 = C('a1')
-        a.a2 = C('a2')
-        a.a2.a21 = C('a21')
-        a.a2.a21.a211 = C('a211')
+        a.a2 = C('a2'); a.a2.__parent__ = a
+        a.a2.a21 = C('a21'); a.a2.a21.__parent__ = a.a2
+        a.a2.a21.a211 = C('a211'); a.a2.a21.a211.__parent__ = a.a2.a21
 
-        a2 = ContextWrapper(a.a2, a)
-        a21 = ContextWrapper(a.a2.a21, a2)
-        a211 = ContextWrapper(a.a2.a21.a211, a21)
+        a2 = a.a2
+        a21 = a.a2.a21
+        a211 = a.a2.a21.a211
 
         acquired = acquire('a1', (), 'a1;acquire', a211, None)
 

@@ -13,13 +13,11 @@
 ##############################################################################
 """
 
-$Id: test_conveniencefunctions.py,v 1.19 2003/06/13 17:41:21 stevea Exp $
+$Id: test_conveniencefunctions.py,v 1.20 2003/09/21 17:31:14 jim Exp $
 """
 from unittest import TestCase, main, makeSuite
 from zope.interface import directlyProvides
 from zope.app.services.tests.placefulsetup import PlacefulSetup
-from zope.app.context import ContextWrapper
-from zope.context import isWrapper
 from zope.app.traversing.adapters import Traverser
 from zope.component import getService
 from zope.app.services.servicenames import Adapters
@@ -28,15 +26,18 @@ from zope.app.traversing.adapters import DefaultTraversable
 
 from zope.app.interfaces.traversing import IPhysicallyLocatable
 from zope.app.interfaces.traversing import IContainmentRoot
-from zope.app.traversing.adapters import WrapperPhysicallyLocatable
+from zope.app.location import LocationPhysicallyLocatable
 from zope.app.traversing.adapters import RootPhysicallyLocatable
 
 from zope.security.proxy import Proxy
 from zope.security.checker import selectChecker
 
 from zope.exceptions import NotFoundError
+from zope.app.container.contained import contained
 
 class C:
+    __parent__ = None
+    __name__ = None
     def __init__(self, name):
         self.name = name
 
@@ -55,11 +56,11 @@ class Test(PlacefulSetup, TestCase):
         item = C('item')
 
         self.root = root  # root is not usually wrapped
-        self.folder = ContextWrapper(folder, self.root,   name='folder')
-        self.item =   ContextWrapper(item,   self.folder, name='item')
+        self.folder = contained(folder, self.root,   name='folder')
+        self.item =   contained(item,   self.folder, name='item')
         self.unwrapped_item = item
-        self.broken_chain_folder = ContextWrapper(folder, None)
-        self.broken_chain_item = ContextWrapper(item,
+        self.broken_chain_folder = contained(folder, None)
+        self.broken_chain_item = contained(item,
                                     self.broken_chain_folder,
                                     name='item'
                                     )
@@ -72,7 +73,7 @@ class Test(PlacefulSetup, TestCase):
         getService(None, Adapters).provideAdapter(
               None, ITraversable, DefaultTraversable)
         getService(None, Adapters).provideAdapter(
-              None, IPhysicallyLocatable, WrapperPhysicallyLocatable)
+              None, IPhysicallyLocatable, LocationPhysicallyLocatable)
         getService(None, Adapters).provideAdapter(
               IContainmentRoot, IPhysicallyLocatable, RootPhysicallyLocatable)
 
@@ -105,7 +106,7 @@ class Test(PlacefulSetup, TestCase):
             traverseName(self.item, '..'),
             self.tr.traverse('/folder')
             )
-        self.assert_(isWrapper(traverseName(self.folder, 'item')))
+
         # XXX test that ++names++ and @@names work too
 
     def testTraverseNameBadValue(self):
@@ -133,26 +134,10 @@ class Test(PlacefulSetup, TestCase):
             'item'
             )
 
-    def testGetNameFromUnwrapped(self):
-        from zope.app.traversing import getName
-        self.assertRaises(
-            TypeError,
-            getName,
-            self.unwrapped_item
-            )
-
     def testGetParent(self):
         from zope.app.traversing import getParent
         self.assertEqual(
             getParent(self.item),
-            self.folder
-            )
-
-    def testGetParentOtherContext(self):
-        from zope.app.traversing import getParent
-        item = ContextWrapper(self.item, self.root, name='item')
-        self.assertEqual(
-            getParent(item),
             self.folder
             )
 
@@ -192,14 +177,6 @@ class Test(PlacefulSetup, TestCase):
             TypeError,
             getParents,
             self.broken_chain_item
-            )
-
-    def testGetParentsFromUnwrapped(self):
-        from zope.app.traversing import getParents
-        self.assertRaises(
-            TypeError,
-            getParents,
-            self.unwrapped_item
             )
 
     def testGetParentFromUnwrapped(self):

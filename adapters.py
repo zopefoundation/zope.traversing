@@ -12,7 +12,7 @@
 #
 ##############################################################################
 """
-$Id: adapters.py,v 1.7 2003/05/23 17:51:53 jim Exp $
+$Id: adapters.py,v 1.8 2003/05/27 14:18:27 jim Exp $
 """
 
 from zope.exceptions import NotFoundError
@@ -22,8 +22,8 @@ from zope.app.interfaces.traversing import IContainmentRoot
 from zope.app.interfaces.traversing import ITraverser, ITraversable
 
 from zope.component import getAdapter, queryAdapter
-from zope.proxy.context import getInnerWrapperData, getWrapperContainer
-from zope.proxy.context import ContextWrapper
+from zope.context import getInnerWrapperData, getWrapperContainer
+from zope.context import ContextWrapper
 
 from zope.app.traversing.namespace import namespaceLookup
 from zope.app.traversing.namespace import UnexpectedParameters

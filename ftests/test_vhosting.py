@@ -13,7 +13,7 @@
 ##############################################################################
 """Functional tests for virtual hosting.
 
-$Id: test_vhosting.py,v 1.5 2003/04/28 13:14:20 mgedmin Exp $
+$Id: test_vhosting.py,v 1.6 2003/05/27 14:18:27 jim Exp $
 """
 
 import unittest
@@ -26,7 +26,7 @@ from zope.publisher.interfaces.browser import IBrowserPresentation
 from zope.app.publisher.browser.resource import Resource
 from zope.app.traversing import traverse
 from zope.security.checker import defineChecker, NoProxy
-from zope.proxy.context import ContextMethod
+from zope.context import ContextMethod
 
 __metaclass__ = type
 

@@ -34,6 +34,14 @@
       permission="zope.Public"
       allowed_interface=".interfaces.IAbsoluteURL"
       />
+      
+  <view
+      for="*"
+      factory=".AbsoluteURL"
+      type="zope.publisher.interfaces.http.IHTTPRequest"
+      permission="zope.Public"
+      provides=".interfaces.IAbsoluteURL"
+      />
 
   <view
       for="zope.app.traversing.interfaces.IContainmentRoot"
@@ -42,6 +50,14 @@
       type="zope.publisher.interfaces.http.IHTTPRequest"
       permission="zope.Public"
       allowed_interface=".interfaces.IAbsoluteURL"
+      />
+      
+  <view
+      for="zope.app.traversing.interfaces.IContainmentRoot"
+      factory=".SiteAbsoluteURL"
+      type="zope.publisher.interfaces.http.IHTTPRequest"
+      permission="zope.Public"
+      provides=".interfaces.IAbsoluteURL"
       />
 
   <browser:page

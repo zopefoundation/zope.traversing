@@ -37,7 +37,7 @@ from zope.app.servicenames import Adapters
 from zope.app.site.tests.placefulsetup import PlacefulSetup
 from zope.security.checker \
     import ProxyFactory, defineChecker, CheckerPublic, Checker
-from zope.security.management import newInteraction
+from zope.security.management import newInteraction, endInteraction
 from zope.app.container.contained import Contained, contained
 
 class ParticipationStub(object):
@@ -178,6 +178,7 @@ class RestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
         self.assertEquals(tr.traverse(('folder', 'item')), item)
 
     def testItemDenied(self):
+        endInteraction()
         newInteraction(ParticipationStub('no one'))
         defineChecker(C, Checker({'item': 'Waaaa', 'folder': CheckerPublic}))
         tr = Traverser(ProxyFactory(self.root))

@@ -22,6 +22,7 @@ import transaction
 from zope.app.publisher.browser.resource import Resource
 from zope.app.traversing.api import traverse
 from zope.security.checker import defineChecker, NamesChecker, NoProxy
+from zope.security.checker import _checkers
 from zope.app.container.contained import Contained
 from zope.app.zptpage.zptpage import ZPTPage
 
@@ -124,7 +125,9 @@ class TestVirtualHosting(functional.BrowserTestCase):
 
     def test_resources(self):
         ztapi.browserResource('quux', Resource)
-        defineChecker(Resource, NamesChecker(['__call__']))
+        # Only register the checker once, so that multiple test runs pass.
+        if Resource not in _checkers:
+            defineChecker(Resource, NamesChecker(['__call__']))
         self.addPage('/foo/bar/pt',
                      u'<span tal:replace="context/++resource++quux" />')
         self.verify('/foo/bar/pt', 'http://localhost/@@/quux\n')

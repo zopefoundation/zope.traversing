@@ -217,7 +217,7 @@ class Test(PlacefulSetup, TestCase):
     def testCanonicalPath(self):
 
         _bad_locations = (
-            (UnicodeError, '\xa323'),
+            (ValueError, '\xa323'),
             (ValueError, ''),
             (ValueError, '//'),
             (ValueError, '/foo//bar'),

@@ -54,7 +54,7 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
         request = TestRequest()
         content = contained(TrivialContent(), Root(), name='a')
         view = zapi.getMultiAdapter((content, request), name='absolute_url')
-        
+
         verifyObject(IAbsoluteURL, view)
 
     def testBadObject(self):
@@ -139,7 +139,6 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
                           {'name': 'b', 'url': base + '/a/b'},
                           {'name': 'c', 'url': base + '/a/b/c'},
                           ))
-        
 
     def testVirtualHosting(self):
         request = TestRequest()
@@ -196,6 +195,19 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
           {'name': 'b', 'url': 'http://127.0.0.1/a/b'},
           {'name': 'c', 'url': 'http://127.0.0.1/a/b/c'},
           ))
+
+    def testNoContextInformation(self):
+        request = TestRequest()
+        view = zapi.getMultiAdapter((None, request), name='absolute_url')
+        self.assertEqual(str(view), 'http://127.0.0.1')
+        self.assertEqual(absoluteURL(None, request), 'http://127.0.0.1')
+
+    def testVirtualHostingWithoutContextInformation(self):
+        request = TestRequest()
+        request._vh_root = contained(TrivialContent(), Root(), name='a')
+        view = zapi.getMultiAdapter((None, request), name='absolute_url')
+        self.assertEqual(str(view), 'http://127.0.0.1')
+        self.assertEqual(absoluteURL(None, request), 'http://127.0.0.1')
 
 
 def test_suite():

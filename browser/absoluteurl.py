@@ -47,7 +47,8 @@ class AbsoluteURL(BrowserView):
         # The application URL contains all the namespaces that are at the
         # beginning of the URL, such as skins, virtual host specifications and
         # so on.
-        if sameProxiedObjects(context, request.getVirtualHostRoot()):
+        if (context is None
+            or sameProxiedObjects(context, request.getVirtualHostRoot())):
             return request.getApplicationURL()
 
         container = getattr(context, '__parent__', None)

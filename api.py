@@ -102,7 +102,7 @@ def traverse(object, path, default=_marker, request=None):
             "A %s instance raised a NotFoundError in "
             "traverse.  Raising NotFoundError in this "
             "method is deprecated and will no-longer be supported "
-            "staring in ZopeX3 3.3.  TraversalError should "
+            "staring in Zope 3.3.  TraversalError should "
             "be raised instead."
             % traverser.__class__.__name__,
             DeprecationWarning)

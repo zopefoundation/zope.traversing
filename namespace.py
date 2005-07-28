@@ -17,6 +17,7 @@ $Id$
 """
 import re
 
+import zope.deprecation
 import zope.component
 import zope.interface
 from zope.component.exceptions import ComponentLookupError
@@ -28,8 +29,11 @@ from zope.app.publisher.browser import applySkin
 from zope.app.traversing.interfaces import ITraversable, IPathAdapter
 from zope.app.traversing.interfaces import TraversalError
 
-# BBB Backward Compatibility
+# BBB Backward Compatibility (Can go away in 3.3)
+zope.deprecation.__show__.off()
 from zope.exceptions import NotFoundError
+zope.deprecation.__show__.on()
+
 import warnings
 
 class UnexpectedParameters(TraversalError):

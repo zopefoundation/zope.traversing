@@ -17,9 +17,7 @@ $Id$
 """
 from zope.interface import Interface
 
-from zope.exceptions import NotFoundError
-
-class TraversalError(NotFoundError):
+class TraversalError(KeyError, LookupError):
     """There is no object for the name given to a traversal
     """
 
@@ -34,7 +32,7 @@ class INamespaceHandler(Interface):
 
         The name lookup usually depends on an object and/or a
         request. If an object or request is unavailable, None will be passed.
-
+    
         The parameters provided, are passed as a sequence of
         name, value items.  The 'pname' argument has the original name
         before parameters were removed.

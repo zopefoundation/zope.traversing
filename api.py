@@ -15,13 +15,17 @@
 
 $Id$
 """
+import zope.deprecation
 
 from zope.interface import moduleProvides
 from interfaces import IContainmentRoot, ITraversalAPI
 from interfaces import ITraverser, IPhysicallyLocatable, TraversalError
 
 # BBB Backward Compatibility (Can go away in 3.3)
+zope.deprecation.__show__.off()
 from zope.exceptions import NotFoundError
+zope.deprecation.__show__.on()
+
 import warnings
 
 moduleProvides(ITraversalAPI)

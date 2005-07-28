@@ -15,6 +15,8 @@
 
 $Id$
 """
+import zope.deprecation
+
 from types import StringTypes, MethodType
 
 from zope.app.traversing.interfaces import TraversalError
@@ -29,7 +31,10 @@ from zope.app.traversing.namespace import UnexpectedParameters
 from zope.app.traversing.namespace import nsParse
 
 # BBB Backward Compatibility (Can go away in 3.3)
+zope.deprecation.__show__.off()
 from zope.exceptions import NotFoundError
+zope.deprecation.__show__.on()
+
 import warnings
 
 _marker = object()  # opaque marker that doesn't get security proxied

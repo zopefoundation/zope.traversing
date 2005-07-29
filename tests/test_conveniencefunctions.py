@@ -106,7 +106,7 @@ class Test(PlacefulSetup, TestCase):
             self.tr.traverse('/folder')
             )
 
-        # XXX test that ++names++ and @@names work too
+        # TODO test that ++names++ and @@names work too
 
     def testTraverseNameBadValue(self):
         from zope.app.traversing.api import traverseName

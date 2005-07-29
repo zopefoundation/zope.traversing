@@ -255,7 +255,7 @@ class acquire(SimpleHandler):
             traversable = ITraversable(ob, None)
             if traversable is not None:
                 try:
-                    # XXX what do we do if the path gets bigger?
+                    # ??? what do we do if the path gets bigger?
                     path = []
                     next = traversable.traverse(name, path)
                     if path:

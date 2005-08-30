@@ -189,7 +189,7 @@ def getParents(obj):
     if parents and IContainmentRoot.providedBy(parents[-1]):
         return parents
 
-    raise TypeError, "Not enough context information to get all parents"
+    raise TypeError("Not enough context information to get all parents")
 
 
 def _normalizePath(path):

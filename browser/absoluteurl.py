@@ -53,13 +53,13 @@ class AbsoluteURL(BrowserView):
 
         container = getattr(context, '__parent__', None)
         if container is None:
-            raise TypeError, _insufficientContext
+            raise TypeError(_insufficientContext)
 
         url = str(zope.component.getMultiAdapter((container, request),
                                                  name='absolute_url'))
         name = self._getContextName(context)
         if name is None:
-            raise TypeError, _insufficientContext
+            raise TypeError(_insufficientContext)
 
         if name:
             url += '/' + urllib.quote(name.encode('utf-8'), _safe)
@@ -78,7 +78,7 @@ class AbsoluteURL(BrowserView):
         # We do this here do maintain the rule that we must be wrapped
         container = getattr(context, '__parent__', None)
         if container is None:
-            raise TypeError, _insufficientContext
+            raise TypeError(_insufficientContext)
 
         if sameProxiedObjects(context, request.getVirtualHostRoot()) or \
                isinstance(context, Exception):
@@ -89,7 +89,7 @@ class AbsoluteURL(BrowserView):
 
         name = getattr(context, '__name__', None)
         if name is None:
-            raise TypeError, _insufficientContext
+            raise TypeError(_insufficientContext)
 
         if name:
             base += ({'name': name,

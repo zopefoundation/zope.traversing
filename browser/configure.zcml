@@ -8,6 +8,7 @@
       provides="zope.publisher.interfaces.browser.IBrowserPublisher"
       factory="zope.app.publication.traversers.SimpleComponentTraverser"
       permission="zope.Public"
+      allowed_interface="zope.publisher.interfaces.browser.IBrowserPublisher"
       />
 
   <view
@@ -16,6 +17,7 @@
       provides="zope.publisher.interfaces.browser.IBrowserPublisher"
       factory="zope.app.container.traversal.ItemTraverser"
       permission="zope.Public"
+      allowed_interface="zope.publisher.interfaces.browser.IBrowserPublisher"
       />
 
   <view
@@ -24,6 +26,7 @@
       provides="zope.publisher.interfaces.browser.IBrowserPublisher"
       factory="zope.app.container.traversal.ItemTraverser"
       permission="zope.Public"
+      allowed_interface="zope.publisher.interfaces.browser.IBrowserPublisher"
       />
 
   <view

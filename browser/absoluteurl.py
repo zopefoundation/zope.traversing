@@ -21,7 +21,7 @@ from zope.proxy import sameProxiedObjects
 from zope.publisher.browser import IBrowserRequest
 
 import zope.component
-from zope.app.i18n import ZopeMessageIDFactory as _
+from zope.app.i18n import ZopeMessageFactory as _
 from zope.app.publisher.browser import BrowserView
 from zope.app.traversing.browser.interfaces import IAbsoluteURL
 

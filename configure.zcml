@@ -86,14 +86,14 @@
     />
 
 <adapter
-    name="language"
+    name="lang"
     provides="zope.app.traversing.interfaces.ITraversable" for="*"
-    factory="zope.app.traversing.namespace.language"
+    factory="zope.app.traversing.namespace.lang"
     />
 <view
-    name="language" type="*"
+    name="lang" type="*"
     provides="zope.app.traversing.interfaces.ITraversable" for="*"
-    factory="zope.app.traversing.namespace.language"
+    factory="zope.app.traversing.namespace.lang"
     />
 
 <view

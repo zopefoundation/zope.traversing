@@ -373,7 +373,7 @@ class resource(view):
         # resource, which is needed to generate the absolute URL.
         return getResource(self.context, name, self.request)
 
-class language(view):
+class lang(view):
 
     def traverse(self, name, ignored):
         self.request.shiftNameToApplication()

@@ -37,7 +37,7 @@ class TestRequest(dict):
         self["HTTP_ACCEPT_LANGUAGE"] = languages
 
     def setupLocale(self):
-        self.localized = True
+        pass
 
     def shiftNameToApplication(self):
         self.shifted = True
@@ -61,7 +61,6 @@ class Test(PlacelessSetup, unittest.TestCase):
         ob = object()
         ob2 = lang(ob, request).traverse('ru', ())
         self.failUnless(ob is ob2)
-        self.failUnless(request.localized)
         self.failUnless(request.shifted)
         self.failUnlessEqual(["ru"], browser_languages.getPreferredLanguages())
 

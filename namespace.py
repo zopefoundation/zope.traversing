@@ -20,6 +20,7 @@ import re
 import zope.deprecation
 import zope.component
 import zope.interface
+from zope.i18n.interfaces import IModifiableUserPreferredLanguages
 from zope.component.exceptions import ComponentLookupError
 from zope.interface import providedBy, directlyProvides, directlyProvidedBy
 from zope.publisher.interfaces.browser import ISkin
@@ -35,6 +36,7 @@ from zope.exceptions import NotFoundError
 zope.deprecation.__show__.on()
 
 import warnings
+
 
 class UnexpectedParameters(TraversalError):
     "Unexpected namespace parameters were provided."
@@ -346,7 +348,7 @@ class etc(SimpleHandler):
             return method()
         except ComponentLookupError:
             raise TraversalError(ob, name)
-            
+
 
 class view(object):
 
@@ -370,6 +372,14 @@ class resource(view):
         # The context is important here, since it becomes the parent of the
         # resource, which is needed to generate the absolute URL.
         return getResource(self.context, name, self.request)
+
+class lang(view):
+
+    def traverse(self, name, ignored):
+        self.request.shiftNameToApplication()
+        languages = IModifiableUserPreferredLanguages(self.request)
+        languages.setPreferredLanguages([name])
+        return self.context
 
 class skin(view):
 
@@ -588,5 +598,3 @@ class debug(view):
             ...
             ValueError: Debug flags only allowed in debug mode
         """
-
-        

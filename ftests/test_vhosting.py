@@ -22,7 +22,7 @@ import transaction
 from zope.app.publisher.browser.resource import Resource
 from zope.app.traversing.api import traverse
 from zope.security.checker import defineChecker, NamesChecker, NoProxy
-from zope.security.checker import _checkers
+from zope.security.checker import _checkers, undefineChecker
 from zope.app.container.contained import Contained
 from zope.app.zptpage.zptpage import ZPTPage
 
@@ -30,9 +30,16 @@ class MyObj(Contained):
     def __getitem__(self, key):
         return traverse(self, '/foo/bar/' + key)
 
-defineChecker(MyObj, NoProxy)
 
 class TestVirtualHosting(functional.BrowserTestCase):
+
+    def setUp(self):
+        functional.BrowserTestCase.setUp(self)
+        defineChecker(MyObj, NoProxy)
+
+    def tearDown(self):
+        functional.BrowserTestCase.tearDown(self)
+        undefineChecker(MyObj)
 
     def test_request_url(self):
         self.addPage('/pt', u'<span tal:replace="request/URL"/>')

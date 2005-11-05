@@ -22,6 +22,8 @@ from zope.interface import directlyProvides
 from zope.publisher.interfaces.http import IHTTPRequest
 from zope.i18n.interfaces import IModifiableUserPreferredLanguages
 
+from zope.publisher.tests import test_browserlanguages
+
 from zope.app.testing import ztapi
 from zope.app.annotation import IAttributeAnnotatable, IAnnotations
 from zope.app.annotation.attribute import AttributeAnnotations
@@ -31,13 +33,7 @@ from zope.app.testing.placelesssetup import PlacelessSetup
 from zope.app.traversing.namespace import lang
 
 
-class TestRequest(dict):
-
-    def __init__(self, languages):
-        self["HTTP_ACCEPT_LANGUAGE"] = languages
-
-    def setupLocale(self):
-        pass
+class TestRequest(test_browserlanguages.TestRequest):
 
     def shiftNameToApplication(self):
         self.shifted = True

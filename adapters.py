@@ -151,6 +151,8 @@ def traversePathElement(obj, name, further_path, default=_marker,
     not provided.
 
     """
+    __traceback_info__ = (obj, name)
+
     if name == '.':
         return obj
 

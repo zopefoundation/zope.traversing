@@ -23,7 +23,7 @@ import zope.interface
 from zope.i18n.interfaces import IModifiableUserPreferredLanguages
 from zope.component.exceptions import ComponentLookupError
 from zope.interface import providedBy, directlyProvides, directlyProvidedBy
-from zope.publisher.interfaces.browser import ISkin
+from zope.publisher.interfaces.browser import IBrowserSkinType
 from zope.security.proxy import removeSecurityProxy
 
 from zope.app.publisher.browser import applySkin
@@ -385,7 +385,7 @@ class skin(view):
 
     def traverse(self, name, ignored):
         self.request.shiftNameToApplication()
-        skin = zope.component.getUtility(ISkin, name)
+        skin = zope.component.getUtility(IBrowserSkinType, name)
         applySkin(self.request, skin)
         return self.context
 
@@ -507,8 +507,8 @@ class debug(view):
 
             >>> class Debug(IBrowserRequest):
             ...     pass
-            >>> directlyProvides(Debug, ISkin)
-            >>> ztapi.provideUtility(ISkin, Debug, 'Debug')
+            >>> directlyProvides(Debug, IBrowserSkinType)
+            >>> ztapi.provideUtility(IBrowserSkinType, Debug, 'Debug')
 
             >>> Debug.providedBy(request)
             False
@@ -542,7 +542,7 @@ class debug(view):
                     # TODO: I am not sure this is the best solution.  What
                     # if we want to enable tracebacks when also trying to
                     # debug a different skin?
-                    skin = zope.component.getUtility(ISkin, 'Debug')
+                    skin = zope.component.getUtility(IBrowserSkinType, 'Debug')
                     directlyProvides(request, providedBy(request)+skin)
                 else:
                     raise ValueError("Unknown debug flag: %s" % flag)

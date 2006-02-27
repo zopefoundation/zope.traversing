@@ -18,7 +18,7 @@ $Id$
 from unittest import TestCase, main, makeSuite
 from zope.interface import Interface, directlyProvides
 
-from zope.publisher.interfaces.browser import ISkin
+from zope.publisher.interfaces.browser import IBrowserSkinType
 from zope.app.testing import ztapi
 from zope.app.testing.placelesssetup import PlacelessSetup
 
@@ -29,14 +29,14 @@ class FauxRequest(object):
 
 class IFoo(Interface):
     pass
-directlyProvides(IFoo, ISkin)
+directlyProvides(IFoo, IBrowserSkinType)
 
 
 class Test(PlacelessSetup, TestCase):
 
     def setUp(self):
         super(Test, self).setUp()
-        ztapi.provideUtility(ISkin, IFoo, 'foo')
+        ztapi.provideUtility(IBrowserSkinType, IFoo, 'foo')
 
     def test(self):
         from zope.app.traversing.namespace import skin

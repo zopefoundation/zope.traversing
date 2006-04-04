@@ -23,9 +23,9 @@ from zope.i18n.interfaces import IModifiableUserPreferredLanguages
 from zope.component.interfaces import ComponentLookupError
 from zope.interface import providedBy, directlyProvides, directlyProvidedBy
 from zope.publisher.interfaces.browser import IBrowserSkinType
+from zope.publisher.browser import applySkin
 from zope.security.proxy import removeSecurityProxy
 
-from zope.app.publisher.browser import applySkin
 from zope.app.traversing.interfaces import ITraversable, IPathAdapter
 from zope.app.traversing.interfaces import TraversalError
 

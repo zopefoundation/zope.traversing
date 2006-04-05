@@ -21,12 +21,12 @@ import zope.component
 from zope.component import getMultiAdapter
 from zope.traversing.browser.absoluteurl import absoluteURL
 from zope.traversing.browser.interfaces import IAbsoluteURL
+from zope.traversing.testing import browserView, browserResource
 from zope.i18n.interfaces import IUserPreferredCharsets
 from zope.interface import Interface, implements
 from zope.interface.verify import verifyObject
 from zope.publisher.browser import TestRequest
 from zope.publisher.http import IHTTPRequest, HTTPCharsets
-from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 
 from zope.app.container.contained import contained
 
@@ -38,14 +38,6 @@ class Root(object):
 
 class TrivialContent(object):
     """Trivial content object, used because instances of object are rocks."""
-
-def browserView(for_, name, factory, providing=Interface):
-    zope.component.provideAdapter(factory, (for_, IDefaultBrowserLayer),
-                                  providing, name=name)
-
-def browserResource(name, factory, providing=Interface):
-    zope.component.provideAdapter(factory, (IDefaultBrowserLayer,),
-                                  providing, name=name)
 
 class TestAbsoluteURL(TestCase):
 

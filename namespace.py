@@ -87,7 +87,7 @@ def namespaceLookup(ns, name, object, request=None):
          ...         pass
          ...     def traverse(self, name, remaining):
          ...         return name+'fromview'
-         >>> from zope.traversing.browser.tests import browserView
+         >>> from zope.traversing.testing import browserView
          >>> browserView(I, 'foo', View, providing=ITraversable)
 
          >>> namespaceLookup('foo', 'bar', C(), request)

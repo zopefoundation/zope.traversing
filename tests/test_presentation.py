@@ -17,7 +17,7 @@ $Id$
 """
 from unittest import TestCase, main, makeSuite
 from zope.traversing.namespace import view, resource
-from zope.traversing.browser.tests import browserView, browserResource
+from zope.traversing.testing import browserView, browserResource
 from zope.interface import Interface, implements
 from zope.publisher.browser import TestRequest
 

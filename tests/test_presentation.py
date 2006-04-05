@@ -21,7 +21,6 @@ from zope.interface import Interface, implements
 from zope.publisher.browser import TestRequest
 
 from zope.app.testing import ztapi
-from zope.app.testing.placelesssetup import PlacelessSetup
 
 class IContent(Interface):
     pass
@@ -40,7 +39,7 @@ class View(object):
         self.content = content
 
 
-class Test(PlacelessSetup, TestCase):
+class Test(TestCase):
 
     def testView(self):
         ztapi.browserView(IContent, 'foo', View)

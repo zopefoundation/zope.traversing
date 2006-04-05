@@ -43,9 +43,6 @@ def namespaceLookup(ns, name, object, request=None):
        Let's start with adapter-based transersal. We're going to use the
        component architecture, so we'll need to initialize it:
 
-         >>> from zope.app.testing.placelesssetup import setUp, tearDown
-         >>> setUp()
-
          >>> class I(zope.interface.Interface):
          ...     'Test interface'
          >>> class C(object):
@@ -95,8 +92,6 @@ def namespaceLookup(ns, name, object, request=None):
 
          >>> namespaceLookup('foo', 'bar', C(), request)
          'barfromview'
-
-         >>> tearDown()
        """
 
     if request is not None:
@@ -415,8 +410,6 @@ class adapter(SimpleHandler):
 
            To demonstrate this, we need to register some adapters:
 
-             >>> from zope.app.testing.placelesssetup import setUp, tearDown
-             >>> setUp()
              >>> from zope.app.testing import ztapi
              >>> def adapter1(ob):
              ...     return 1
@@ -438,10 +431,6 @@ class adapter(SimpleHandler):
              ... except TraversalError:
              ...     print 'no adapter'
              no adapter
-
-           Cleanup:
-
-             >>> tearDown()
            """
         try:
             return zope.component.getAdapter(self.context, IPathAdapter, name)

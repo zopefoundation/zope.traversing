@@ -19,28 +19,23 @@ import unittest
 
 from zope.interface import directlyProvides
 from zope.publisher.interfaces.http import IHTTPRequest
-from zope.i18n.interfaces import IModifiableUserPreferredLanguages
-
 from zope.publisher.tests import test_browserlanguages
+from zope.i18n.interfaces import IModifiableUserPreferredLanguages
+from zope.traversing.namespace import lang
 
 from zope.app.testing import ztapi
 from zope.app.annotation import IAttributeAnnotatable, IAnnotations
 from zope.app.annotation.attribute import AttributeAnnotations
 from zope.app.publisher.browser import ModifiableBrowserLanguages
-from zope.app.testing.placelesssetup import PlacelessSetup
-
-from zope.traversing.namespace import lang
-
 
 class TestRequest(test_browserlanguages.TestRequest):
 
     def shiftNameToApplication(self):
         self.shifted = True
 
-class Test(PlacelessSetup, unittest.TestCase):
+class Test(unittest.TestCase):
 
     def setUp(self):
-        super(Test, self).setUp()
         self.request = TestRequest("en")
         directlyProvides(self.request, IHTTPRequest, IAttributeAnnotatable)
         ztapi.provideAdapter(IAttributeAnnotatable, IAnnotations,

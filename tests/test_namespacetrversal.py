@@ -18,11 +18,8 @@ $Id$
 from unittest import main
 from zope.testing.doctestunit import DocTestSuite
 
-from zope.app.testing.placelesssetup import setUp, tearDown
-
 def test_suite():
-    return DocTestSuite('zope.traversing.namespace',
-                        setUp=setUp, tearDown=tearDown)
+    return DocTestSuite('zope.traversing.namespace')
 
 if __name__ == '__main__':
     main(defaultTest='test_suite')

@@ -20,7 +20,6 @@ from zope.interface import Interface, directlyProvides
 
 from zope.publisher.interfaces.browser import IBrowserSkinType
 from zope.app.testing import ztapi
-from zope.app.testing.placelesssetup import PlacelessSetup
 
 
 class FauxRequest(object):
@@ -32,7 +31,7 @@ class IFoo(Interface):
 directlyProvides(IFoo, IBrowserSkinType)
 
 
-class Test(PlacelessSetup, TestCase):
+class Test(TestCase):
 
     def setUp(self):
         super(Test, self).setUp()

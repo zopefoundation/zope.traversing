@@ -16,12 +16,11 @@
 $Id$
 """
 from unittest import TestCase, main, makeSuite
-from zope.app.testing.placelesssetup import PlacelessSetup
-from zope.app.testing import ztapi, setup
 from zope.interface import implements
 from zope.traversing.interfaces import IContainmentRoot
 from zope.traversing.interfaces import IPhysicallyLocatable
 
+from zope.app.testing import ztapi, setup
 from zope.app.container.contained import contained
 from zope.app.component.site import SiteManagerContainer
 
@@ -36,7 +35,7 @@ class C(object):
     pass
 
 
-class Test(PlacelessSetup, TestCase):
+class Test(TestCase):
 
     def test(self):
         setup.setUpTraversal()

@@ -20,7 +20,7 @@ from zope.interface import implements
 from zope.traversing.interfaces import IContainmentRoot
 from zope.traversing.interfaces import IPhysicallyLocatable
 
-from zope.app.testing import ztapi, setup
+from zope.app.testing import setup
 from zope.app.container.contained import contained
 from zope.app.component.site import SiteManagerContainer
 

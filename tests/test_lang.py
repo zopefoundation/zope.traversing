@@ -17,13 +17,13 @@ $Id$
 """
 import unittest
 
+import zope.component
 from zope.interface import directlyProvides
 from zope.publisher.interfaces.http import IHTTPRequest
 from zope.publisher.tests import test_browserlanguages
 from zope.i18n.interfaces import IModifiableUserPreferredLanguages
 from zope.traversing.namespace import lang
 
-from zope.app.testing import ztapi
 from zope.app.annotation import IAttributeAnnotatable, IAnnotations
 from zope.app.annotation.attribute import AttributeAnnotations
 from zope.app.publisher.browser import ModifiableBrowserLanguages
@@ -38,10 +38,11 @@ class Test(unittest.TestCase):
     def setUp(self):
         self.request = TestRequest("en")
         directlyProvides(self.request, IHTTPRequest, IAttributeAnnotatable)
-        ztapi.provideAdapter(IAttributeAnnotatable, IAnnotations,
-            AttributeAnnotations)
-        ztapi.provideAdapter(IHTTPRequest,
-            IModifiableUserPreferredLanguages, ModifiableBrowserLanguages)
+        zope.component.provideAdapter(AttributeAnnotations,
+                                      (IAttributeAnnotatable,), IAnnotations)
+        zope.component.provideAdapter(ModifiableBrowserLanguages,
+                                      (IHTTPRequest,),
+                                      IModifiableUserPreferredLanguages)
 
     def test_adapter(self):
         request = self.request

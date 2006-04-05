@@ -17,9 +17,14 @@ $Id$
 """
 import unittest
 
+import zope.component
 from zope.interface import directlyProvides, implementedBy
 from zope.interface.verify import verifyClass
 from zope.location.traversing import LocationPhysicallyLocatable
+from zope.security.interfaces import Unauthorized
+from zope.security.checker \
+    import ProxyFactory, defineChecker, CheckerPublic, Checker
+from zope.security.management import newInteraction, endInteraction
 
 from zope.traversing.adapters import Traverser, DefaultTraversable
 from zope.traversing.adapters import RootPhysicallyLocatable
@@ -27,12 +32,6 @@ from zope.traversing.interfaces import ITraverser, ITraversable
 from zope.traversing.interfaces import IPhysicallyLocatable
 from zope.traversing.interfaces import IContainmentRoot, TraversalError
 
-from zope.security.interfaces import Unauthorized
-from zope.security.checker \
-    import ProxyFactory, defineChecker, CheckerPublic, Checker
-from zope.security.management import newInteraction, endInteraction
-
-from zope.app.testing import ztapi
 from zope.app.component.testing import PlacefulSetup
 from zope.app.container.contained import Contained, contained
 
@@ -82,15 +81,14 @@ class UnrestrictedNoTraverseTests(unittest.TestCase):
 class UnrestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
     def setUp(self):
         PlacefulSetup.setUp(self)
+
+        zope.component.provideAdapter(DefaultTraversable, (None,), ITraversable)
+        zope.component.provideAdapter(LocationPhysicallyLocatable, (None,),
+                                      IPhysicallyLocatable)
+        zope.component.provideAdapter(RootPhysicallyLocatable,
+                                      (IContainmentRoot,), IPhysicallyLocatable)
+
         # Build up a wrapper chain
-
-        ztapi.provideAdapter(
-              None, ITraversable, DefaultTraversable)
-        ztapi.provideAdapter(
-              None, IPhysicallyLocatable, LocationPhysicallyLocatable)
-        ztapi.provideAdapter(
-              IContainmentRoot, IPhysicallyLocatable, RootPhysicallyLocatable)
-
         self.root = root = C('root')
         directlyProvides(self.root, IContainmentRoot)
         self.folder = folder = contained(C('folder'), root, 'folder')
@@ -146,12 +144,11 @@ class RestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
     def setUp(self):
         PlacefulSetup.setUp(self)
 
-        ztapi.provideAdapter(
-             None, ITraversable, DefaultTraversable)
-        ztapi.provideAdapter(
-              None, IPhysicallyLocatable, LocationPhysicallyLocatable)
-        ztapi.provideAdapter(
-              IContainmentRoot, IPhysicallyLocatable, RootPhysicallyLocatable)
+        zope.component.provideAdapter(DefaultTraversable, (None,), ITraversable)
+        zope.component.provideAdapter(LocationPhysicallyLocatable, (None,),
+                                      IPhysicallyLocatable)
+        zope.component.provideAdapter(RootPhysicallyLocatable,
+                                      (IContainmentRoot,), IPhysicallyLocatable)
 
         self.root = root = C('root')
         directlyProvides(root, IContainmentRoot)

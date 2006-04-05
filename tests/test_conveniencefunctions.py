@@ -16,6 +16,8 @@
 $Id$
 """
 from unittest import TestCase, main, makeSuite
+
+import zope.component
 from zope.interface import directlyProvides
 from zope.location.traversing import LocationPhysicallyLocatable
 from zope.security.proxy import Proxy
@@ -26,7 +28,6 @@ from zope.traversing.interfaces import ITraverser, ITraversable
 from zope.traversing.interfaces import IContainmentRoot, TraversalError
 from zope.traversing.interfaces import IPhysicallyLocatable
 
-from zope.app.testing import ztapi
 from zope.app.component.testing import PlacefulSetup
 from zope.app.container.contained import contained
 
@@ -63,14 +64,12 @@ class Test(PlacefulSetup, TestCase):
         folder.item = item
 
         self.tr = Traverser(root)
-        ztapi.provideAdapter(
-              None, ITraverser, Traverser)
-        ztapi.provideAdapter(
-              None, ITraversable, DefaultTraversable)
-        ztapi.provideAdapter(
-              None, IPhysicallyLocatable, LocationPhysicallyLocatable)
-        ztapi.provideAdapter(
-              IContainmentRoot, IPhysicallyLocatable, RootPhysicallyLocatable)
+        zope.component.provideAdapter(Traverser, (None,), ITraverser)
+        zope.component.provideAdapter(DefaultTraversable, (None,), ITraversable)
+        zope.component.provideAdapter(LocationPhysicallyLocatable, (None,),
+                                      IPhysicallyLocatable)
+        zope.component.provideAdapter(RootPhysicallyLocatable,
+                                      (IContainmentRoot,), IPhysicallyLocatable)
 
     def testTraverse(self):
         from zope.traversing.api import traverse

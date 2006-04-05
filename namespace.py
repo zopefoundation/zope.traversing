@@ -56,8 +56,7 @@ def namespaceLookup(ns, name, object, request=None):
          ...     def traverse(self, name, remaining):
          ...         return name+'42'
 
-         >>> from zope.app.testing import ztapi
-         >>> ztapi.provideAdapter(I, ITraversable, Adapter, 'foo')
+         >>> zope.component.provideAdapter(Adapter, (I,), ITraversable, 'foo')
 
        Then given an object, we can traverse it with a
        namespace-qualified name:
@@ -88,7 +87,8 @@ def namespaceLookup(ns, name, object, request=None):
          ...         pass
          ...     def traverse(self, name, remaining):
          ...         return name+'fromview'
-         >>> ztapi.browserView(I, 'foo', View, providing=ITraversable)
+         >>> from zope.traversing.browser.tests import browserView
+         >>> browserView(I, 'foo', View, providing=ITraversable)
 
          >>> namespaceLookup('foo', 'bar', C(), request)
          'barfromview'
@@ -410,13 +410,14 @@ class adapter(SimpleHandler):
 
            To demonstrate this, we need to register some adapters:
 
-             >>> from zope.app.testing import ztapi
              >>> def adapter1(ob):
              ...     return 1
              >>> def adapter2(ob):
              ...     return 2
-             >>> ztapi.provideAdapter(None, IPathAdapter, adapter1, 'a1')
-             >>> ztapi.provideAdapter(None, IPathAdapter, adapter2, 'a2')
+             >>> zope.component.provideAdapter(
+             ...     adapter1, (None,), IPathAdapter, 'a1')
+             >>> zope.component.provideAdapter(
+             ...     adapter2, (None,), IPathAdapter, 'a2')
 
            Now, with these adapters in place, we can use the traversal adapter:
 
@@ -473,13 +474,13 @@ class debug(view):
 
         ++debug++errors enables tracebacks (by switching to debug skin)
 
-            >>> from zope.app.testing import ztapi
             >>> from zope.publisher.interfaces.browser import IBrowserRequest
 
             >>> class Debug(IBrowserRequest):
             ...     pass
             >>> directlyProvides(Debug, IBrowserSkinType)
-            >>> ztapi.provideUtility(IBrowserSkinType, Debug, 'Debug')
+            >>> zope.component.provideUtility(
+            ...     Debug, IBrowserSkinType, name='Debug')
 
             >>> Debug.providedBy(request)
             False

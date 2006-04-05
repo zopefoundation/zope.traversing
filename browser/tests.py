@@ -26,10 +26,9 @@ from zope.interface import Interface, implements
 from zope.interface.verify import verifyObject
 from zope.publisher.browser import TestRequest
 from zope.publisher.http import IHTTPRequest, HTTPCharsets
+from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 
 from zope.app.container.contained import contained
-from zope.app.testing import ztapi
-from zope.app.testing.placelesssetup import PlacelessSetup
 
 class IRoot(Interface):
     pass
@@ -40,15 +39,18 @@ class Root(object):
 class TrivialContent(object):
     """Trivial content object, used because instances of object are rocks."""
 
-class TestAbsoluteURL(PlacelessSetup, TestCase):
+def browserView(for_, name, factory, providing=Interface):
+    zope.component.provideAdapter(factory, (for_, IDefaultBrowserLayer),
+                                  providing, name=name)
+
+class TestAbsoluteURL(TestCase):
 
     def setUp(self):
-        super(TestAbsoluteURL, self).setUp()
         from zope.traversing.browser import AbsoluteURL, SiteAbsoluteURL
-        ztapi.browserView(None, 'absolute_url', AbsoluteURL)
-        ztapi.browserView(IRoot, 'absolute_url', SiteAbsoluteURL)
-        ztapi.browserView(None, '', AbsoluteURL, providing=IAbsoluteURL)
-        ztapi.browserView(IRoot, '', SiteAbsoluteURL, providing=IAbsoluteURL)
+        browserView(None, 'absolute_url', AbsoluteURL)
+        browserView(IRoot, 'absolute_url', SiteAbsoluteURL)
+        browserView(None, '', AbsoluteURL, providing=IAbsoluteURL)
+        browserView(IRoot, '', SiteAbsoluteURL, providing=IAbsoluteURL)
         zope.component.provideAdapter(HTTPCharsets, (IHTTPRequest,),
                                       IUserPreferredCharsets)
 

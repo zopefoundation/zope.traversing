@@ -16,9 +16,10 @@
 $Id$
 """
 from unittest import TestCase, main, makeSuite
+
+import zope.traversing.testing
+from zope.traversing.interfaces import IContainmentRoot, IPhysicallyLocatable
 from zope.interface import implements
-from zope.traversing.interfaces import IContainmentRoot
-from zope.traversing.interfaces import IPhysicallyLocatable
 
 from zope.app.testing import setup
 from zope.app.container.contained import contained
@@ -38,7 +39,7 @@ class C(object):
 class Test(TestCase):
 
     def test(self):
-        setup.setUpTraversal()
+        zope.traversing.testing.setUp()
 
         root = Root()
         f1 = contained(C(), root, name='f1')

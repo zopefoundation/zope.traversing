@@ -17,9 +17,9 @@ $Id$
 """
 import unittest
 
-from zope.app.testing import ztapi
 from zope.interface import directlyProvides, implementedBy
 from zope.interface.verify import verifyClass
+from zope.location.traversing import LocationPhysicallyLocatable
 
 from zope.traversing.adapters import Traverser, DefaultTraversable
 from zope.traversing.adapters import RootPhysicallyLocatable
@@ -32,7 +32,7 @@ from zope.security.checker \
     import ProxyFactory, defineChecker, CheckerPublic, Checker
 from zope.security.management import newInteraction, endInteraction
 
-from zope.app.location.traversing import LocationPhysicallyLocatable
+from zope.app.testing import ztapi
 from zope.app.component.testing import PlacefulSetup
 from zope.app.container.contained import Contained, contained
 

@@ -16,22 +16,18 @@
 $Id$
 """
 from unittest import TestCase, main, makeSuite
-from zope.app.testing import ztapi
 from zope.interface import directlyProvides
-from zope.app.component.testing import PlacefulSetup
-from zope.traversing.adapters import Traverser
-from zope.traversing.interfaces import ITraverser, ITraversable
-from zope.traversing.adapters import DefaultTraversable
-
-from zope.traversing.interfaces import IPhysicallyLocatable
-from zope.traversing.interfaces import IContainmentRoot
-from zope.app.location.traversing import LocationPhysicallyLocatable
-from zope.traversing.adapters import RootPhysicallyLocatable
-
+from zope.location.traversing import LocationPhysicallyLocatable
 from zope.security.proxy import Proxy
 from zope.security.checker import selectChecker
+from zope.traversing.adapters import Traverser, DefaultTraversable
+from zope.traversing.adapters import RootPhysicallyLocatable
+from zope.traversing.interfaces import ITraverser, ITraversable
+from zope.traversing.interfaces import IContainmentRoot, TraversalError
+from zope.traversing.interfaces import IPhysicallyLocatable
 
-from zope.traversing.interfaces import TraversalError
+from zope.app.testing import ztapi
+from zope.app.component.testing import PlacefulSetup
 from zope.app.container.contained import contained
 
 class C(object):

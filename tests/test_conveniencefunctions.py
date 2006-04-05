@@ -19,19 +19,19 @@ from unittest import TestCase, main, makeSuite
 from zope.app.testing import ztapi
 from zope.interface import directlyProvides
 from zope.app.component.testing import PlacefulSetup
-from zope.app.traversing.adapters import Traverser
-from zope.app.traversing.interfaces import ITraverser, ITraversable
-from zope.app.traversing.adapters import DefaultTraversable
+from zope.traversing.adapters import Traverser
+from zope.traversing.interfaces import ITraverser, ITraversable
+from zope.traversing.adapters import DefaultTraversable
 
-from zope.app.traversing.interfaces import IPhysicallyLocatable
-from zope.app.traversing.interfaces import IContainmentRoot
+from zope.traversing.interfaces import IPhysicallyLocatable
+from zope.traversing.interfaces import IContainmentRoot
 from zope.app.location.traversing import LocationPhysicallyLocatable
-from zope.app.traversing.adapters import RootPhysicallyLocatable
+from zope.traversing.adapters import RootPhysicallyLocatable
 
 from zope.security.proxy import Proxy
 from zope.security.checker import selectChecker
 
-from zope.app.traversing.interfaces import TraversalError
+from zope.traversing.interfaces import TraversalError
 from zope.app.container.contained import contained
 
 class C(object):
@@ -77,14 +77,14 @@ class Test(PlacefulSetup, TestCase):
               IContainmentRoot, IPhysicallyLocatable, RootPhysicallyLocatable)
 
     def testTraverse(self):
-        from zope.app.traversing.api import traverse
+        from zope.traversing.api import traverse
         self.assertEqual(
             traverse(self.item, '/folder/item'),
             self.tr.traverse('/folder/item')
             )
 
     def testTraverseFromUnwrapped(self):
-        from zope.app.traversing.api import traverse
+        from zope.traversing.api import traverse
         self.assertRaises(
             TypeError,
             traverse,
@@ -92,7 +92,7 @@ class Test(PlacefulSetup, TestCase):
             )
 
     def testTraverseName(self):
-        from zope.app.traversing.api import traverseName
+        from zope.traversing.api import traverseName
         self.assertEqual(
             traverseName(self.folder, 'item'),
             self.tr.traverse('/folder/item')
@@ -109,7 +109,7 @@ class Test(PlacefulSetup, TestCase):
         # TODO test that ++names++ and @@names work too
 
     def testTraverseNameBadValue(self):
-        from zope.app.traversing.api import traverseName
+        from zope.traversing.api import traverseName
         self.assertRaises(
             TraversalError,
             traverseName,
@@ -127,28 +127,28 @@ class Test(PlacefulSetup, TestCase):
             )
 
     def testGetName(self):
-        from zope.app.traversing.api import getName
+        from zope.traversing.api import getName
         self.assertEqual(
             getName(self.item),
             'item'
             )
 
     def testGetParent(self):
-        from zope.app.traversing.api import getParent
+        from zope.traversing.api import getParent
         self.assertEqual(
             getParent(self.item),
             self.folder
             )
 
     def testGetParentFromRoot(self):
-        from zope.app.traversing.api import getParent
+        from zope.traversing.api import getParent
         self.assertEqual(
             getParent(self.root),
             None
             )
 
     def testGetParentBrokenChain(self):
-        from zope.app.traversing.api import getParent
+        from zope.traversing.api import getParent
         self.assertRaises(
             TypeError,
             getParent,
@@ -156,7 +156,7 @@ class Test(PlacefulSetup, TestCase):
             )
 
     def testGetParentFromUnwrapped(self):
-        from zope.app.traversing.api import getParent
+        from zope.traversing.api import getParent
         self.assertRaises(
             TypeError,
             getParent,
@@ -164,14 +164,14 @@ class Test(PlacefulSetup, TestCase):
             )
 
     def testGetParents(self):
-        from zope.app.traversing.api import getParents
+        from zope.traversing.api import getParents
         self.assertEqual(
             getParents(self.item),
             [self.folder, self.root]
             )
 
     def testGetParentsBrokenChain(self):
-        from zope.app.traversing.api import getParents
+        from zope.traversing.api import getParents
         self.assertRaises(
             TypeError,
             getParents,
@@ -179,7 +179,7 @@ class Test(PlacefulSetup, TestCase):
             )
 
     def testGetParentFromUnwrapped(self):
-        from zope.app.traversing.api import getParent
+        from zope.traversing.api import getParent
         self.assertRaises(
             TypeError,
             getParent,
@@ -187,28 +187,28 @@ class Test(PlacefulSetup, TestCase):
             )
 
     def testGetPath(self):
-        from zope.app.traversing.api import getPath
+        from zope.traversing.api import getPath
         self.assertEqual(
             getPath(self.item),
             u'/folder/item'
             )
 
     def testGetPathOfRoot(self):
-        from zope.app.traversing.api import getPath
+        from zope.traversing.api import getPath
         self.assertEqual(
             getPath(self.root),
             u'/',
             )
 
     def testGetNameOfRoot(self):
-        from zope.app.traversing.api import getName
+        from zope.traversing.api import getName
         self.assertEqual(
             getName(self.root),
             u'',
             )
 
     def testGetRoot(self):
-        from zope.app.traversing.api import getRoot
+        from zope.traversing.api import getRoot
         self.assertEqual(
             getRoot(self.item),
             self.root
@@ -256,7 +256,7 @@ class Test(PlacefulSetup, TestCase):
             ),
         )
 
-        from zope.app.traversing.api import canonicalPath
+        from zope.traversing.api import canonicalPath
 
         for error_type, value in _bad_locations:
             self.assertRaises(error_type, canonicalPath, value)
@@ -308,7 +308,7 @@ class Test(PlacefulSetup, TestCase):
         )
 
 
-        from zope.app.traversing.api import _normalizePath
+        from zope.traversing.api import _normalizePath
 
         for error_type, value in _bad_locations:
             self.assertRaises(error_type, _normalizePath, value)
@@ -320,7 +320,7 @@ class Test(PlacefulSetup, TestCase):
                                  "failure on %s" % argument)
 
     def test_joinPath_slashes(self):
-        from zope.app.traversing.api import joinPath
+        from zope.traversing.api import joinPath
         path = u'/'
         args = ('/test', 'bla', '/foo', 'bar')
         self.assertRaises(ValueError, joinPath, path, *args)
@@ -329,7 +329,7 @@ class Test(PlacefulSetup, TestCase):
         self.assertRaises(ValueError, joinPath, path, *args)
 
     def test_joinPath(self):
-        from zope.app.traversing.api import joinPath
+        from zope.traversing.api import joinPath
         path = u'/bla'
         args = ('foo', 'bar', 'baz', 'bone')
         self.assertEqual(joinPath(path, *args), u'/bla/foo/bar/baz/bone')
@@ -347,7 +347,7 @@ class Test(PlacefulSetup, TestCase):
         self.assertRaises(ValueError, joinPath, path, *args)
 
     def test_joinPath_normalize(self):
-        from zope.app.traversing.api import joinPath
+        from zope.traversing.api import joinPath
         path = u'/bla'
         args = ('foo', 'bar', '..', 'baz', 'bone')
         self.assertEqual(joinPath(path, *args), u'/bla/foo/baz/bone')

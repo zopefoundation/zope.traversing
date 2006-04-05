@@ -16,11 +16,11 @@
 $Id$
 """
 import unittest
+import transaction
 from zope.app.testing import ztapi, functional
 from zope.app.folder import Folder
-import transaction
 from zope.app.publisher.browser.resource import Resource
-from zope.app.traversing.api import traverse
+from zope.traversing.api import traverse
 from zope.security.checker import defineChecker, NamesChecker, NoProxy
 from zope.security.checker import _checkers, undefineChecker
 from zope.app.container.contained import Contained

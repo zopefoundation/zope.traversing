@@ -39,8 +39,7 @@ class Test(PlacelessSetup, TestCase):
         ztapi.provideUtility(IBrowserSkinType, IFoo, 'foo')
 
     def test(self):
-        from zope.app.traversing.namespace import skin
-
+        from zope.traversing.namespace import skin
 
         request = FauxRequest()
         ob = object()

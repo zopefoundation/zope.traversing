@@ -44,7 +44,7 @@ class TestRequest(object):
 class TestVHNamespace(unittest.TestCase):
 
     def test_vh(self):
-        from zope.app.traversing.namespace import vh
+        from zope.traversing.namespace import vh
 
         # GET /folder1/++vh++/x/y/z/++/folder1_1
 
@@ -59,7 +59,7 @@ class TestVHNamespace(unittest.TestCase):
         self.assertEqual(request._app_server, 'http://server')
 
     def test_vh_noPlusPlus(self):
-        from zope.app.traversing.namespace import vh
+        from zope.traversing.namespace import vh
 
         # GET /folder1/folder2/++vh++http:host:80/folder1_1
         request = TestRequest(['folder1', 'folder2'], ['folder1_1'])
@@ -69,7 +69,7 @@ class TestVHNamespace(unittest.TestCase):
 
 
     def test_vh_host(self):
-        from zope.app.traversing.namespace import vh
+        from zope.traversing.namespace import vh
 
         request = TestRequest(['folder1'], ['folder1_1', '++'])
         ob = object()

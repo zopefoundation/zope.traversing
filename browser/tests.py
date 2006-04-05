@@ -17,17 +17,19 @@ $Id$
 """
 from unittest import TestCase, main, makeSuite
 
-from zope.app import zapi
-from zope.app.container.contained import contained
-from zope.app.testing import ztapi
-from zope.app.testing.placelesssetup import PlacelessSetup
-from zope.app.traversing.browser.absoluteurl import absoluteURL
-from zope.app.traversing.browser.interfaces import IAbsoluteURL
+import zope.component
+from zope.component import getMultiAdapter
+from zope.traversing.browser.absoluteurl import absoluteURL
+from zope.traversing.browser.interfaces import IAbsoluteURL
 from zope.i18n.interfaces import IUserPreferredCharsets
 from zope.interface import Interface, implements
 from zope.interface.verify import verifyObject
 from zope.publisher.browser import TestRequest
 from zope.publisher.http import IHTTPRequest, HTTPCharsets
+
+from zope.app.container.contained import contained
+from zope.app.testing import ztapi
+from zope.app.testing.placelesssetup import PlacelessSetup
 
 class IRoot(Interface):
     pass
@@ -42,30 +44,30 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
 
     def setUp(self):
         super(TestAbsoluteURL, self).setUp()
-        from zope.app.traversing.browser import AbsoluteURL, SiteAbsoluteURL
+        from zope.traversing.browser import AbsoluteURL, SiteAbsoluteURL
         ztapi.browserView(None, 'absolute_url', AbsoluteURL)
         ztapi.browserView(IRoot, 'absolute_url', SiteAbsoluteURL)
         ztapi.browserView(None, '', AbsoluteURL, providing=IAbsoluteURL)
         ztapi.browserView(IRoot, '', SiteAbsoluteURL, providing=IAbsoluteURL)
-        ztapi.provideAdapter(IHTTPRequest, IUserPreferredCharsets,
-                             HTTPCharsets)
+        zope.component.provideAdapter(HTTPCharsets, (IHTTPRequest,),
+                                      IUserPreferredCharsets)
 
     def test_interface(self):
         request = TestRequest()
         content = contained(TrivialContent(), Root(), name='a')
-        view = zapi.getMultiAdapter((content, request), name='absolute_url')
+        view = getMultiAdapter((content, request), name='absolute_url')
 
         verifyObject(IAbsoluteURL, view)
 
     def testBadObject(self):
         request = TestRequest()
-        view = zapi.getMultiAdapter((42, request), name='absolute_url')
+        view = getMultiAdapter((42, request), name='absolute_url')
         self.assertRaises(TypeError, view.__str__)
         self.assertRaises(TypeError, absoluteURL, 42, request)
 
     def testNoContext(self):
         request = TestRequest()
-        view = zapi.getMultiAdapter((Root(), request), name='absolute_url')
+        view = getMultiAdapter((Root(), request), name='absolute_url')
         self.assertEqual(str(view), 'http://127.0.0.1')
         self.assertEqual(absoluteURL(Root(), request), 'http://127.0.0.1')
 
@@ -75,7 +77,7 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
         content = contained(TrivialContent(), Root(), name='a')
         content = contained(TrivialContent(), content, name='b')
         content = contained(TrivialContent(), content, name='c')
-        view = zapi.getMultiAdapter((content, request), name='absolute_url')
+        view = getMultiAdapter((content, request), name='absolute_url')
         self.assertEqual(str(view), 'http://127.0.0.1/a/b/c')
         self.assertEqual(absoluteURL(content, request),
                          'http://127.0.0.1/a/b/c')
@@ -97,7 +99,7 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
         content = contained(TrivialContent(), root, name=u'\u0442')
         content = contained(TrivialContent(), content, name=u'\u0435')
         content = contained(TrivialContent(), content, name=u'\u0441')
-        view = zapi.getMultiAdapter((content, request), name='absolute_url')
+        view = getMultiAdapter((content, request), name='absolute_url')
         self.assertEqual(str(view),
                          'http://127.0.0.1/%D0%B9/%D1%82/%D0%B5/%D1%81')
         self.assertEqual(view(),
@@ -128,7 +130,7 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
         content = contained(TrivialContent(), Root(), name='a')
         content = contained(TrivialContent(), content, name='b')
         content = contained(TrivialContent(), content, name='c')
-        view = zapi.getMultiAdapter((content, request), name='absolute_url')
+        view = getMultiAdapter((content, request), name='absolute_url')
         base = 'http://127.0.0.1/++skin++test'
         self.assertEqual(str(view), base + '/a/b/c')
 
@@ -148,7 +150,7 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
         request._vh_root = content
         content = contained(TrivialContent(), content, name='b')
         content = contained(TrivialContent(), content, name='c')
-        view = zapi.getMultiAdapter((content, request), name='absolute_url')
+        view = getMultiAdapter((content, request), name='absolute_url')
         self.assertEqual(str(view), 'http://127.0.0.1/b/c')
 
         breadcrumbs = view.breadcrumbs()
@@ -166,7 +168,7 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
         request._vh_root = content
         content = contained(TrivialContent(), content, name='b')
         content = contained(TrivialContent(), content, name='c')
-        view = zapi.getMultiAdapter((content, request), name='absolute_url')
+        view = getMultiAdapter((content, request), name='absolute_url')
         self.assertEqual(str(view), 'http://127.0.0.1/b/c')
 
         breadcrumbs = view.breadcrumbs()
@@ -185,7 +187,7 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
         content = contained(TrivialContent(), content, name='a')
         content = contained(TrivialContent(), content, name='b')
         content = contained(TrivialContent(), content, name='c')
-        view = zapi.getMultiAdapter((content, request), name='absolute_url')
+        view = getMultiAdapter((content, request), name='absolute_url')
         self.assertEqual(str(view), 'http://127.0.0.1/a/b/c')
 
         breadcrumbs = view.breadcrumbs()
@@ -198,14 +200,14 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
 
     def testNoContextInformation(self):
         request = TestRequest()
-        view = zapi.getMultiAdapter((None, request), name='absolute_url')
+        view = getMultiAdapter((None, request), name='absolute_url')
         self.assertEqual(str(view), 'http://127.0.0.1')
         self.assertEqual(absoluteURL(None, request), 'http://127.0.0.1')
 
     def testVirtualHostingWithoutContextInformation(self):
         request = TestRequest()
         request._vh_root = contained(TrivialContent(), Root(), name='a')
-        view = zapi.getMultiAdapter((None, request), name='absolute_url')
+        view = getMultiAdapter((None, request), name='absolute_url')
         self.assertEqual(str(view), 'http://127.0.0.1')
         self.assertEqual(absoluteURL(None, request), 'http://127.0.0.1')
 

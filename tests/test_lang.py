@@ -15,7 +15,6 @@
 
 $Id$
 """
-
 import unittest
 
 from zope.interface import directlyProvides
@@ -30,7 +29,7 @@ from zope.app.annotation.attribute import AttributeAnnotations
 from zope.app.publisher.browser import ModifiableBrowserLanguages
 from zope.app.testing.placelesssetup import PlacelessSetup
 
-from zope.app.traversing.namespace import lang
+from zope.traversing.namespace import lang
 
 
 class TestRequest(test_browserlanguages.TestRequest):

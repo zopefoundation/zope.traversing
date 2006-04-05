@@ -18,14 +18,14 @@ $Id$
 from types import StringTypes, MethodType
 from zope.interface import implements
 
-from zope.app.traversing.interfaces import TraversalError
-from zope.app.traversing.interfaces import IPhysicallyLocatable
-from zope.app.traversing.interfaces import IContainmentRoot
-from zope.app.traversing.interfaces import ITraverser, ITraversable
+from zope.traversing.interfaces import TraversalError
+from zope.traversing.interfaces import IPhysicallyLocatable
+from zope.traversing.interfaces import IContainmentRoot
+from zope.traversing.interfaces import ITraverser, ITraversable
 
-from zope.app.traversing.namespace import namespaceLookup
-from zope.app.traversing.namespace import UnexpectedParameters
-from zope.app.traversing.namespace import nsParse
+from zope.traversing.namespace import namespaceLookup
+from zope.traversing.namespace import UnexpectedParameters
+from zope.traversing.namespace import nsParse
 
 _marker = object()  # opaque marker that doesn't get security proxied
 

@@ -21,7 +21,7 @@ from zope.testing.cleanup import CleanUp # Base class w registry cleanup
 class Test(CleanUp, TestCase):
 
     def testApplicationControl(self):
-        from zope.app.traversing.namespace import etc
+        from zope.traversing.namespace import etc
         from zope.app.applicationcontrol.applicationcontrol \
              import applicationController, applicationControllerRoot
 
@@ -30,7 +30,7 @@ class Test(CleanUp, TestCase):
             applicationController)
 
     def testSiteManager(self):
-        from zope.app.traversing.namespace import etc
+        from zope.traversing.namespace import etc
         class C(object):
             def getSiteManager(self): return 42
 

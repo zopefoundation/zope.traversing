@@ -16,14 +16,15 @@
 $Id$
 """
 import urllib
+import zope.component
 from zope.interface import implements
 from zope.proxy import sameProxiedObjects
 from zope.publisher.browser import IBrowserRequest
+from zope.traversing.browser.interfaces import IAbsoluteURL
+from zope.i18nmessageid import MessageFactory
+_ = MessageFactory('zope')
 
-import zope.component
-from zope.app.i18n import ZopeMessageFactory as _
 from zope.app.publisher.browser import BrowserView
-from zope.app.traversing.browser.interfaces import IAbsoluteURL
 
 _insufficientContext = _("There isn't enough context to get URL information. "
                        "This is probably due to a bug in setting up location "

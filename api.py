@@ -16,9 +16,9 @@
 $Id$
 """
 from zope.interface import moduleProvides
-from zope.app.traversing.interfaces import IContainmentRoot, ITraversalAPI
-from zope.app.traversing.interfaces import ITraverser, IPhysicallyLocatable
-from zope.app.traversing.interfaces import TraversalError
+from zope.traversing.interfaces import IContainmentRoot, ITraversalAPI
+from zope.traversing.interfaces import ITraverser, IPhysicallyLocatable
+from zope.traversing.interfaces import TraversalError
 
 moduleProvides(ITraversalAPI)
 __all__ = tuple(ITraversalAPI)
@@ -221,4 +221,4 @@ def canonicalPath(path_or_object):
     return _normalizePath(path)
 
 # import this down here to avoid circular imports
-from zope.app.traversing.adapters import traversePathElement
+from zope.traversing.adapters import traversePathElement

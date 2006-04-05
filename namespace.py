@@ -26,8 +26,8 @@ from zope.publisher.interfaces.browser import IBrowserSkinType
 from zope.publisher.browser import applySkin
 from zope.security.proxy import removeSecurityProxy
 
-from zope.app.traversing.interfaces import ITraversable, IPathAdapter
-from zope.app.traversing.interfaces import TraversalError
+from zope.traversing.interfaces import ITraversable, IPathAdapter
+from zope.traversing.interfaces import TraversalError
 
 class UnexpectedParameters(TraversalError):
     "Unexpected namespace parameters were provided."
@@ -296,7 +296,7 @@ class item(SimpleHandler):
 
 from zope.app.applicationcontrol.applicationcontrol \
      import applicationController
-from zope.app.traversing.interfaces import IContainmentRoot
+from zope.traversing.interfaces import IContainmentRoot
 
 class etc(SimpleHandler):
 

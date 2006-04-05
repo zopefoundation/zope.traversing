@@ -16,5 +16,5 @@
 $Id$
 """
 
-from zope.app.traversing.browser.absoluteurl import AbsoluteURL
-from zope.app.traversing.browser.absoluteurl import SiteAbsoluteURL
+from zope.traversing.browser.absoluteurl import AbsoluteURL
+from zope.traversing.browser.absoluteurl import SiteAbsoluteURL

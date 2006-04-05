@@ -21,7 +21,7 @@ from zope.testing.doctestunit import DocTestSuite
 from zope.app.testing.placelesssetup import setUp, tearDown
 
 def test_suite():
-    return DocTestSuite('zope.app.traversing.namespace',
+    return DocTestSuite('zope.traversing.namespace',
                         setUp=setUp, tearDown=tearDown)
 
 if __name__ == '__main__':

@@ -53,7 +53,7 @@
       />
 
   <view
-      for="zope.app.traversing.interfaces.IContainmentRoot"
+      for="zope.traversing.interfaces.IContainmentRoot"
       name="absolute_url"
       factory=".SiteAbsoluteURL"
       type="zope.publisher.interfaces.http.IHTTPRequest"
@@ -62,7 +62,7 @@
       />
       
   <view
-      for="zope.app.traversing.interfaces.IContainmentRoot"
+      for="zope.traversing.interfaces.IContainmentRoot"
       factory=".SiteAbsoluteURL"
       type="zope.publisher.interfaces.http.IHTTPRequest"
       permission="zope.Public"
@@ -78,7 +78,7 @@
       />
 
   <browser:page
-      for="zope.app.traversing.interfaces.IContainmentRoot"
+      for="zope.traversing.interfaces.IContainmentRoot"
       name="absolute_url"
       class=".SiteAbsoluteURL"
       permission="zope.Public"

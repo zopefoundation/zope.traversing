@@ -16,11 +16,10 @@
 $Id$
 """
 from unittest import TestCase, main, makeSuite
+
+import zope.component
 from zope.interface import Interface, directlyProvides
-
 from zope.publisher.interfaces.browser import IBrowserSkinType
-from zope.app.testing import ztapi
-
 
 class FauxRequest(object):
     def shiftNameToApplication(self):
@@ -35,7 +34,7 @@ class Test(TestCase):
 
     def setUp(self):
         super(Test, self).setUp()
-        ztapi.provideUtility(IBrowserSkinType, IFoo, 'foo')
+        zope.component.provideUtility(IFoo, IBrowserSkinType, name='foo')
 
     def test(self):
         from zope.traversing.namespace import skin

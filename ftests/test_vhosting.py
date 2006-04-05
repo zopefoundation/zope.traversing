@@ -17,12 +17,14 @@ $Id$
 """
 import unittest
 import transaction
-from zope.app.testing import ztapi, functional
-from zope.app.folder import Folder
-from zope.app.publisher.browser.resource import Resource
 from zope.traversing.api import traverse
+from zope.traversing.browser.tests import browserResource
 from zope.security.checker import defineChecker, NamesChecker, NoProxy
 from zope.security.checker import _checkers, undefineChecker
+
+from zope.app.testing import functional
+from zope.app.folder import Folder
+from zope.app.publisher.browser.resource import Resource
 from zope.app.container.contained import Contained
 from zope.app.zptpage.zptpage import ZPTPage
 
@@ -131,7 +133,7 @@ class TestVirtualHosting(functional.BrowserTestCase):
                     'https://otherhost/bar/pt\n')
 
     def test_resources(self):
-        ztapi.browserResource('quux', Resource)
+        browserResource('quux', Resource)
         # Only register the checker once, so that multiple test runs pass.
         if Resource not in _checkers:
             defineChecker(Resource, NamesChecker(['__call__']))

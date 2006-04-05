@@ -17,10 +17,9 @@ $Id$
 """
 from unittest import TestCase, main, makeSuite
 from zope.traversing.namespace import view, resource
+from zope.traversing.browser.tests import browserView, browserResource
 from zope.interface import Interface, implements
 from zope.publisher.browser import TestRequest
-
-from zope.app.testing import ztapi
 
 class IContent(Interface):
     pass
@@ -42,14 +41,14 @@ class View(object):
 class Test(TestCase):
 
     def testView(self):
-        ztapi.browserView(IContent, 'foo', View)
+        browserView(IContent, 'foo', View)
 
         ob = Content()
         v = view(ob, TestRequest()).traverse('foo', ())
         self.assertEqual(v.__class__, View)
 
     def testResource(self):
-        ztapi.browserResource('foo', Resource)
+        browserResource('foo', Resource)
 
         ob = Content()
         r = resource(ob, TestRequest()).traverse('foo', ())

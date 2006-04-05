@@ -43,6 +43,10 @@ def browserView(for_, name, factory, providing=Interface):
     zope.component.provideAdapter(factory, (for_, IDefaultBrowserLayer),
                                   providing, name=name)
 
+def browserResource(name, factory, providing=Interface):
+    zope.component.provideAdapter(factory, (IDefaultBrowserLayer,),
+                                  providing, name=name)
+
 class TestAbsoluteURL(TestCase):
 
     def setUp(self):

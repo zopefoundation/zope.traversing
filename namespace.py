@@ -25,9 +25,8 @@ from zope.interface import providedBy, directlyProvides, directlyProvidedBy
 from zope.publisher.interfaces.browser import IBrowserSkinType
 from zope.publisher.browser import applySkin
 from zope.security.proxy import removeSecurityProxy
-
 from zope.traversing.interfaces import ITraversable, IPathAdapter
-from zope.traversing.interfaces import TraversalError
+from zope.traversing.interfaces import TraversalError, IContainmentRoot
 
 class UnexpectedParameters(TraversalError):
     "Unexpected namespace parameters were provided."
@@ -294,10 +293,6 @@ class item(SimpleHandler):
            """
         return self.context[name]
 
-from zope.app.applicationcontrol.applicationcontrol \
-     import applicationController
-from zope.traversing.interfaces import IContainmentRoot
-
 class etc(SimpleHandler):
 
     def traverse(self, name, ignored):
@@ -314,8 +309,13 @@ class etc(SimpleHandler):
 
         ob = self.context
 
+        # TODO: lift dependency on zope.app
         if (name in ('process', 'ApplicationController')
             and IContainmentRoot.providedBy(ob)):
+            # import the application controller here to avoid circular
+            # import problems
+            from zope.app.applicationcontrol.applicationcontrol \
+                 import applicationController
             return applicationController
 
         if name not in ('site',):

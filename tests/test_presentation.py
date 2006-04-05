@@ -16,10 +16,11 @@
 $Id$
 """
 from unittest import TestCase, main, makeSuite
-from zope.traversing.namespace import view, resource
-from zope.traversing.testing import browserView, browserResource
+from zope.testing.cleanup import CleanUp
 from zope.interface import Interface, implements
 from zope.publisher.browser import TestRequest
+from zope.traversing.namespace import view, resource
+from zope.traversing.testing import browserView, browserResource
 
 class IContent(Interface):
     pass
@@ -38,7 +39,7 @@ class View(object):
         self.content = content
 
 
-class Test(TestCase):
+class Test(CleanUp, TestCase):
 
     def testView(self):
         browserView(IContent, 'foo', View)

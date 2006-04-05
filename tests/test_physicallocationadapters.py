@@ -20,6 +20,7 @@ from unittest import TestCase, main, makeSuite
 import zope.traversing.testing
 from zope.traversing.interfaces import IContainmentRoot, IPhysicallyLocatable
 from zope.interface import implements
+from zope.testing.cleanup import CleanUp
 
 from zope.app.testing import setup
 from zope.app.container.contained import contained
@@ -36,7 +37,7 @@ class C(object):
     pass
 
 
-class Test(TestCase):
+class Test(CleanUp, TestCase):
 
     def test(self):
         zope.traversing.testing.setUp()

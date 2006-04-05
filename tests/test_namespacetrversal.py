@@ -17,9 +17,11 @@ $Id$
 """
 from unittest import main
 from zope.testing.doctestunit import DocTestSuite
+from zope.component.testing import setUp, tearDown
 
 def test_suite():
-    return DocTestSuite('zope.traversing.namespace')
+    return DocTestSuite('zope.traversing.namespace',
+                        setUp=setUp, tearDown=tearDown)
 
 if __name__ == '__main__':
     main(defaultTest='test_suite')

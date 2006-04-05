@@ -37,63 +37,66 @@ class ExcessiveDepth(TraversalError):
 def namespaceLookup(ns, name, object, request=None):
     """Lookup a value from a namespace
 
-       We look up a value using a view or an adapter, depending on
-       whether a request is passed.
+    We look up a value using a view or an adapter, depending on
+    whether a request is passed.
 
-       Let's start with adapter-based transersal. We're going to use the
-       component architecture, so we'll need to initialize it:
+    Let's start with adapter-based transersal:
 
-         >>> class I(zope.interface.Interface):
-         ...     'Test interface'
-         >>> class C(object):
-         ...     zope.interface.implements(I)
+      >>> class I(zope.interface.Interface):
+      ...     'Test interface'
+      >>> class C(object):
+      ...     zope.interface.implements(I)
 
-       We'll register a simple testing adapter:
+    We'll register a simple testing adapter:
 
-         >>> class Adapter(object):
-         ...     def __init__(self, context):
-         ...         self.context = context
-         ...     def traverse(self, name, remaining):
-         ...         return name+'42'
+      >>> class Adapter(object):
+      ...     def __init__(self, context):
+      ...         self.context = context
+      ...     def traverse(self, name, remaining):
+      ...         return name+'42'
 
-         >>> zope.component.provideAdapter(Adapter, (I,), ITraversable, 'foo')
+      >>> zope.component.provideAdapter(Adapter, (I,), ITraversable, 'foo')
 
-       Then given an object, we can traverse it with a
-       namespace-qualified name:
+    Then given an object, we can traverse it with a
+    namespace-qualified name:
 
-         >>> namespaceLookup('foo', 'bar', C())
-         'bar42'
+      >>> namespaceLookup('foo', 'bar', C())
+      'bar42'
 
-       If we give an invalid namespace, we'll get a not found error:
+    If we give an invalid namespace, we'll get a not found error:
 
-         >>> namespaceLookup('fiz', 'bar', C())
-         Traceback (most recent call last):
-         ...
-         TraversalError: '++fiz++bar'
+      >>> namespaceLookup('fiz', 'bar', C())
+      Traceback (most recent call last):
+      ...
+      TraversalError: '++fiz++bar'
 
-       We'll get the same thing if we provide a request:
+    We'll get the same thing if we provide a request:
 
-       >>> from zope.publisher.browser import TestRequest
-         >>> request = TestRequest()
-         >>> namespaceLookup('foo', 'bar', C(), request)
-         Traceback (most recent call last):
-         ...
-         TraversalError: '++foo++bar'
+      >>> from zope.publisher.browser import TestRequest
+      >>> request = TestRequest()
+      >>> namespaceLookup('foo', 'bar', C(), request)
+      Traceback (most recent call last):
+      ...
+      TraversalError: '++foo++bar'
 
-       We need to provide a view:
+    We need to provide a view:
 
-         >>> class View(object):
-         ...     def __init__(self, context, request):
-         ...         pass
-         ...     def traverse(self, name, remaining):
-         ...         return name+'fromview'
-         >>> from zope.traversing.testing import browserView
-         >>> browserView(I, 'foo', View, providing=ITraversable)
+      >>> class View(object):
+      ...     def __init__(self, context, request):
+      ...         pass
+      ...     def traverse(self, name, remaining):
+      ...         return name+'fromview'
+      >>> from zope.traversing.testing import browserView
+      >>> browserView(I, 'foo', View, providing=ITraversable)
 
-         >>> namespaceLookup('foo', 'bar', C(), request)
-         'barfromview'
-       """
+      >>> namespaceLookup('foo', 'bar', C(), request)
+      'barfromview'
 
+    Clean up:
+
+      >>> from zope.testing.cleanup import cleanUp
+      >>> cleanUp()
+    """
     if request is not None:
         traverser = zope.component.queryMultiAdapter((object, request),
                                                      ITraversable, ns)
@@ -109,36 +112,33 @@ def namespaceLookup(ns, name, object, request=None):
 namespace_pattern = re.compile('[+][+]([a-zA-Z0-9_]+)[+][+]')
 
 def nsParse(name):
-    """Parse a namespace-qualified name into a namespace name and a name
-
-    Returns the namespace name and a name.
+    """Parse a namespace-qualified name into a namespace name and a
+    name.  Returns the namespace name and a name.
 
     A namespace-qualified name is usually of the form ++ns++name, as in:
 
-    >>> nsParse('++acquire++foo')
-    ('acquire', 'foo')
+      >>> nsParse('++acquire++foo')
+      ('acquire', 'foo')
 
     The part inside the +s must be an identifier, so:
 
-    >>> nsParse('++hello world++foo')
-    ('', '++hello world++foo')
-    >>> nsParse('+++acquire+++foo')
-    ('', '+++acquire+++foo')
-
+      >>> nsParse('++hello world++foo')
+      ('', '++hello world++foo')
+      >>> nsParse('+++acquire+++foo')
+      ('', '+++acquire+++foo')
 
     But it may also be a @@foo, which implies the view namespace:
 
-    >>> nsParse('@@foo')
-    ('view', 'foo')
+      >>> nsParse('@@foo')
+      ('view', 'foo')
 
-    >>> nsParse('@@@foo')
-    ('view', '@foo')
+      >>> nsParse('@@@foo')
+      ('view', '@foo')
 
-    >>> nsParse('@foo')
-    ('', '@foo')
+      >>> nsParse('@foo')
+      ('', '@foo')
 
     """
-
     ns = ''
     if name.startswith('@@'):
         ns = 'view'
@@ -180,15 +180,15 @@ class SimpleHandler(object):
     def __init__(self, context, request=None):
         """Simple handlers can be used as adapters or views
 
-           They ignore their second constructor arg and store the first
-           one in their context attr:
+        They ignore their second constructor arg and store the first
+        one in their context attr:
 
-              >>> SimpleHandler(42).context
-              42
+          >>> SimpleHandler(42).context
+          42
 
-              >>> SimpleHandler(42, 43).context
-              42
-           """
+          >>> SimpleHandler(42, 43).context
+          42
+        """
         self.context = context
 
 class acquire(SimpleHandler):
@@ -198,43 +198,43 @@ class acquire(SimpleHandler):
     def traverse(self, name, remaining):
         """Acquire a name
 
-           Let's set up some example data:
+        Let's set up some example data:
 
-             >>> class testcontent(object):
-             ...     zope.interface.implements(ITraversable)
-             ...     def traverse(self, name, remaining):
-             ...         v = getattr(self, name, None)
-             ...         if v is None:
-             ...             raise TraversalError(name)
-             ...         return v
-             ...     def __repr__(self):
-             ...         return 'splat'
+          >>> class testcontent(object):
+          ...     zope.interface.implements(ITraversable)
+          ...     def traverse(self, name, remaining):
+          ...         v = getattr(self, name, None)
+          ...         if v is None:
+          ...             raise TraversalError(name)
+          ...         return v
+          ...     def __repr__(self):
+          ...         return 'splat'
 
-             >>> ob = testcontent()
-             >>> ob.a = 1
-             >>> ob.__parent__ = testcontent()
-             >>> ob.__parent__.b = 2
-             >>> ob.__parent__.__parent__ = testcontent()
-             >>> ob.__parent__.__parent__.c = 3
+          >>> ob = testcontent()
+          >>> ob.a = 1
+          >>> ob.__parent__ = testcontent()
+          >>> ob.__parent__.b = 2
+          >>> ob.__parent__.__parent__ = testcontent()
+          >>> ob.__parent__.__parent__.c = 3
 
-           And acquire some names:
+        And acquire some names:
 
-             >>> adapter = acquire(ob)
+          >>> adapter = acquire(ob)
 
-             >>> adapter.traverse('a', ())
-             1
+          >>> adapter.traverse('a', ())
+          1
 
-             >>> adapter.traverse('b', ())
-             2
+          >>> adapter.traverse('b', ())
+          2
 
-             >>> adapter.traverse('c', ())
-             3
+          >>> adapter.traverse('c', ())
+          3
 
-             >>> adapter.traverse('d', ())
-             Traceback (most recent call last):
-             ...
-             TraversalError: (splat, 'd')
-           """
+          >>> adapter.traverse('d', ())
+          Traceback (most recent call last):
+          ...
+          TraversalError: (splat, 'd')
+        """
         i = 0
         ob = self.context
         while i < 200:
@@ -264,14 +264,14 @@ class attr(SimpleHandler):
     def traverse(self, name, ignored):
         """Attribute traversal adapter
 
-           This adapter just provides traversal to attributes:
+        This adapter just provides traversal to attributes:
 
-              >>> ob = {'x': 1}
-              >>> adapter = attr(ob)
-              >>> adapter.traverse('keys', ())()
-              ['x']
+          >>> ob = {'x': 1}
+          >>> adapter = attr(ob)
+          >>> adapter.traverse('keys', ())()
+          ['x']
 
-           """
+        """
         return getattr(self.context, name)
 
 class item(SimpleHandler):
@@ -405,34 +405,39 @@ class adapter(SimpleHandler):
     def traverse(self, name, ignored):
         """Adapter traversal adapter
 
-           This adapter provides traversal to named adapters registered to
-           provide IPathAdapter.
+        This adapter provides traversal to named adapters registered
+        to provide IPathAdapter.
 
-           To demonstrate this, we need to register some adapters:
+        To demonstrate this, we need to register some adapters:
 
-             >>> def adapter1(ob):
-             ...     return 1
-             >>> def adapter2(ob):
-             ...     return 2
-             >>> zope.component.provideAdapter(
-             ...     adapter1, (None,), IPathAdapter, 'a1')
-             >>> zope.component.provideAdapter(
-             ...     adapter2, (None,), IPathAdapter, 'a2')
+          >>> def adapter1(ob):
+          ...     return 1
+          >>> def adapter2(ob):
+          ...     return 2
+          >>> zope.component.provideAdapter(
+          ...     adapter1, (None,), IPathAdapter, 'a1')
+          >>> zope.component.provideAdapter(
+          ...     adapter2, (None,), IPathAdapter, 'a2')
 
-           Now, with these adapters in place, we can use the traversal adapter:
+        Now, with these adapters in place, we can use the traversal adapter:
 
-             >>> ob = object()
-             >>> adapter = adapter(ob)
-             >>> adapter.traverse('a1', ())
-             1
-             >>> adapter.traverse('a2', ())
-             2
-             >>> try:
-             ...     adapter.traverse('bob', ())
-             ... except TraversalError:
-             ...     print 'no adapter'
-             no adapter
-           """
+          >>> ob = object()
+          >>> adapter = adapter(ob)
+          >>> adapter.traverse('a1', ())
+          1
+          >>> adapter.traverse('a2', ())
+          2
+          >>> try:
+          ...     adapter.traverse('bob', ())
+          ... except TraversalError:
+          ...     print 'no adapter'
+          no adapter
+
+        Clean up:
+        
+          >>> from zope.testing.cleanup import cleanUp
+          >>> cleanUp()
+        """
         try:
             return zope.component.getAdapter(self.context, IPathAdapter, name)
         except ComponentLookupError:

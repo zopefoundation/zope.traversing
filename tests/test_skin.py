@@ -18,6 +18,7 @@ $Id$
 from unittest import TestCase, main, makeSuite
 
 import zope.component
+from zope.testing.cleanup import CleanUp
 from zope.interface import Interface, directlyProvides
 from zope.publisher.interfaces.browser import IBrowserSkinType
 
@@ -30,7 +31,7 @@ class IFoo(Interface):
 directlyProvides(IFoo, IBrowserSkinType)
 
 
-class Test(TestCase):
+class Test(CleanUp, TestCase):
 
     def setUp(self):
         super(Test, self).setUp()

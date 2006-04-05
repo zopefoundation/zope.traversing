@@ -23,6 +23,7 @@ from zope.publisher.interfaces.http import IHTTPRequest
 from zope.publisher.tests import test_browserlanguages
 from zope.i18n.interfaces import IModifiableUserPreferredLanguages
 from zope.traversing.namespace import lang
+from zope.testing.cleanup import CleanUp
 
 from zope.app.annotation import IAttributeAnnotatable, IAnnotations
 from zope.app.annotation.attribute import AttributeAnnotations
@@ -33,9 +34,11 @@ class TestRequest(test_browserlanguages.TestRequest):
     def shiftNameToApplication(self):
         self.shifted = True
 
-class Test(unittest.TestCase):
+class Test(CleanUp, unittest.TestCase):
 
     def setUp(self):
+        super(Test, self).setUp()
+
         self.request = TestRequest("en")
         directlyProvides(self.request, IHTTPRequest, IAttributeAnnotatable)
         zope.component.provideAdapter(AttributeAnnotations,

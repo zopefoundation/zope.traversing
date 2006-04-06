@@ -25,8 +25,8 @@ from zope.i18n.interfaces import IModifiableUserPreferredLanguages
 from zope.traversing.namespace import lang
 from zope.testing.cleanup import CleanUp
 
-from zope.app.annotation import IAttributeAnnotatable, IAnnotations
-from zope.app.annotation.attribute import AttributeAnnotations
+from zope.annotation import IAttributeAnnotatable, IAnnotations
+from zope.annotation.attribute import AttributeAnnotations
 from zope.app.publisher.browser import ModifiableBrowserLanguages
 
 class TestRequest(test_browserlanguages.TestRequest):

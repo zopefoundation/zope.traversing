@@ -10,10 +10,7 @@
     factory="zope.traversing.adapters.DefaultTraversable"
     provides="zope.traversing.interfaces.ITraversable" />
 
-<adapter
-    provides="zope.traversing.interfaces.IPhysicallyLocatable"
-    for="zope.traversing.interfaces.IContainmentRoot"
-    factory="zope.traversing.adapters.RootPhysicallyLocatable" />
+<adapter factory="zope.traversing.adapters.RootPhysicallyLocatable" />
 
 <adapter
     name="etc"

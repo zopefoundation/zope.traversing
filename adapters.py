@@ -16,7 +16,9 @@
 $Id$
 """
 from types import StringTypes, MethodType
-from zope.interface import implements
+
+import zope.interface
+import zope.component
 
 from zope.traversing.interfaces import TraversalError
 from zope.traversing.interfaces import IPhysicallyLocatable
@@ -32,7 +34,7 @@ _marker = object()  # opaque marker that doesn't get security proxied
 class DefaultTraversable(object):
     """Traverses objects via attribute and item lookup"""
 
-    implements(ITraversable)
+    zope.interface.implements(ITraversable)
 
     def __init__(self, subject):
         self._subject = subject
@@ -54,9 +56,8 @@ class DefaultTraversable(object):
 class RootPhysicallyLocatable(object):
     __doc__ = IPhysicallyLocatable.__doc__
 
-    implements(IPhysicallyLocatable)
-
-    __used_for__ = IContainmentRoot
+    zope.component.adapts(IContainmentRoot)
+    zope.interface.implements(IPhysicallyLocatable)
 
     def __init__(self, context):
         self.context = context
@@ -81,7 +82,7 @@ class RootPhysicallyLocatable(object):
 class Traverser(object):
     """Provide traverse features"""
 
-    implements(ITraverser)
+    zope.interface.implements(ITraverser)
 
     # This adapter can be used for any object.
 

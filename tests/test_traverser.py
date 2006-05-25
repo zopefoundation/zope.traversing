@@ -137,6 +137,15 @@ class UnrestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
     def testNotFoundNoDefault(self):
         self.assertRaises(TraversalError, self.tr.traverse, 'foo')
 
+    def testTraverseOldStyleClass(self):
+        class AnOldStyleClass:
+            x = object()
+        container = {}
+        container['theclass'] = AnOldStyleClass
+
+        tr = Traverser(container)
+        self.assert_(tr.traverse('theclass/x') is AnOldStyleClass.x)
+
 class RestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
     _oldPolicy = None
     _deniedNames = ()

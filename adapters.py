@@ -158,7 +158,8 @@ def traversePathElement(obj, name, further_path, default=_marker,
         nm = name
 
     if traversable is None:
-        if obj.__class__ == dict:
+        # not all objects have __class__, for example old style classes
+        if getattr(obj, '__class__', None) == dict:
             # Special-case dicts
             return obj[name]
 

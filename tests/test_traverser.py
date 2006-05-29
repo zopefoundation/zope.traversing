@@ -146,6 +146,18 @@ class UnrestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
         tr = Traverser(container)
         self.assert_(tr.traverse('theclass/x') is AnOldStyleClass.x)
 
+    def testTraversingDictSeesDictAPI(self):
+        adict = {
+            'foo': 'bar',
+            'anotherdict': {'bar': 'foo'},
+            'items': '123',
+            }
+        tr = Traverser(adict)
+        self.assertEqual(tr.traverse('items'), adict.items)
+        self.assertEqual(tr.traverse('anotherdict/bar'), 'foo')
+        self.assertEqual(tr.traverse('anotherdict/items'),
+                         adict['anotherdict'].items)
+
 class RestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
     _oldPolicy = None
     _deniedNames = ()

@@ -47,6 +47,14 @@ class Test(CleanUp, TestCase):
         self.assert_(IFoo.providedBy(request))
         self.assertEqual(request.shifted, 1)
 
+    def test_missing_skin(self):
+        from zope.traversing.namespace import skin
+        from zope.traversing.interfaces import TraversalError
+        request = FauxRequest()
+        ob = object()
+        traverser = skin(ob, request)
+        self.assertRaises(TraversalError, traverser.traverse, 'bar', ())
+
 def test_suite():
     return makeSuite(Test)
 

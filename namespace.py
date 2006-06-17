@@ -362,7 +362,10 @@ class skin(view):
 
     def traverse(self, name, ignored):
         self.request.shiftNameToApplication()
-        skin = zope.component.getUtility(IBrowserSkinType, name)
+        try:
+            skin = zope.component.getUtility(IBrowserSkinType, name)
+        except ComponentLookupError:
+            raise TraversalError("++skin++%s" % name)
         applySkin(self.request, skin)
         return self.context
 

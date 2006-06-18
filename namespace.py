@@ -65,19 +65,19 @@ def namespaceLookup(ns, name, object, request=None):
 
     If we give an invalid namespace, we'll get a not found error:
 
-      >>> namespaceLookup('fiz', 'bar', C())
+      >>> namespaceLookup('fiz', 'bar', C())    # doctest: +ELLIPSIS
       Traceback (most recent call last):
       ...
-      TraversalError: '++fiz++bar'
+      TraversalError: (<zope.traversing.namespace.C object at 0x...>, '++fiz++bar')
 
     We'll get the same thing if we provide a request:
 
       >>> from zope.publisher.browser import TestRequest
       >>> request = TestRequest()
-      >>> namespaceLookup('foo', 'bar', C(), request)
+      >>> namespaceLookup('foo', 'bar', C(), request)    # doctest: +ELLIPSIS
       Traceback (most recent call last):
       ...
-      TraversalError: '++foo++bar'
+      TraversalError: (<zope.traversing.namespace.C object at 0x...>, '++foo++bar')
 
     We need to provide a view:
 
@@ -104,7 +104,7 @@ def namespaceLookup(ns, name, object, request=None):
         traverser = zope.component.queryAdapter(object, ITraversable, ns)
 
     if traverser is None:
-        raise TraversalError("++%s++%s" % (ns, name))
+        raise TraversalError(object, "++%s++%s" % (ns, name))
 
     return traverser.traverse(name, ())
 
@@ -205,7 +205,7 @@ class acquire(SimpleHandler):
           ...     def traverse(self, name, remaining):
           ...         v = getattr(self, name, None)
           ...         if v is None:
-          ...             raise TraversalError(name)
+          ...             raise TraversalError(self, name)
           ...         return v
           ...     def __repr__(self):
           ...         return 'splat'

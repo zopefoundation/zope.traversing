@@ -25,6 +25,7 @@ class IContainmentRoot(Interface):
     """Marker interface to designate root objects
     """
 
+#TODO this does not seem to be used anywhere. Remove it? --philiKON
 class INamespaceHandler(Interface):
 
     def __call__(name, object, request):
@@ -72,9 +73,10 @@ class ITraversable(Interface):
         Should return the item corresponding to 'name' or raise
         TraversalError where appropriate.
 
-        furtherPath is a list of names still to be traversed. This method is
-        allowed to change the contents of furtherPath.
+        'name' is an ASCII string or Unicode object.
 
+        'furtherPath' is a list of names still to be traversed. This
+        method is allowed to change the contents of furtherPath.
         """
 
 _RAISE_KEYERROR = object()

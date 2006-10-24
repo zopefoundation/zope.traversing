@@ -15,6 +15,8 @@
 
 $Id$
 """
+__docformat__ = 'restructuredtext'
+
 import re
 
 import zope.component
@@ -27,6 +29,7 @@ from zope.publisher.browser import applySkin
 from zope.security.proxy import removeSecurityProxy
 from zope.traversing.interfaces import ITraversable, IPathAdapter
 from zope.traversing.interfaces import TraversalError, IContainmentRoot
+
 
 class UnexpectedParameters(TraversalError):
     "Unexpected namespace parameters were provided."
@@ -437,7 +440,7 @@ class adapter(SimpleHandler):
           no adapter
 
         Clean up:
-        
+
           >>> from zope.testing.cleanup import cleanUp
           >>> cleanUp()
         """

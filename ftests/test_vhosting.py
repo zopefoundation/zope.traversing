@@ -27,6 +27,7 @@ from zope.app.folder import Folder
 from zope.app.publisher.browser.resource import Resource
 from zope.app.container.contained import Contained
 from zope.app.zptpage.zptpage import ZPTPage
+from zope.traversing.ftests.layer import TraversingLayer
 
 class MyObj(Contained):
     def __getitem__(self, key):
@@ -182,6 +183,7 @@ class TestVirtualHosting(functional.BrowserTestCase):
 
 def test_suite():
     suite = unittest.TestSuite()
+    TestVirtualHosting.layer = TraversingLayer
     suite.addTest(unittest.makeSuite(TestVirtualHosting))
     return suite
 

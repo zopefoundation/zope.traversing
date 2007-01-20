@@ -18,6 +18,7 @@ $Id$
 import unittest
 from zope.app.testing import functional
 from zope.publisher.interfaces import NotFound
+from zope.traversing.ftests.layer import TraversingLayer
 
 class TestSkin(functional.BrowserTestCase):
 
@@ -26,6 +27,7 @@ class TestSkin(functional.BrowserTestCase):
 
 def test_suite():
     suite = unittest.TestSuite()
+    TestSkin.layer = TraversingLayer
     suite.addTest(unittest.makeSuite(TestSkin))
     return suite
 

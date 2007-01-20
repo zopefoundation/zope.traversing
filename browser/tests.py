@@ -29,6 +29,8 @@ from zope.publisher.browser import TestRequest
 from zope.publisher.http import IHTTPRequest, HTTPCharsets
 
 from zope.app.container.contained import contained
+from zope.app.testing import setup
+
 
 class IRoot(Interface):
     pass
@@ -42,6 +44,7 @@ class TrivialContent(object):
 class TestAbsoluteURL(TestCase):
 
     def setUp(self):
+        setup.placelessSetUp()
         from zope.traversing.browser import AbsoluteURL, SiteAbsoluteURL
         browserView(None, 'absolute_url', AbsoluteURL)
         browserView(IRoot, 'absolute_url', SiteAbsoluteURL)
@@ -49,6 +52,9 @@ class TestAbsoluteURL(TestCase):
         browserView(IRoot, '', SiteAbsoluteURL, providing=IAbsoluteURL)
         zope.component.provideAdapter(HTTPCharsets, (IHTTPRequest,),
                                       IUserPreferredCharsets)
+
+    def tearDown(self):
+        setup.placelessTearDown()
 
     def test_interface(self):
         request = TestRequest()

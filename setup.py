@@ -18,13 +18,10 @@ $Id$
 
 import os
 
-try:
-    from setuptools import setup, Extension
-except ImportError, e:
-    from distutils.core import setup, Extension
+from setuptools import setup, find_packages
 
 setup(name='zope.traversing',
-      version='3.4-dev',
+      version='3.4dev',
       url='http://svn.zope.org/zope.traversing',
       license='ZPL 2.1',
       description='Zope traversing',
@@ -32,12 +29,8 @@ setup(name='zope.traversing',
       author_email='zope3-dev@zope.org',
       long_description="Module for traversing the object tree.",
 
-      packages=['zope',
-                'zope.traversing',
-                'zope.traversing.browser',
-                'zope.traversing.ftests',
-                'zope.traversing.tests'],
-      package_dir = {'': 'src'},
+      packages=find_packages('src'),
+	  package_dir = {'': 'src'},
 
       namespace_packages=['zope',],
       tests_require = ['zope.testing',

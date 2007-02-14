@@ -1,2 +1,0 @@
-zope.traversing Package Changelog
-=================================

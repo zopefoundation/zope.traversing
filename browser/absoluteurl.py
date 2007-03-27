@@ -19,7 +19,6 @@ import urllib
 import zope.component
 from zope.interface import implements
 from zope.proxy import sameProxiedObjects
-from zope.publisher.interfaces.browser import IBrowserRequest
 from zope.publisher.browser import BrowserView
 from zope.traversing.browser.interfaces import IAbsoluteURL
 from zope.i18nmessageid import MessageFactory

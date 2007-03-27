@@ -18,7 +18,7 @@ $Id$
 import unittest
 from zope.app.testing import functional
 from zope.publisher.interfaces import NotFound
-from zope.traversing.ftests.layer import TraversingLayer
+from zope.traversing.tests.layer import TraversingLayer
 
 class TestSkin(functional.BrowserTestCase):
 

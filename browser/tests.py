@@ -21,7 +21,7 @@ import zope.component
 from zope.component import getMultiAdapter
 from zope.traversing.browser.absoluteurl import absoluteURL
 from zope.traversing.browser.interfaces import IAbsoluteURL
-from zope.traversing.testing import browserView, browserResource
+from zope.traversing.testing import browserView
 from zope.i18n.interfaces import IUserPreferredCharsets
 from zope.interface import Interface, implements
 from zope.interface.verify import verifyObject

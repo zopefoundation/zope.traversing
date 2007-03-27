@@ -15,7 +15,7 @@
 
 $Id$
 """
-from types import StringTypes, MethodType
+from types import StringTypes
 
 import zope.interface
 import zope.component

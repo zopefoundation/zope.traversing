@@ -17,8 +17,8 @@ $Id$
 """
 
 import os
-
 from setuptools import setup, find_packages
+
 
 setup(name='zope.traversing',
       version = '3.4.0b1',
@@ -30,7 +30,7 @@ setup(name='zope.traversing',
       long_description="Module for traversing the object tree.",
 
       packages=find_packages('src'),
-	  package_dir = {'': 'src'},
+      package_dir = {'': 'src'},
 
       namespace_packages=['zope',],
       extras_require = dict(test=['zope.app.testing',

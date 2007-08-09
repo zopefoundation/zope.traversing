@@ -25,6 +25,7 @@ from zope.i18n.interfaces import IModifiableUserPreferredLanguages
 from zope.component.interfaces import ComponentLookupError
 from zope.interface import providedBy, directlyProvides, directlyProvidedBy
 from zope.publisher.interfaces.browser import IBrowserSkinType
+from zope.publisher.interfaces.xmlrpc import IXMLRPCSkinType
 from zope.publisher.browser import applySkin
 from zope.security.proxy import removeSecurityProxy
 from zope.traversing.interfaces import ITraversable, IPathAdapter
@@ -363,14 +364,22 @@ class lang(view):
 
 class skin(view):
 
+    skin_type = IBrowserSkinType
+
     def traverse(self, name, ignored):
         self.request.shiftNameToApplication()
         try:
-            skin = zope.component.getUtility(IBrowserSkinType, name)
+            skin = zope.component.getUtility(self.skin_type, name)
         except ComponentLookupError:
             raise TraversalError("++skin++%s" % name)
         applySkin(self.request, skin)
         return self.context
+
+
+class xmlrpc_skin(skin):
+
+    skin_type = IXMLRPCSkinType
+
 
 class vh(view):
 

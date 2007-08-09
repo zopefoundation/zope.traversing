@@ -1,0 +1,10 @@
+=======
+Changes
+=======
+
+3.5
+===
+
+- Added a traverer for ++skin++ for XMLRPC skins (IXMLRPCSkinType). This also
+  means that the normal ++skin++ namespace handler is only bound to
+  IBrowserRequest. 

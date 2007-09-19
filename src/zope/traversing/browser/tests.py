@@ -18,7 +18,7 @@ $Id$
 from unittest import TestCase, main, makeSuite
 
 import zope.component
-from zope.component import getMultiAdapter
+from zope.component import getMultiAdapter, adapts
 from zope.traversing.browser.absoluteurl import absoluteURL
 from zope.traversing.browser.interfaces import IAbsoluteURL
 from zope.traversing.testing import browserView
@@ -27,6 +27,7 @@ from zope.interface import Interface, implements
 from zope.interface.verify import verifyObject
 from zope.publisher.browser import TestRequest
 from zope.publisher.http import IHTTPRequest, HTTPCharsets
+from zope.location.interfaces import ILocation
 
 from zope.app.container.contained import contained
 from zope.app.testing import setup
@@ -41,6 +42,25 @@ class Root(object):
 class TrivialContent(object):
     """Trivial content object, used because instances of object are rocks."""
 
+class FooContent(object):
+    """Class whose location will be provided by an adapter."""
+
+class FooLocation(object):
+    """Adapts FooAdapter to the ILocation protocol."""
+    implements(ILocation)
+    adapts(FooContent)
+
+    def __init__(self, context):
+        self.context = context
+
+    @property
+    def __name__(self):
+        return 'foo'
+
+    @property
+    def __parent__(self):
+        return contained(TrivialContent(), Root(), name='bar')
+
 class TestAbsoluteURL(TestCase):
 
     def setUp(self):
@@ -50,6 +70,7 @@ class TestAbsoluteURL(TestCase):
         browserView(IRoot, 'absolute_url', SiteAbsoluteURL)
         browserView(None, '', AbsoluteURL, providing=IAbsoluteURL)
         browserView(IRoot, '', SiteAbsoluteURL, providing=IAbsoluteURL)
+        zope.component.provideAdapter(FooLocation)
         zope.component.provideAdapter(HTTPCharsets, (IHTTPRequest,),
                                       IUserPreferredCharsets)
 
@@ -92,6 +113,22 @@ class TestAbsoluteURL(TestCase):
                           {'name': 'a', 'url': 'http://127.0.0.1/a'},
                           {'name': 'b', 'url': 'http://127.0.0.1/a/b'},
                           {'name': 'c', 'url': 'http://127.0.0.1/a/b/c'},
+                          ))
+
+    def testAdaptedContext(self):
+        request = TestRequest()
+
+        content = FooContent()
+        view = getMultiAdapter((content, request), name='absolute_url')
+        self.assertEqual(str(view), 'http://127.0.0.1/bar/foo')
+        self.assertEqual(absoluteURL(content, request),
+                         'http://127.0.0.1/bar/foo')
+
+        breadcrumbs = view.breadcrumbs()
+        self.assertEqual(breadcrumbs,
+                         ({'name':  '', 'url': 'http://127.0.0.1'},
+                          {'name': 'bar', 'url': 'http://127.0.0.1/bar'},
+                          {'name': 'foo', 'url': 'http://127.0.0.1/bar/foo'},
                           ))
 
     def testBasicContext_unicode(self):

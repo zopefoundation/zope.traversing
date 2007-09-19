@@ -18,6 +18,7 @@ $Id$
 import urllib
 import zope.component
 from zope.interface import implements
+from zope.location.interfaces import ILocation
 from zope.proxy import sameProxiedObjects
 from zope.publisher.browser import BrowserView
 from zope.traversing.browser.interfaces import IAbsoluteURL
@@ -50,13 +51,14 @@ class AbsoluteURL(BrowserView):
             or sameProxiedObjects(context, request.getVirtualHostRoot())):
             return request.getApplicationURL()
 
+        context = ILocation(context, context)
         container = getattr(context, '__parent__', None)
         if container is None:
             raise TypeError(_insufficientContext)
 
         url = str(zope.component.getMultiAdapter((container, request),
                                                  name='absolute_url'))
-        name = self._getContextName(context)
+        name = getattr(context, '__name__', None)
         if name is None:
             raise TypeError(_insufficientContext)
 
@@ -67,14 +69,12 @@ class AbsoluteURL(BrowserView):
 
     __call__ = __str__
 
-    def _getContextName(self, context):
-        return getattr(context, '__name__', None)
-
     def breadcrumbs(self):
         context = self.context
         request = self.request
 
         # We do this here do maintain the rule that we must be wrapped
+        context = ILocation(context, context)
         container = getattr(context, '__parent__', None)
         if container is None:
             raise TypeError(_insufficientContext)

@@ -1,7 +1,4 @@
-zope.traversing Package Readme
-==============================
-
-Overview
---------
-
-Module for traversing the object tree.
+The ``zope.traversing`` package provides adapteres for resolving
+object paths by traversing an object hierarchy.  This also includes
+support for traversal namespaces (e.g. ``++view++``, ``++skin++``,
+etc.) as well as computing URLs via the ``@@absolute_url`` view.

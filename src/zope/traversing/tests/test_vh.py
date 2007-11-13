@@ -77,6 +77,17 @@ class TestVHNamespace(unittest.TestCase):
 
         self.assertEqual(request._app_server, 'http://www.fubarco.com:80')
 
+
+    def test_unicode_vh_host(self):
+        from zope.traversing.namespace import vh
+
+        request = TestRequest(['folder1'], ['folder1_1', '++'])
+        ob = object()
+
+        result = vh(ob, request).traverse(u'http:www.fubarco.com:80', ())
+        assert(isinstance(request._app_server, str))
+
+
 def test_suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(TestVHNamespace))

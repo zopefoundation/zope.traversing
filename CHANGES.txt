@@ -8,3 +8,6 @@ Changes
 - Added a traverer for ++skin++ for XMLRPC skins (IXMLRPCSkinType). This also
   means that the normal ++skin++ namespace handler is only bound to
   IBrowserRequest. 
+
+- Resolved the dependency on zope.app.applicationcontrol by importing the
+  application controller only if the package is available.

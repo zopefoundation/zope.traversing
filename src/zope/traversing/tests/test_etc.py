@@ -21,6 +21,15 @@ from zope.testing.cleanup import CleanUp # Base class w registry cleanup
 class Test(CleanUp, TestCase):
 
     def testApplicationControl(self):
+        # This test is to be taken with care. The 'process' name will only be
+        # resolved if zope.app.applicationcontrol can be imported in the first
+        # place. So there is no guarantee that 'process' can be resolved in
+        # spite of the test; it just assures that if the applicationcontroller
+        # can be imported, the 'process' name will be resolved correctly.
+        # While the zope.traversing package itself no longer depends on
+        # zope.app.applicationcontrol, its tests do, so we always test the
+        # behaviour in the case that the application controller is present.
+
         from zope.traversing.namespace import etc
         from zope.app.applicationcontrol.applicationcontrol \
              import applicationController, applicationControllerRoot

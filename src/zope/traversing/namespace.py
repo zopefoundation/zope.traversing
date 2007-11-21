@@ -308,14 +308,17 @@ class etc(SimpleHandler):
 
         ob = self.context
 
-        # TODO: lift dependency on zope.app
         if (name in ('process', 'ApplicationController')
             and IContainmentRoot.providedBy(ob)):
             # import the application controller here to avoid circular
             # import problems
-            from zope.app.applicationcontrol.applicationcontrol \
-                 import applicationController
-            return applicationController
+            try:
+                from zope.app.applicationcontrol.applicationcontrol \
+                     import applicationController
+            except ImportError:
+                pass
+            else:
+                return applicationController
 
         if name not in ('site',):
             raise TraversalError(ob, name)

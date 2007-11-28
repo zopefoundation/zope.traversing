@@ -15,23 +15,23 @@
 
 $Id$
 """
-
-import os
 from setuptools import setup, find_packages
 
+long_description = (open('README.txt').read() +
+                    '\n\n' +
+                    open('CHANGES.txt').read())
 
 setup(name='zope.traversing',
-      version = '3.5.0a1',
+      version = '3.5.0a2',
       url='http://pypi.python.org/pypi/zope.traversing',
       license='ZPL 2.1',
-      description='Zope traversing',
       author='Zope Corporation and Contributors',
       author_email='zope3-dev@zope.org',
-      long_description="Module for traversing the object tree.",
+      description="Resolving paths in the object hierarchy",
+      long_description=long_description,
 
       packages=find_packages('src'),
       package_dir = {'': 'src'},
-
       namespace_packages=['zope',],
       extras_require = dict(test=['zope.app.testing',
                                   'zope.app.securitypolicy',
@@ -49,6 +49,5 @@ setup(name='zope.traversing',
                         'zope.security',
                         ],
       include_package_data = True,
-
       zip_safe = False,
       )

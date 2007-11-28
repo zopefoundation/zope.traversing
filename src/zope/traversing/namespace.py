@@ -393,6 +393,7 @@ class vh(view):
         traversal_stack = request.getTraversalStack()
         app_names = []
 
+        name = name.encode('utf8')
         if name:
             try:
                 proto, host, port = name.split(":")

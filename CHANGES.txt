@@ -2,10 +2,15 @@
 Changes
 =======
 
-After 3.5.0a2 (unreleased)
+After 3.5.0a3 (unreleased)
 --------------------------
 
+
+3.5.0a3 (2007-12-28)
+--------------------
+
 - backed out the controversial `++skin++` traverser for XML-RPC.
+
 
 3.5.0a2 (2007-11-28)
 --------------------

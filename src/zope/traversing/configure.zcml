@@ -95,15 +95,9 @@
     />
 
 <view
-    name="skin" type="zope.publisher.interfaces.browser.IBrowserRequest"
+    name="skin" type="*"
     provides="zope.traversing.interfaces.ITraversable" for="*"
     factory="zope.traversing.namespace.skin"
-    />
-
-<view
-    name="skin" type="zope.publisher.interfaces.xmlrpc.IXMLRPCRequest"
-    provides="zope.traversing.interfaces.ITraversable" for="*"
-    factory="zope.traversing.namespace.xmlrpc_skin"
     />
 
 <view

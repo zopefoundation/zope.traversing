@@ -18,7 +18,7 @@ $Id$
 import unittest
 
 import zope.component
-from zope.interface import directlyProvides, implementedBy, directlyProvidedBy
+from zope.interface import directlyProvides, implementedBy
 from zope.interface.verify import verifyClass
 from zope.location.traversing import LocationPhysicallyLocatable
 from zope.security.interfaces import Unauthorized

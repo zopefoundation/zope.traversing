@@ -2,8 +2,13 @@
 Changes
 =======
 
+After 3.5.0a2 (unreleased)
+--------------------------
+
+- backed out the controversial `++skin++` traverser for XML-RPC.
+
 3.5.0a2 (2007-11-28)
-====================
+--------------------
 
 - ported 3.4.1a1 to trunk
   - Do not use unicode strings to set the application server in the virtual

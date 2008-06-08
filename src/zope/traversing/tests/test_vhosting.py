@@ -46,56 +46,56 @@ class TestVirtualHosting(functional.BrowserTestCase):
 
     def test_request_url(self):
         self.addPage('/pt', u'<span tal:replace="request/URL"/>')
-        self.verify('/pt', 'http://localhost/pt\n')
+        self.verify('/pt', 'http://localhost/pt')
         self.verify('/++vh++/++/pt',
-                    'http://localhost/pt\n')
+                    'http://localhost/pt')
         self.verify('/++vh++https:otherhost:443/++/pt',
-                    'https://otherhost/pt\n')
+                    'https://otherhost/pt')
         self.verify('/++vh++https:otherhost:443/fake/folders/++/pt',
-                    'https://otherhost/fake/folders/pt\n')
+                    'https://otherhost/fake/folders/pt')
 
         self.addPage('/foo/bar/pt', u'<span tal:replace="request/URL"/>')
-        self.verify('/foo/bar/pt', 'http://localhost/foo/bar/pt\n')
+        self.verify('/foo/bar/pt', 'http://localhost/foo/bar/pt')
         self.verify('/foo/bar/++vh++/++/pt',
-                    'http://localhost/pt\n')
+                    'http://localhost/pt')
         self.verify('/foo/bar/++vh++https:otherhost:443/++/pt',
-                    'https://otherhost/pt\n')
+                    'https://otherhost/pt')
         self.verify('/foo/++vh++https:otherhost:443/fake/folders/++/bar/pt',
-                    'https://otherhost/fake/folders/bar/pt\n')
+                    'https://otherhost/fake/folders/bar/pt')
 
     def test_request_base(self):
         self.addPage('/pt', u'<head></head>')
         self.verify('/pt/',
                     '<head>\n<base href="http://localhost/pt" />\n'
-                    '</head>\n')
+                    '</head>')
         self.verify('/++vh++/++/pt/',
                     '<head>\n<base href="http://localhost/pt" />\n'
-                    '</head>\n')
+                    '</head>')
         self.verify('/++vh++https:otherhost:443/++/pt/',
                     '<head>\n'
                     '<base href="https://otherhost/pt" />'
-                    '\n</head>\n')
+                    '\n</head>')
         self.verify('/++vh++https:otherhost:443/fake/folders/++/pt/',
                     '<head>\n<base href='
                     '"https://otherhost/fake/folders/pt" />'
-                    '\n</head>\n')
+                    '\n</head>')
 
         self.addPage('/foo/bar/pt', u'<head></head>')
         self.verify('/foo/bar/pt/',
                     '<head>\n<base '
                     'href="http://localhost/foo/bar/pt" />\n'
-                    '</head>\n')
+                    '</head>')
         self.verify('/foo/bar/++vh++/++/pt/',
                     '<head>\n<base href="http://localhost/pt" />\n'
-                    '</head>\n')
+                    '</head>')
         self.verify('/foo/bar/++vh++https:otherhost:443/++/pt/',
                     '<head>\n'
                     '<base href="https://otherhost/pt" />'
-                    '\n</head>\n')
+                    '\n</head>')
         self.verify('/foo/++vh++https:otherhost:443/fake/folders/++/bar/pt/',
                     '<head>\n<base href='
                     '"https://otherhost/fake/folders/bar/pt" />'
-                    '\n</head>\n')
+                    '\n</head>')
 
     def test_request_redirect(self):
         self.addPage('/foo/index.html', u'Spam')
@@ -107,31 +107,31 @@ class TestVirtualHosting(functional.BrowserTestCase):
 
     def test_absolute_url(self):
         self.addPage('/pt', u'<span tal:replace="template/@@absolute_url"/>')
-        self.verify('/pt', 'http://localhost/pt\n')
+        self.verify('/pt', 'http://localhost/pt')
         self.verify('/++vh++/++/pt',
-                    'http://localhost/pt\n')
+                    'http://localhost/pt')
         self.verify('/++vh++https:otherhost:443/++/pt',
-                    'https://otherhost/pt\n')
+                    'https://otherhost/pt')
         self.verify('/++vh++https:otherhost:443/fake/folders/++/pt',
-                    'https://otherhost/fake/folders/pt\n')
+                    'https://otherhost/fake/folders/pt')
 
         self.addPage('/foo/bar/pt',
                      u'<span tal:replace="template/@@absolute_url"/>')
-        self.verify('/foo/bar/pt', 'http://localhost/foo/bar/pt\n')
+        self.verify('/foo/bar/pt', 'http://localhost/foo/bar/pt')
         self.verify('/foo/bar/++vh++/++/pt',
-                    'http://localhost/pt\n')
+                    'http://localhost/pt')
         self.verify('/foo/bar/++vh++https:otherhost:443/++/pt',
-                    'https://otherhost/pt\n')
+                    'https://otherhost/pt')
         self.verify('/foo/++vh++https:otherhost:443/fake/folders/++/bar/pt',
-                    'https://otherhost/fake/folders/bar/pt\n')
+                    'https://otherhost/fake/folders/bar/pt')
 
     def test_absolute_url_absolute_traverse(self):
         self.createObject('/foo/bar/obj', MyObj())
         self.addPage('/foo/bar/pt',
                      u'<span tal:replace="container/obj/pt/@@absolute_url"/>')
-        self.verify('/foo/bar/pt', 'http://localhost/foo/bar/pt\n')
+        self.verify('/foo/bar/pt', 'http://localhost/foo/bar/pt')
         self.verify('/foo/++vh++https:otherhost:443/++/bar/pt',
-                    'https://otherhost/bar/pt\n')
+                    'https://otherhost/bar/pt')
 
     def test_resources(self):
         browserResource('quux', Resource)
@@ -140,9 +140,9 @@ class TestVirtualHosting(functional.BrowserTestCase):
             defineChecker(Resource, NamesChecker(['__call__']))
         self.addPage('/foo/bar/pt',
                      u'<span tal:replace="context/++resource++quux" />')
-        self.verify('/foo/bar/pt', 'http://localhost/@@/quux\n')
+        self.verify('/foo/bar/pt', 'http://localhost/@@/quux')
         self.verify('/foo/++vh++https:otherhost:443/fake/folders/++/bar/pt',
-                    'https://otherhost/fake/folders/@@/quux\n')
+                    'https://otherhost/fake/folders/@@/quux')
 
     def createFolders(self, path):
         """addFolders('/a/b/c/d') would traverse and/or create three nested

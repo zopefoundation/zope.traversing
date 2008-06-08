@@ -38,6 +38,9 @@ setup(name='zope.traversing',
                                   'zope.app.zcmlfiles',
                                   'zope.app.zptpage',
                                   'zope.app.applicationcontrol',
+                                  # The tests expect a spec-compliant TAL
+                                  # interpreter as found in zope.tal 3.5.0
+                                  'zope.tal >= 3.5.0',
                                   ]),
       install_requires=['setuptools',
                         'zope.component',

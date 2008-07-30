@@ -20,6 +20,7 @@ After 3.5.0a3
 --------------------
 
 - ported 3.4.1a1 to trunk
+
   - Do not use unicode strings to set the application server in the virtual
     host namespace. This caused absolute_url to create unicode URL's.
 

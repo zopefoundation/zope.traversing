@@ -47,7 +47,7 @@ class DefaultTraversable(object):
         if hasattr(subject, '__getitem__'):
             try:
                 return subject[name]
-            except KeyError:
+            except (KeyError, TypeError):
                 pass
         raise TraversalError(subject, name)
 

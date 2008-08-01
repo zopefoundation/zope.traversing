@@ -9,6 +9,9 @@ After 3.5.0a3
   compliant TAL interpreter as available in zope.tal >= 3.5.0.
 - Fixed deprecation warning caused by using an old module name for
   ZopeSecurityPolicy in ftesting.zcml
+- Made sure traversing doesn't raise an TypeError but a TraversalError when the
+  traversal step before yielded a string.
+
 
 3.5.0a3 (2007-12-28)
 --------------------

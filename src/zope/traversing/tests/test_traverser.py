@@ -158,6 +158,13 @@ class UnrestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
         self.assertEqual(tr.traverse('anotherdict/items'),
                          adict['anotherdict'].items)
 
+    def testTraversingDoesntFailOnStrings(self):
+        adict = {'foo': 'bar'}
+        tr = Traverser(adict)
+        # This used to raise type error before
+        self.assertRaises(TraversalError, tr.traverse, 'foo/baz')
+
+
 class RestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
     _oldPolicy = None
     _deniedNames = ()

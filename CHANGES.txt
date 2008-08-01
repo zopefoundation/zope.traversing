@@ -2,8 +2,8 @@
 Changes
 =======
 
-After 3.5.0a3
--------------
+3.5.0a4 (2008-08-01)
+--------------------
 
 - Updated (test) dependencies and tests to expect and work with a spec
   compliant TAL interpreter as available in zope.tal >= 3.5.0.

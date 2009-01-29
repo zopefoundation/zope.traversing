@@ -15,15 +15,15 @@
 
 $Id$
 """
+
 from zope.interface import Interface
 
-class TraversalError(KeyError, LookupError):
-    """There is no object for the name given to a traversal
-    """
+# BBB: Re-import symbols to their old location.
+from zope.location.interfaces import LocationError as TraversalError
+from zope.location.interfaces import IRoot as IContainmentRoot
+from zope.location.interfaces import ILocationInfo as IPhysicallyLocatable
+from zope.location.interfaces import ITraverser
 
-class IContainmentRoot(Interface):
-    """Marker interface to designate root objects
-    """
 
 #TODO this does not seem to be used anywhere. Remove it? --philiKON
 class INamespaceHandler(Interface):
@@ -33,7 +33,7 @@ class INamespaceHandler(Interface):
 
         The name lookup usually depends on an object and/or a
         request. If an object or request is unavailable, None will be passed.
-    
+
         The parameters provided, are passed as a sequence of
         name, value items.  The 'pname' argument has the original name
         before parameters were removed.
@@ -42,27 +42,6 @@ class INamespaceHandler(Interface):
         location.
         """
 
-class IPhysicallyLocatable(Interface):
-    """Objects that have a physical location in a containment hierarchy.
-    """
-
-    def getRoot():
-        """Return the physical root object
-        """
-
-    def getPath():
-        """Return the physical path to the object as a string.
-        """
-
-    def getName():
-        """Return the last segment of the physical path.
-        """
-
-    def getNearestSite():
-        """Return the site the object is contained in
-        
-        If the object is a site, the object itself is returned.
-        """
 
 class ITraversable(Interface):
     """To traverse an object, this interface must be provided"""
@@ -77,28 +56,6 @@ class ITraversable(Interface):
 
         'furtherPath' is a list of names still to be traversed. This
         method is allowed to change the contents of furtherPath.
-        """
-
-_RAISE_KEYERROR = object()
-
-class ITraverser(Interface):
-    """Provide traverse features"""
-
-    def traverse(path, default=_RAISE_KEYERROR, request=None):
-        """
-        Return an object given a path.
-
-        Path is either an immutable sequence of strings or a slash ('/')
-        delimited string.
-
-        If the first string in the path sequence is an empty string,
-        or the path begins with a '/', start at the root. Otherwise the path
-        is relative to the current context.
-
-        If the object is not found, return 'default' argument.
-
-        'request' is passed in when traversing from presentation code. This
-        allows paths like @@foo to work.
         """
 
 class ITraversalAPI(Interface):

@@ -5,6 +5,8 @@ Changes
 3.5.0a4 (2008-08-01)
 --------------------
 
+- Reverse dependencies between zope.location and zope.traversing.
+
 - Updated (test) dependencies and tests to expect and work with a spec
   compliant TAL interpreter as available in zope.tal >= 3.5.0.
 - Fixed deprecation warning caused by using an old module name for

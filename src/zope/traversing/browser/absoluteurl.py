@@ -51,7 +51,7 @@ class AbsoluteURL(BrowserView):
             or sameProxiedObjects(context, request.getVirtualHostRoot())):
             return request.getApplicationURL()
 
-        context = ILocation(context, context)
+        context = ILocation(context)
         container = getattr(context, '__parent__', None)
         if container is None:
             raise TypeError(_insufficientContext)

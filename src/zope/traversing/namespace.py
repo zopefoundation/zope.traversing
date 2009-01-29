@@ -71,7 +71,7 @@ def namespaceLookup(ns, name, object, request=None):
       >>> namespaceLookup('fiz', 'bar', C())    # doctest: +ELLIPSIS
       Traceback (most recent call last):
       ...
-      TraversalError: (<zope.traversing.namespace.C object at 0x...>, '++fiz++bar')
+      LocationError: (<zope.traversing.namespace.C object at 0x...>, '++fiz++bar')
 
     We'll get the same thing if we provide a request:
 
@@ -80,7 +80,7 @@ def namespaceLookup(ns, name, object, request=None):
       >>> namespaceLookup('foo', 'bar', C(), request)    # doctest: +ELLIPSIS
       Traceback (most recent call last):
       ...
-      TraversalError: (<zope.traversing.namespace.C object at 0x...>, '++foo++bar')
+      LocationError: (<zope.traversing.namespace.C object at 0x...>, '++foo++bar')
 
     We need to provide a view:
 
@@ -236,7 +236,7 @@ class acquire(SimpleHandler):
           >>> adapter.traverse('d', ())
           Traceback (most recent call last):
           ...
-          TraversalError: (splat, 'd')
+          LocationError: (splat, 'd')
         """
         i = 0
         ob = self.context

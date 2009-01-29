@@ -22,7 +22,7 @@ long_description = (open('README.txt').read() +
                     open('CHANGES.txt').read())
 
 setup(name='zope.traversing',
-      version = '3.5dev',
+      version = '3.5a5dev',
       url='http://pypi.python.org/pypi/zope.traversing',
       license='ZPL 2.1',
       author='Zope Corporation and Contributors',
@@ -50,6 +50,7 @@ setup(name='zope.traversing',
                         'zope.proxy',
                         'zope.publisher',
                         'zope.security',
+                        'zope.location>=3.5dev',
                         ],
       include_package_data = True,
       zip_safe = False,

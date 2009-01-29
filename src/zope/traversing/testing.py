@@ -49,6 +49,7 @@ def setUp():
     browserView(IContainmentRoot, '', SiteAbsoluteURL,
                 providing=IAbsoluteURL)
 
+
 def browserView(for_, name, factory, providing=zope.interface.Interface):
     zope.component.provideAdapter(factory, (for_, IDefaultBrowserLayer),
                                   providing, name=name)

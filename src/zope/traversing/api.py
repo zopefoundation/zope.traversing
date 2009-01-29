@@ -148,22 +148,7 @@ def getParents(obj):
     Raises a TypeError if the context doesn't go all the way down to
     a containment root.
     """
-    if IContainmentRoot.providedBy(obj):
-        return []
-
-    
-    parents = []
-    w = obj
-    while 1:
-        w = w.__parent__
-        if w is None:
-            break
-        parents.append(w)
-
-    if parents and IContainmentRoot.providedBy(parents[-1]):
-        return parents
-
-    raise TypeError("Not enough context information to get all parents")
+    return IPhysicallyLocatable(obj).getParents()
 
 
 def _normalizePath(path):

@@ -29,7 +29,7 @@ from zope.traversing.interfaces import IContainmentRoot, TraversalError
 from zope.traversing.interfaces import IPhysicallyLocatable
 
 from zope.app.component.testing import PlacefulSetup
-from zope.app.container.contained import contained
+from zope.container.contained import contained
 
 class C(object):
     __parent__ = None

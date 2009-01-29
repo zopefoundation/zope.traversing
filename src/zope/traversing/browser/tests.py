@@ -29,7 +29,7 @@ from zope.publisher.browser import TestRequest
 from zope.publisher.http import IHTTPRequest, HTTPCharsets
 from zope.location.interfaces import ILocation
 
-from zope.app.container.contained import contained
+from zope.container.contained import contained
 from zope.app.testing import setup
 
 

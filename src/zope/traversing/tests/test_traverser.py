@@ -33,7 +33,7 @@ from zope.traversing.interfaces import IPhysicallyLocatable
 from zope.traversing.interfaces import IContainmentRoot, TraversalError
 
 from zope.app.component.testing import PlacefulSetup
-from zope.app.container.contained import Contained, contained
+from zope.container.contained import Contained, contained
 
 class ParticipationStub(object):
 

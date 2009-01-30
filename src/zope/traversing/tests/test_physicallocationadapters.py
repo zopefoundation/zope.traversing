@@ -24,7 +24,7 @@ from zope.testing.cleanup import CleanUp
 
 from zope.app.testing import setup
 from zope.container.contained import contained
-from zope.app.component.site import SiteManagerContainer
+from zope.site.site import SiteManagerContainer
 
 
 class Root(object):

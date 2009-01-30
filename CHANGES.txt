@@ -7,6 +7,10 @@ Changes
 
 - Use zope.container instead of zope.app.container.
 
+- Use zope.site instead of zope.app.folder in the unit tests.
+
+- Reduced, but did not eliminate, test dependencies on zope.app.component.
+
 3.5.0a4 (2008-08-01)
 --------------------
 

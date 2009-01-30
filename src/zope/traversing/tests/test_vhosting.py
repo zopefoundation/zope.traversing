@@ -23,10 +23,10 @@ from zope.security.checker import defineChecker, NamesChecker, NoProxy
 from zope.security.checker import _checkers, undefineChecker
 
 from zope.app.testing import functional
-from zope.app.folder import Folder
 from zope.app.publisher.browser.resource import Resource
 from zope.container.contained import Contained
 from zope.app.zptpage.zptpage import ZPTPage
+from zope.site.folder import Folder
 from zope.traversing.tests.layer import TraversingLayer
 
 class MyObj(Contained):

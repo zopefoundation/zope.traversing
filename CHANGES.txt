@@ -22,6 +22,9 @@ Changes
 - Remove the ``zope.traversing.interfaces.INamespaceHandler`` interface,
   as it seems not to be used for years.
 
+- Change package's mailing list address to zope-dev at zope.org instead
+  of retired zope3-dev at zope.org
+
 3.5.0 (2009-01-31)
 ------------------
 

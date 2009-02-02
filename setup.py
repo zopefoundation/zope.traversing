@@ -26,7 +26,7 @@ setup(name='zope.traversing',
       url='http://pypi.python.org/pypi/zope.traversing',
       license='ZPL 2.1',
       author='Zope Corporation and Contributors',
-      author_email='zope3-dev@zope.org',
+      author_email='zope-dev@zope.org',
       description="Resolving paths in the object hierarchy",
       long_description=long_description,
 

@@ -22,11 +22,11 @@ long_description = (open('README.txt').read() +
                     open('CHANGES.txt').read())
 
 setup(name='zope.traversing',
-      version = '3.5.1dev',
+      version = '3.5.1',
       url='http://pypi.python.org/pypi/zope.traversing',
       license='ZPL 2.1',
       author='Zope Corporation and Contributors',
-      author_email='zope3-dev@zope.org',
+      author_email='zope-dev@zope.org',
       description="Resolving paths in the object hierarchy",
       long_description=long_description,
 

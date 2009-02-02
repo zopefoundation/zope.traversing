@@ -24,17 +24,17 @@ import zope.interface
 from zope.i18n.interfaces import IModifiableUserPreferredLanguages
 from zope.component.interfaces import ComponentLookupError
 from zope.interface import providedBy, directlyProvides, directlyProvidedBy
+from zope.location.interfaces import IRoot, LocationError
 from zope.publisher.interfaces.browser import IBrowserSkinType
 from zope.publisher.browser import applySkin
 from zope.security.proxy import removeSecurityProxy
 from zope.traversing.interfaces import ITraversable, IPathAdapter
-from zope.traversing.interfaces import TraversalError, IContainmentRoot
 
 
-class UnexpectedParameters(TraversalError):
+class UnexpectedParameters(LocationError):
     "Unexpected namespace parameters were provided."
 
-class ExcessiveDepth(TraversalError):
+class ExcessiveDepth(LocationError):
     "Too many levels of containment. We don't believe them."
 
 def namespaceLookup(ns, name, object, request=None):
@@ -107,7 +107,7 @@ def namespaceLookup(ns, name, object, request=None):
         traverser = zope.component.queryAdapter(object, ITraversable, ns)
 
     if traverser is None:
-        raise TraversalError(object, "++%s++%s" % (ns, name))
+        raise LocationError(object, "++%s++%s" % (ns, name))
 
     return traverser.traverse(name, ())
 
@@ -157,7 +157,7 @@ def nsParse(name):
 def getResource(site, name, request):
     resource = queryResource(site, name, request)
     if resource is None:
-        raise TraversalError(site, name)
+        raise LocationError(site, name)
     return resource
 
 def queryResource(site, name, request, default=None):
@@ -208,7 +208,7 @@ class acquire(SimpleHandler):
           ...     def traverse(self, name, remaining):
           ...         v = getattr(self, name, None)
           ...         if v is None:
-          ...             raise TraversalError(self, name)
+          ...             raise LocationError(self, name)
           ...         return v
           ...     def __repr__(self):
           ...         return 'splat'
@@ -250,7 +250,7 @@ class acquire(SimpleHandler):
                     next = traversable.traverse(name, path)
                     if path:
                         continue
-                except TraversalError:
+                except LocationError:
                     pass
 
                 else:
@@ -258,7 +258,7 @@ class acquire(SimpleHandler):
 
             ob = getattr(ob, '__parent__', None)
             if ob is None:
-                raise TraversalError(self.context, name)
+                raise LocationError(self.context, name)
 
         raise ExcessiveDepth(self.context, name)
 
@@ -308,7 +308,7 @@ class etc(SimpleHandler):
         ob = self.context
 
         if (name in ('process', 'ApplicationController')
-            and IContainmentRoot.providedBy(ob)):
+            and IRoot.providedBy(ob)):
             # import the application controller here to avoid circular
             # import problems
             try:
@@ -320,17 +320,17 @@ class etc(SimpleHandler):
                 return applicationController
 
         if name not in ('site',):
-            raise TraversalError(ob, name)
+            raise LocationError(ob, name)
 
         method_name = "getSiteManager"
         method = getattr(ob, method_name, None)
         if method is None:
-            raise TraversalError(ob, name)
+            raise LocationError(ob, name)
 
         try:
             return method()
         except ComponentLookupError:
-            raise TraversalError(ob, name)
+            raise LocationError(ob, name)
 
 
 class view(object):
@@ -345,7 +345,7 @@ class view(object):
         view = zope.component.queryMultiAdapter((self.context, self.request),
                                                 name=name)
         if view is None:
-            raise TraversalError(self.context, name)
+            raise LocationError(self.context, name)
 
         return view
 
@@ -371,7 +371,7 @@ class skin(view):
         try:
             skin = zope.component.getUtility(IBrowserSkinType, name)
         except ComponentLookupError:
-            raise TraversalError("++skin++%s" % name)
+            raise LocationError("++skin++%s" % name)
         applySkin(self.request, skin)
         return self.context
 
@@ -439,7 +439,7 @@ class adapter(SimpleHandler):
           2
           >>> try:
           ...     adapter.traverse('bob', ())
-          ... except TraversalError:
+          ... except LocationError:
           ...     print 'no adapter'
           no adapter
 
@@ -451,7 +451,7 @@ class adapter(SimpleHandler):
         try:
             return zope.component.getAdapter(self.context, IPathAdapter, name)
         except ComponentLookupError:
-            raise TraversalError(self.context, name)
+            raise LocationError(self.context, name)
 
 
 class debug(view):

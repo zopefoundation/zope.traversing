@@ -49,11 +49,11 @@ class Test(CleanUp, TestCase):
 
     def test_missing_skin(self):
         from zope.traversing.namespace import skin
-        from zope.traversing.interfaces import TraversalError
+        from zope.location.interfaces import LocationError
         request = FauxRequest()
         ob = object()
         traverser = skin(ob, request)
-        self.assertRaises(TraversalError, traverser.traverse, 'bar', ())
+        self.assertRaises(LocationError, traverser.traverse, 'bar', ())
 
 def test_suite():
     return makeSuite(Test)

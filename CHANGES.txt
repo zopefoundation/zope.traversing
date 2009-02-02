@@ -5,7 +5,18 @@ Changes
 3.5.1 (unreleased)
 ------------------
 
-- ...
+- The ``RootPhysicallyLocatable`` adapter has been superseded by the
+  refactored ``zope.location.traversing.LocationPhysicallyLocatable``
+  that we depend on since 3.5.0a4.
+  Remove the adapter and its registration, and making its import place
+  pointing to ``zope.location.traversing.LocationPhysicallyLocatable``
+  to maintain backward-compatibility.
+
+- Use direct imports instead of compatibility ones for things that were
+  moved to ``zope.location``.
+
+- Remove the ``zope.traversing.interfaces.INamespaceHandler`` interface,
+  as it seems not to be used for years.
 
 3.5.0 (2009-01-31)
 ------------------

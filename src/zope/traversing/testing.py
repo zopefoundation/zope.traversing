@@ -21,11 +21,10 @@ import zope.component
 import zope.interface
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 from zope.location.traversing import LocationPhysicallyLocatable
-from zope.traversing.interfaces import ITraverser, ITraversable
-from zope.traversing.interfaces import IPhysicallyLocatable
-from zope.traversing.interfaces import IContainmentRoot
+from zope.location.interfaces import ILocationInfo, IRoot, ITraverser
+from zope.traversing.interfaces import ITraversable
 from zope.traversing.adapters import DefaultTraversable
-from zope.traversing.adapters import Traverser, RootPhysicallyLocatable
+from zope.traversing.adapters import Traverser
 from zope.traversing.browser import SiteAbsoluteURL, AbsoluteURL
 from zope.traversing.browser.interfaces import IAbsoluteURL
 from zope.traversing.namespace import etc
@@ -34,20 +33,17 @@ def setUp():
     zope.component.provideAdapter(Traverser, (None,), ITraverser)
     zope.component.provideAdapter(DefaultTraversable, (None,), ITraversable)
     zope.component.provideAdapter(LocationPhysicallyLocatable,
-                                  (None,), IPhysicallyLocatable)
-    zope.component.provideAdapter(RootPhysicallyLocatable,
-                                  (IContainmentRoot,), IPhysicallyLocatable)
+                                  (None,), ILocationInfo)
 
     # set up the 'etc' namespace
     zope.component.provideAdapter(etc, (None,), ITraversable, name="etc")
     zope.component.provideAdapter(etc, (None, None), ITraversable, name="etc")
 
     browserView(None, "absolute_url", AbsoluteURL)
-    browserView(IContainmentRoot, "absolute_url", SiteAbsoluteURL)
+    browserView(IRoot, "absolute_url", SiteAbsoluteURL)
 
     browserView(None, '', AbsoluteURL, providing=IAbsoluteURL)
-    browserView(IContainmentRoot, '', SiteAbsoluteURL,
-                providing=IAbsoluteURL)
+    browserView(IRoot, '', SiteAbsoluteURL, providing=IAbsoluteURL)
 
 
 def browserView(for_, name, factory, providing=zope.interface.Interface):

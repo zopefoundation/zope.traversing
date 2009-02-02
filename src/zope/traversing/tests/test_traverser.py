@@ -21,16 +21,15 @@ import zope.component
 from zope.interface import directlyProvides, implementedBy
 from zope.interface.verify import verifyClass
 from zope.location.traversing import LocationPhysicallyLocatable
+from zope.location.interfaces \
+    import ILocationInfo, IRoot, LocationError, ITraverser
 from zope.security.interfaces import Unauthorized
 from zope.security.checker \
     import ProxyFactory, defineChecker, CheckerPublic, Checker
 from zope.security.management import newInteraction, endInteraction
 
 from zope.traversing.adapters import Traverser, DefaultTraversable
-from zope.traversing.adapters import RootPhysicallyLocatable
-from zope.traversing.interfaces import ITraverser, ITraversable
-from zope.traversing.interfaces import IPhysicallyLocatable
-from zope.traversing.interfaces import IContainmentRoot, TraversalError
+from zope.traversing.interfaces import ITraversable
 
 from zope.app.component.testing import PlacefulSetup
 from zope.container.contained import Contained, contained
@@ -65,7 +64,7 @@ class TraverserTests(PlacefulSetup, unittest.TestCase):
 class UnrestrictedNoTraverseTests(unittest.TestCase):
     def setUp(self):
         self.root = root = C('root')
-        directlyProvides(self.root, IContainmentRoot)
+        directlyProvides(self.root, IRoot)
         self.folder = folder = C('folder')
         self.item = item = C('item')
 
@@ -75,7 +74,7 @@ class UnrestrictedNoTraverseTests(unittest.TestCase):
         self.tr = Traverser(root)
 
     def testNoTraversable(self):
-        self.assertRaises(TraversalError, self.tr.traverse,
+        self.assertRaises(LocationError, self.tr.traverse,
                           'folder')
 
 class UnrestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
@@ -84,13 +83,11 @@ class UnrestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
 
         zope.component.provideAdapter(DefaultTraversable, (None,), ITraversable)
         zope.component.provideAdapter(LocationPhysicallyLocatable, (None,),
-                                      IPhysicallyLocatable)
-        zope.component.provideAdapter(RootPhysicallyLocatable,
-                                      (IContainmentRoot,), IPhysicallyLocatable)
+                                      ILocationInfo)
 
         # Build up a wrapper chain
         self.root = root = C('root')
-        directlyProvides(self.root, IContainmentRoot)
+        directlyProvides(self.root, IRoot)
         self.folder = folder = contained(C('folder'), root, 'folder')
         self.item = item = contained(C('item'), folder, 'item')
 
@@ -135,7 +132,7 @@ class UnrestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
             'notFound')
 
     def testNotFoundNoDefault(self):
-        self.assertRaises(TraversalError, self.tr.traverse, 'foo')
+        self.assertRaises(LocationError, self.tr.traverse, 'foo')
 
     def testTraverseOldStyleClass(self):
         class AnOldStyleClass:
@@ -162,7 +159,7 @@ class UnrestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
         adict = {'foo': 'bar'}
         tr = Traverser(adict)
         # This used to raise type error before
-        self.assertRaises(TraversalError, tr.traverse, 'foo/baz')
+        self.assertRaises(LocationError, tr.traverse, 'foo/baz')
 
 
 class RestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
@@ -174,12 +171,10 @@ class RestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
 
         zope.component.provideAdapter(DefaultTraversable, (None,), ITraversable)
         zope.component.provideAdapter(LocationPhysicallyLocatable, (None,),
-                                      IPhysicallyLocatable)
-        zope.component.provideAdapter(RootPhysicallyLocatable,
-                                      (IContainmentRoot,), IPhysicallyLocatable)
+                                      ILocationInfo)
 
         self.root = root = C('root')
-        directlyProvides(root, IContainmentRoot)
+        directlyProvides(root, IRoot)
         self.folder = folder = contained(C('folder'), root, 'folder')
         self.item = item = contained(C('item'), folder, 'item')
 
@@ -247,7 +242,7 @@ class DefaultTraversableTests(unittest.TestCase):
     def testNotFound(self):
         df = DefaultTraversable(C('dummy'))
 
-        self.assertRaises(TraversalError, df.traverse, 'bar', [])
+        self.assertRaises(LocationError, df.traverse, 'bar', [])
 
 def test_suite():
     loader = unittest.TestLoader()

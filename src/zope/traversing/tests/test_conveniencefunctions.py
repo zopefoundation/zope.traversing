@@ -20,13 +20,12 @@ from unittest import TestCase, main, makeSuite
 import zope.component
 from zope.interface import directlyProvides
 from zope.location.traversing import LocationPhysicallyLocatable
+from zope.location.interfaces \
+    import ILocationInfo, IRoot, LocationError, ITraverser
 from zope.security.proxy import Proxy
 from zope.security.checker import selectChecker
 from zope.traversing.adapters import Traverser, DefaultTraversable
-from zope.traversing.adapters import RootPhysicallyLocatable
-from zope.traversing.interfaces import ITraverser, ITraversable
-from zope.traversing.interfaces import IContainmentRoot, TraversalError
-from zope.traversing.interfaces import IPhysicallyLocatable
+from zope.traversing.interfaces import ITraversable
 
 from zope.app.component.testing import PlacefulSetup
 from zope.container.contained import contained
@@ -47,7 +46,7 @@ class Test(PlacefulSetup, TestCase):
         PlacefulSetup.setUp(self)
         # Build up a wrapper chain
         root = C('root')
-        directlyProvides(root, IContainmentRoot)
+        directlyProvides(root, IRoot)
         folder = C('folder')
         item = C('item')
 
@@ -67,9 +66,7 @@ class Test(PlacefulSetup, TestCase):
         zope.component.provideAdapter(Traverser, (None,), ITraverser)
         zope.component.provideAdapter(DefaultTraversable, (None,), ITraversable)
         zope.component.provideAdapter(LocationPhysicallyLocatable, (None,),
-                                      IPhysicallyLocatable)
-        zope.component.provideAdapter(RootPhysicallyLocatable,
-                                      (IContainmentRoot,), IPhysicallyLocatable)
+                                      ILocationInfo)
 
     def testTraverse(self):
         from zope.traversing.api import traverse
@@ -106,17 +103,17 @@ class Test(PlacefulSetup, TestCase):
     def testTraverseNameBadValue(self):
         from zope.traversing.api import traverseName
         self.assertRaises(
-            TraversalError,
+            LocationError,
             traverseName,
             self.folder, '../root'
             )
         self.assertRaises(
-            TraversalError,
+            LocationError,
             traverseName,
             self.folder, '/root'
             )
         self.assertRaises(
-            TraversalError,
+            LocationError,
             traverseName,
             self.folder, './item'
             )

@@ -18,7 +18,7 @@ $Id$
 from unittest import TestCase, main, makeSuite
 
 import zope.traversing.testing
-from zope.traversing.interfaces import IContainmentRoot, IPhysicallyLocatable
+from zope.location.interfaces import ILocationInfo, IRoot
 from zope.interface import implements
 from zope.testing.cleanup import CleanUp
 
@@ -28,7 +28,7 @@ from zope.site.site import SiteManagerContainer
 
 
 class Root(object):
-    implements(IContainmentRoot)
+    implements(IRoot)
 
     __parent__ = None
 
@@ -47,7 +47,7 @@ class Test(CleanUp, TestCase):
         f2 = contained(SiteManagerContainer(), f1, name='f2')
         f3 = contained(C(), f2, name='f3')
         
-        adapter = IPhysicallyLocatable(f3)
+        adapter = ILocationInfo(f3)
 
         self.assertEqual(adapter.getPath(), '/f1/f2/f3')
         self.assertEqual(adapter.getName(), 'f3')

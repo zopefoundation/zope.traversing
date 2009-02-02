@@ -20,14 +20,17 @@ from types import StringTypes
 import zope.interface
 import zope.component
 
-from zope.traversing.interfaces import TraversalError
-from zope.traversing.interfaces import IPhysicallyLocatable
-from zope.traversing.interfaces import IContainmentRoot
-from zope.traversing.interfaces import ITraverser, ITraversable
+from zope.location.interfaces \
+    import ILocationInfo, LocationError, ITraverser
+from zope.traversing.interfaces import ITraversable
 
 from zope.traversing.namespace import namespaceLookup
 from zope.traversing.namespace import UnexpectedParameters
 from zope.traversing.namespace import nsParse
+
+# BBB: LocationPhysicallyLocatable does the same thing for root object
+# as the RootPhysicallyLocatable that used to be defined here.
+from zope.location.traversing import LocationPhysicallyLocatable as RootPhysicallyLocatable
 
 _marker = object()  # opaque marker that doesn't get security proxied
 
@@ -49,33 +52,7 @@ class DefaultTraversable(object):
                 return subject[name]
             except (KeyError, TypeError):
                 pass
-        raise TraversalError(subject, name)
-
-class RootPhysicallyLocatable(object):
-    __doc__ = IPhysicallyLocatable.__doc__
-
-    zope.component.adapts(IContainmentRoot)
-    zope.interface.implements(IPhysicallyLocatable)
-
-    def __init__(self, context):
-        self.context = context
-
-    def getPath(self):
-        "See IPhysicallyLocatable"
-        return u'/'
-
-    def getRoot(self):
-        "See IPhysicallyLocatable"
-        return self.context
-
-    def getName(self):
-        "See IPhysicallyLocatable"
-        return u''
-
-    def getNearestSite(self):
-        "See IPhysicallyLocatable"
-        return self.context
-
+        raise LocationError(subject, name)
 
 class Traverser(object):
     """Provide traverse features"""
@@ -106,14 +83,14 @@ class Traverser(object):
         if not path[-1]:
             # Start at the root
             pop()
-            curr = IPhysicallyLocatable(self.context).getRoot()
+            curr = ILocationInfo(self.context).getRoot()
         try:
             while path:
                 name = pop()
                 curr = traversePathElement(curr, name, path, request=request)
 
             return curr
-        except TraversalError:
+        except LocationError:
             if default == _marker:
                 raise
             return default
@@ -136,7 +113,7 @@ def traversePathElement(obj, name, further_path, default=_marker,
     'request' is passed in when traversing from presentation code. This
     allows paths like @@foo to work.
 
-    Raises TraversalError if path cannot be found and 'default' was
+    Raises LocationError if path cannot be found and 'default' was
     not provided.
 
     """
@@ -158,11 +135,11 @@ def traversePathElement(obj, name, further_path, default=_marker,
     if traversable is None:
         traversable = ITraversable(obj, None)
         if traversable is None:
-            raise TraversalError('No traversable adapter found', obj)
+            raise LocationError('No traversable adapter found', obj)
 
     try:
         return traversable.traverse(nm, further_path)
-    except TraversalError:
+    except LocationError:
         if default is not _marker:
             return default
         else:

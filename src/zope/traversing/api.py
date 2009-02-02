@@ -16,9 +16,9 @@
 $Id$
 """
 from zope.interface import moduleProvides
-from zope.traversing.interfaces import IContainmentRoot, ITraversalAPI
-from zope.traversing.interfaces import ITraverser, IPhysicallyLocatable
-from zope.traversing.interfaces import TraversalError
+from zope.location.interfaces \
+    import ILocationInfo, IRoot, LocationError, ITraverser
+from zope.traversing.interfaces import ITraversalAPI
 
 moduleProvides(ITraversalAPI)
 __all__ = tuple(ITraversalAPI)
@@ -59,12 +59,12 @@ def joinPath(path, *args):
 def getPath(obj):
     """Returns a string representing the physical path to the object.
     """
-    return IPhysicallyLocatable(obj).getPath()
+    return ILocationInfo(obj).getPath()
 
 def getRoot(obj):
     """Returns the root of the traversal for the given object.
     """
-    return IPhysicallyLocatable(obj).getRoot()
+    return ILocationInfo(obj).getRoot()
 
 def traverse(object, path, default=_marker, request=None):
     """Traverse 'path' relative to the given object.
@@ -74,7 +74,7 @@ def traverse(object, path, default=_marker, request=None):
     'request' is passed in when traversing from presentation code. This
     allows paths like @@foo to work.
 
-    Raises TraversalError if path cannot be found
+    Raises LocationError if path cannot be found
 
     Note: calling traverse with a path argument taken from an untrusted
           source, such as an HTTP request form variable, is a bad idea.
@@ -101,7 +101,7 @@ def traverseName(obj, name, default=_marker, traversable=None, request=None):
     'request' is passed in when traversing from presentation code. This
     allows paths like @@foo to work.
 
-    Raises TraversalError if path cannot be found and 'default' was
+    Raises LocationError if path cannot be found and 'default' was
     not provided.
 
     """
@@ -120,7 +120,7 @@ def traverseName(obj, name, default=_marker, traversable=None, request=None):
 def getName(obj):
     """Get the name an object was traversed via
     """
-    return IPhysicallyLocatable(obj).getName()
+    return ILocationInfo(obj).getName()
 
 def getParent(obj):
     """Returns the container the object was traversed via.
@@ -130,7 +130,7 @@ def getParent(obj):
     parent.
     """
     
-    if IContainmentRoot.providedBy(obj):
+    if IRoot.providedBy(obj):
         return None
     
     parent = getattr(obj, '__parent__', None)
@@ -148,7 +148,7 @@ def getParents(obj):
     Raises a TypeError if the context doesn't go all the way down to
     a containment root.
     """
-    return IPhysicallyLocatable(obj).getParents()
+    return ILocationInfo(obj).getParents()
 
 
 def _normalizePath(path):

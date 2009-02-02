@@ -25,24 +25,6 @@ from zope.location.interfaces import ILocationInfo as IPhysicallyLocatable
 from zope.location.interfaces import ITraverser
 
 
-#TODO this does not seem to be used anywhere. Remove it? --philiKON
-class INamespaceHandler(Interface):
-
-    def __call__(name, object, request):
-        """Access a name in a namespace
-
-        The name lookup usually depends on an object and/or a
-        request. If an object or request is unavailable, None will be passed.
-
-        The parameters provided, are passed as a sequence of
-        name, value items.  The 'pname' argument has the original name
-        before parameters were removed.
-
-        It is not the responsibility of the handler to give the return value a
-        location.
-        """
-
-
 class ITraversable(Interface):
     """To traverse an object, this interface must be provided"""
 
@@ -50,7 +32,7 @@ class ITraversable(Interface):
         """Get the next item on the path
 
         Should return the item corresponding to 'name' or raise
-        TraversalError where appropriate.
+        LocationError where appropriate.
 
         'name' is an ASCII string or Unicode object.
 
@@ -97,7 +79,7 @@ class ITraversalAPI(Interface):
         'request' is passed in when traversing from presentation code. This
         allows paths like @@foo to work.
 
-        Raises TraversalError if path cannot be found
+        Raises LocationError if path cannot be found
 
         Note: calling traverse with a path argument taken from an untrusted
               source, such as an HTTP request form variable, is a bad idea.
@@ -121,7 +103,7 @@ class ITraversalAPI(Interface):
         'request' is passed in when traversing from presentation code. This
         allows paths like @@foo to work.
 
-        Raises TraversalError if path cannot be found and 'default' was
+        Raises LocationError if path cannot be found and 'default' was
         not provided.
 
         """

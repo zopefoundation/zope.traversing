@@ -4,14 +4,12 @@
 <adapter
     for="*"
     factory="zope.traversing.adapters.Traverser"
-    provides="zope.traversing.interfaces.ITraverser" />
+    provides="zope.location.interfaces.ITraverser" />
 
 <adapter
     for="*"
     factory="zope.traversing.adapters.DefaultTraversable"
     provides="zope.traversing.interfaces.ITraversable" />
-
-<adapter factory="zope.traversing.adapters.RootPhysicallyLocatable" />
 
 <adapter
     name="etc"

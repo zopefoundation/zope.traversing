@@ -8,9 +8,13 @@ Changes
 - The ``RootPhysicallyLocatable`` adapter has been superseded by the
   refactored ``zope.location.traversing.LocationPhysicallyLocatable``
   that we depend on since 3.5.0a4.
+
   Remove the adapter and its registration, and making its import place
   pointing to ``zope.location.traversing.LocationPhysicallyLocatable``
   to maintain backward-compatibility.
+
+  This also fixes a bug introduced in version 3.5.0a4 when trying to
+  call ``getParents`` function for the root object.
 
 - Use direct imports instead of compatibility ones for things that were
   moved to ``zope.location``.

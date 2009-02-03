@@ -20,7 +20,8 @@ import unittest
 import zope.component
 from zope.interface import directlyProvides, implementedBy
 from zope.interface.verify import verifyClass
-from zope.location.traversing import LocationPhysicallyLocatable
+from zope.location.traversing \
+    import LocationPhysicallyLocatable, RootPhysicallyLocatable
 from zope.location.interfaces \
     import ILocationInfo, IRoot, LocationError, ITraverser
 from zope.security.interfaces import Unauthorized
@@ -84,6 +85,8 @@ class UnrestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
         zope.component.provideAdapter(DefaultTraversable, (None,), ITraversable)
         zope.component.provideAdapter(LocationPhysicallyLocatable, (None,),
                                       ILocationInfo)
+        zope.component.provideAdapter(RootPhysicallyLocatable,
+                                      (IRoot,), ILocationInfo)
 
         # Build up a wrapper chain
         self.root = root = C('root')
@@ -172,6 +175,8 @@ class RestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
         zope.component.provideAdapter(DefaultTraversable, (None,), ITraversable)
         zope.component.provideAdapter(LocationPhysicallyLocatable, (None,),
                                       ILocationInfo)
+        zope.component.provideAdapter(RootPhysicallyLocatable,
+                                      (IRoot,), ILocationInfo)
 
         self.root = root = C('root')
         directlyProvides(root, IRoot)

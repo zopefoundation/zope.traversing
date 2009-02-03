@@ -19,7 +19,8 @@ from unittest import TestCase, main, makeSuite
 
 import zope.component
 from zope.interface import directlyProvides
-from zope.location.traversing import LocationPhysicallyLocatable
+from zope.location.traversing \
+    import LocationPhysicallyLocatable, RootPhysicallyLocatable
 from zope.location.interfaces \
     import ILocationInfo, IRoot, LocationError, ITraverser
 from zope.security.proxy import Proxy
@@ -67,6 +68,8 @@ class Test(PlacefulSetup, TestCase):
         zope.component.provideAdapter(DefaultTraversable, (None,), ITraversable)
         zope.component.provideAdapter(LocationPhysicallyLocatable, (None,),
                                       ILocationInfo)
+        zope.component.provideAdapter(RootPhysicallyLocatable,
+                                      (IRoot,), ILocationInfo)
 
     def testTraverse(self):
         from zope.traversing.api import traverse

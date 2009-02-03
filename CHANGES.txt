@@ -5,7 +5,8 @@ Changes
 3.5.2 (unreleased)
 ------------------
 
-- ...
+- The RootPhysicallyLocatable is not the same as LocationPhysicallyLocatable
+  now in zope.location. Fix the import and testing setups.
 
 3.5.1 (2009-02-02)
 ------------------

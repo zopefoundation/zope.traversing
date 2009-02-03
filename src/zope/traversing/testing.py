@@ -20,7 +20,8 @@ __docformat__ = "reStructuredText"
 import zope.component
 import zope.interface
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
-from zope.location.traversing import LocationPhysicallyLocatable
+from zope.location.traversing \
+    import LocationPhysicallyLocatable, RootPhysicallyLocatable
 from zope.location.interfaces import ILocationInfo, IRoot, ITraverser
 from zope.traversing.interfaces import ITraversable
 from zope.traversing.adapters import DefaultTraversable
@@ -34,7 +35,8 @@ def setUp():
     zope.component.provideAdapter(DefaultTraversable, (None,), ITraversable)
     zope.component.provideAdapter(LocationPhysicallyLocatable,
                                   (None,), ILocationInfo)
-
+    zope.component.provideAdapter(RootPhysicallyLocatable,
+                                  (IRoot,), ILocationInfo)
     # set up the 'etc' namespace
     zope.component.provideAdapter(etc, (None,), ITraversable, name="etc")
     zope.component.provideAdapter(etc, (None, None), ITraversable, name="etc")

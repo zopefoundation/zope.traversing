@@ -28,9 +28,7 @@ from zope.traversing.namespace import namespaceLookup
 from zope.traversing.namespace import UnexpectedParameters
 from zope.traversing.namespace import nsParse
 
-# BBB: LocationPhysicallyLocatable does the same thing for root object
-# as the RootPhysicallyLocatable that used to be defined here.
-from zope.location.traversing import LocationPhysicallyLocatable as RootPhysicallyLocatable
+from zope.location.traversing import RootPhysicallyLocatable # BBB
 
 _marker = object()  # opaque marker that doesn't get security proxied
 

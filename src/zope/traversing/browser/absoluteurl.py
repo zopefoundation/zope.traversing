@@ -57,7 +57,7 @@ class AbsoluteURL(BrowserView):
             raise TypeError(_insufficientContext)
 
         url = str(zope.component.getMultiAdapter((container, request),
-                                                 name='absolute_url'))
+                                                 IAbsoluteURL))
         name = getattr(context, '__name__', None)
         if name is None:
             raise TypeError(_insufficientContext)
@@ -84,7 +84,7 @@ class AbsoluteURL(BrowserView):
             return ({'name':'', 'url': self.request.getApplicationURL()}, )
 
         base = tuple(zope.component.getMultiAdapter(
-                (container, request), name='absolute_url').breadcrumbs())
+                (container, request), IAbsoluteURL).breadcrumbs())
 
         name = getattr(context, '__name__', None)
         if name is None:

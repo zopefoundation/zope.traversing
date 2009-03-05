@@ -5,7 +5,8 @@ Changes
 3.5.3 (unreleased)
 ------------------
 
-- ...
+- Use IAbsoluteURL lookup instead of the "absolute_url" view in the
+  recursive AbsoluteURL adapters (LP: #338101).
 
 3.5.2 (2009-02-04)
 ------------------

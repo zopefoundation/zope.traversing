@@ -26,7 +26,7 @@ from zope.component.interfaces import ComponentLookupError
 from zope.interface import providedBy, directlyProvides, directlyProvidedBy
 from zope.location.interfaces import IRoot, LocationError
 from zope.publisher.interfaces.browser import IBrowserSkinType
-from zope.publisher.browser import applySkin
+from zope.publisher.skinnable import applySkin
 from zope.security.proxy import removeSecurityProxy
 from zope.traversing.interfaces import ITraversable, IPathAdapter
 

@@ -1,7 +1,6 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
-    xmlns:webservice="http://namespaces.canonical.com/webservice"
-    i18n_domain="lazr">
+    xmlns:webservice="http://namespaces.canonical.com/webservice">
 
     <include package="zope.component" file="meta.zcml"/>
 

@@ -16,10 +16,10 @@
     provides="zope.traversing.interfaces.ITraversable" for="*"
     factory="zope.traversing.namespace.etc"
     />
-<view
+<adapter
     name="etc"
-    type="zope.interface.Interface"
-    provides="zope.traversing.interfaces.ITraversable" for="*"
+    for="* zope.publisher.interfaces.IRequest"
+    provides="zope.traversing.interfaces.ITraversable"
     factory="zope.traversing.namespace.etc"
     />
 
@@ -28,10 +28,10 @@
     provides="zope.traversing.interfaces.ITraversable" for="*"
     factory="zope.traversing.namespace.attr"
     />
-<view
+<adapter
     name="attribute"
-    type="zope.interface.Interface"
-    provides="zope.traversing.interfaces.ITraversable" for="*"
+    for="* zope.publisher.interfaces.IRequest"
+    provides="zope.traversing.interfaces.ITraversable"
     factory="zope.traversing.namespace.attr"
     />
 
@@ -40,10 +40,10 @@
     provides="zope.traversing.interfaces.ITraversable" for="*"
     factory="zope.traversing.namespace.adapter"
     />
-<view
+<adapter
     name="adapter"
-    type="zope.interface.Interface"
-    provides="zope.traversing.interfaces.ITraversable" for="*"
+    for="* zope.publisher.interfaces.IRequest"
+    provides="zope.traversing.interfaces.ITraversable"
     factory="zope.traversing.namespace.adapter"
     />
 
@@ -52,9 +52,10 @@
     provides="zope.traversing.interfaces.ITraversable" for="*"
     factory="zope.traversing.namespace.item"
     />
-<view
-    name="item" type="*"
-    provides="zope.traversing.interfaces.ITraversable" for="*"
+<adapter
+    name="item"
+    for="* zope.publisher.interfaces.IRequest"
+    provides="zope.traversing.interfaces.ITraversable"
     factory="zope.traversing.namespace.item"
     />
 
@@ -63,21 +64,24 @@
     provides="zope.traversing.interfaces.ITraversable" for="*"
     factory="zope.traversing.namespace.acquire"
     />
-<view
-    name="acquire" type="*"
-    provides="zope.traversing.interfaces.ITraversable" for="*"
+<adapter
+    name="acquire"
+    for="* zope.publisher.interfaces.IRequest"
+    provides="zope.traversing.interfaces.ITraversable"
     factory="zope.traversing.namespace.acquire"
     />
 
-<view
-    name="view" type="*"
-    provides="zope.traversing.interfaces.ITraversable" for="*"
+<adapter
+    name="view"
+    for="* zope.publisher.interfaces.IRequest"
+    provides="zope.traversing.interfaces.ITraversable"
     factory="zope.traversing.namespace.view"
     />
 
-<view
-    name="resource" type="*"
-    provides="zope.traversing.interfaces.ITraversable" for="*"
+<adapter
+    name="resource"
+    for="* zope.publisher.interfaces.IRequest"
+    provides="zope.traversing.interfaces.ITraversable"
     factory="zope.traversing.namespace.resource"
     />
 
@@ -86,21 +90,24 @@
     provides="zope.traversing.interfaces.ITraversable" for="*"
     factory="zope.traversing.namespace.lang"
     />
-<view
-    name="lang" type="*"
-    provides="zope.traversing.interfaces.ITraversable" for="*"
+<adapter
+    name="lang"
+    for="* zope.publisher.interfaces.IRequest"
+    provides="zope.traversing.interfaces.ITraversable"
     factory="zope.traversing.namespace.lang"
     />
 
-<view
-    name="skin" type="*"
-    provides="zope.traversing.interfaces.ITraversable" for="*"
+<adapter
+    name="skin"
+    for="* zope.publisher.interfaces.IRequest"
+    provides="zope.traversing.interfaces.ITraversable"
     factory="zope.traversing.namespace.skin"
     />
 
-<view
-    name="vh" type="*"
-    provides="zope.traversing.interfaces.ITraversable" for="*"
+<adapter
+    name="vh"
+    for="* zope.publisher.interfaces.IRequest"
+    provides="zope.traversing.interfaces.ITraversable"
     factory="zope.traversing.namespace.vh"
     />
 
@@ -110,10 +117,11 @@
  See issue 507 for the rationale of binding this to developer-mode only.
  -->
 
-<view
+<adapter
     zcml:condition="have devmode"
-    name="debug" type="*"
-    provides="zope.traversing.interfaces.ITraversable" for="*"
+    name="debug"
+    for="* zope.publisher.interfaces.IRequest"
+    provides="zope.traversing.interfaces.ITraversable"
     factory="zope.traversing.namespace.debug"
     />
 

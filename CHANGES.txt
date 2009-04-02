@@ -5,7 +5,7 @@ Changes
 3.5.4 (unreleased)
 ------------------
 
-- ...
+- Change configure.zcml to not depend on zope.app.component.
 
 3.5.3 (2009-03-10)
 ------------------

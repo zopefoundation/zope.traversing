@@ -7,6 +7,9 @@ Changes
 
 - Change configure.zcml to not depend on zope.app.component.
 
+- This release includes the BBB-incompatible ``zope.publisher.skinnable``
+  change from 3.5.3.
+
 
 3.5.4 (2009-04-06)
 ------------------

@@ -2,6 +2,24 @@
 Changes
 =======
 
+3.5.4 (2009-04-06)
+------------------
+
+- Revert BBB-incompatible use of ``zope.publisher.skinnable``:  that
+  change belongs in a 3.6.0 release, because it requires a BBB-incompatible
+  version of ``zope.publisher``.
+
+
+3.5.3 (2009-03-10)
+------------------
+
+- Use applySkin from new location. zope.publisher.skinnable instead of
+  zope.publisher.browser.
+
+- Use IAbsoluteURL lookup instead of the "absolute_url" view in the
+  recursive AbsoluteURL adapters (LP: #338101).
+
+
 3.5.2 (2009-02-04)
 ------------------
 

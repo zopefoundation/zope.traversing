@@ -9,6 +9,9 @@ Changes
   zope.app.publisher -> zope.app.publication dependency (which was a
   cycle).
 
+- Look up the application controller through a utility registration
+  rather than a direct reference.
+
 
 3.6.0 (2009-04-06)
 ------------------

@@ -139,3 +139,7 @@ class ITraversalAPI(Interface):
 class IPathAdapter(Interface):
     """Marker interface for adapters to be used in paths
     """
+
+class IEtcNamespace(Interface):
+    """Marker for utility registrations in the ++etc++ namespace
+    """

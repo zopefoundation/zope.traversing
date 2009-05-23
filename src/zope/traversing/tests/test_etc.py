@@ -30,9 +30,13 @@ class Test(CleanUp, TestCase):
         # zope.app.applicationcontrol, its tests do, so we always test the
         # behaviour in the case that the application controller is present.
 
+        import zope.component
+        from zope.traversing.interfaces import IEtcNamespace
         from zope.traversing.namespace import etc
         from zope.app.applicationcontrol.applicationcontrol \
              import applicationController, applicationControllerRoot
+        gsm = zope.component.getGlobalSiteManager()
+        gsm.registerUtility(applicationController, IEtcNamespace, 'process')
 
         self.assertEqual(
             etc(applicationControllerRoot).traverse('process', ()),

@@ -28,7 +28,9 @@ from zope.location.interfaces import IRoot, LocationError
 from zope.publisher.interfaces.browser import IBrowserSkinType
 from zope.publisher.skinnable import applySkin
 from zope.security.proxy import removeSecurityProxy
-from zope.traversing.interfaces import ITraversable, IPathAdapter
+from zope.traversing.interfaces import IEtcNamespace
+from zope.traversing.interfaces import IPathAdapter
+from zope.traversing.interfaces import ITraversable
 
 
 class UnexpectedParameters(LocationError):
@@ -294,30 +296,11 @@ class item(SimpleHandler):
 class etc(SimpleHandler):
 
     def traverse(self, name, ignored):
-        # TODO:
-        # This is here now to allow us to get site managers from a
-        # separate namespace from the content. We add and etc
-        # namespace to allow us to handle misc objects.  We'll apply
-        # YAGNI for now and hard code this. We'll want something more
-        # general later. We were thinking of just calling "get"
-        # methods, but this is probably too magic. In particular, we
-        # will treat returned objects as sub-objects wrt security and
-        # not all get methods may satisfy this assumption. It might be
-        # best to introduce some sort of etc registry.
+        utility = zope.component.queryUtility(IEtcNamespace, name)
+        if utility is not None:
+            return utility
 
         ob = self.context
-
-        if (name in ('process', 'ApplicationController')
-            and IRoot.providedBy(ob)):
-            # import the application controller here to avoid circular
-            # import problems
-            try:
-                from zope.app.applicationcontrol.applicationcontrol \
-                     import applicationController
-            except ImportError:
-                pass
-            else:
-                return applicationController
 
         if name not in ('site',):
             raise LocationError(ob, name)

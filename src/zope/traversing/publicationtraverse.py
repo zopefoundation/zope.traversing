@@ -27,12 +27,6 @@ from zope.traversing.interfaces import TraversalError
 from zope.publisher.interfaces import IPublishTraverse
 from zope.publisher.interfaces.browser import IBrowserPublisher
 
-class DuplicateNamespaces(Exception):
-    """More than one namespace was specified in a request"""
-
-class UnknownNamespace(Exception):
-    """A parameter specified an unknown namespace"""
-
 class PublicationTraverser(object):
     """Traversal used for publication.
 

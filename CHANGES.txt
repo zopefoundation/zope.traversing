@@ -2,6 +2,14 @@
 Changes
 =======
 
+3.7.0 (unreleased)
+------------------
+
+- Moved the publicationtraverse module to zope.traversing, removing the
+  zope.app.publisher -> zope.app.publication dependency (which was a
+  cycle).
+
+
 3.6.0 (2009-04-06)
 ------------------
 

@@ -5,7 +5,9 @@ Changes
 3.7.1 (unreleased)
 ------------------
 
-- ...
+- AbsoluteURL now implements the fact that __call__ returns the same as __str__
+  in a manner that it applies for subclasses, too, so they only have to override
+  __str__ and not both.
 
 3.7.0 (2009-05-23)
 ------------------

@@ -67,7 +67,8 @@ class AbsoluteURL(BrowserView):
 
         return url
 
-    __call__ = __str__
+    def __call__(self):
+        return self.__str__()
 
     def breadcrumbs(self):
         context = self.context
@@ -119,7 +120,8 @@ class SiteAbsoluteURL(BrowserView):
 
         return url
 
-    __call__ = __str__
+    def __call__(self):
+        return self.__str__()
 
     def breadcrumbs(self):
         context = self.context

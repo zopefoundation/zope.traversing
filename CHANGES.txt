@@ -2,12 +2,15 @@
 Changes
 =======
 
+3.7.3 (unreleased)
+------------------
+
+
 3.7.2 (2009-08-29)
 ------------------
 
 - Made virtual hosting tests compatible with zope.publisher 3.9. Redirecting
   to a different host requires an explicit `trusted` redirect now.
-
 
 3.7.1 (2009-06-16)
 ------------------
@@ -26,7 +29,6 @@ Changes
 - Look up the application controller through a utility registration
   rather than a direct reference.
 
-
 3.6.0 (2009-04-06)
 ------------------
 
@@ -35,14 +37,12 @@ Changes
 - This release includes the BBB-incompatible ``zope.publisher.skinnable``
   change from 3.5.3.
 
-
 3.5.4 (2009-04-06)
 ------------------
 
 - Revert BBB-incompatible use of ``zope.publisher.skinnable``:  that
   change belongs in a 3.6.0 release, because it requires a BBB-incompatible
   version of ``zope.publisher``.
-
 
 3.5.3 (2009-03-10)
 ------------------

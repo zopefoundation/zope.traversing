@@ -5,7 +5,8 @@ Changes
 3.7.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Made virtual hosting tests compatible with zope.publisher 3.9. Redirecting
+  to a different host requires an explicit `trusted` redirect now.
 
 
 3.7.1 (2009-06-16)

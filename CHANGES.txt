@@ -2,7 +2,7 @@
 Changes
 =======
 
-3.7.2 (unreleased)
+3.7.2 (2009-08-29)
 ------------------
 
 - Made virtual hosting tests compatible with zope.publisher 3.9. Redirecting

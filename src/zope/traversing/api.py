@@ -129,16 +129,7 @@ def getParent(obj):
     Raises TypeError if the object doesn't have enough context to get the
     parent.
     """
-    
-    if IRoot.providedBy(obj):
-        return None
-    
-    parent = getattr(obj, '__parent__', None)
-    if parent is not None:
-        return parent
-
-    raise TypeError("Not enough context information to get parent", obj)
-
+    return ILocationInfo(obj).getParent()
 
 
 def getParents(obj):

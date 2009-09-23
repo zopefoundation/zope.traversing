@@ -5,8 +5,6 @@ Changes
 3.7.3 (unreleased)
 ------------------
 
-- Moved the implementation of zope.traversing.api.getParent() to
-  zope.location.interfaces.ILocationInfo, analogous to getParents().
 
 3.7.2 (2009-08-29)
 ------------------

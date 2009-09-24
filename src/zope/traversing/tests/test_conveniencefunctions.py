@@ -21,12 +21,11 @@ import zope.component
 from zope.interface import directlyProvides
 from zope.location.traversing \
     import LocationPhysicallyLocatable, RootPhysicallyLocatable
-from zope.location.interfaces \
-    import ILocationInfo, IRoot, LocationError, ITraverser
+from zope.location.interfaces import ILocationInfo, IRoot, LocationError
 from zope.security.proxy import Proxy
 from zope.security.checker import selectChecker
 from zope.traversing.adapters import Traverser, DefaultTraversable
-from zope.traversing.interfaces import ITraversable
+from zope.traversing.interfaces import ITraversable, ITraverser
 
 from zope.app.component.testing import PlacefulSetup
 from zope.container.contained import contained

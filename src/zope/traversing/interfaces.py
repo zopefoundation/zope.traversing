@@ -22,7 +22,9 @@ from zope.interface import Interface
 from zope.location.interfaces import LocationError as TraversalError
 from zope.location.interfaces import IRoot as IContainmentRoot
 from zope.location.interfaces import ILocationInfo as IPhysicallyLocatable
-from zope.location.interfaces import ITraverser
+
+
+_RAISE_KEYERROR = object()
 
 
 class ITraversable(Interface):
@@ -39,6 +41,29 @@ class ITraversable(Interface):
         'furtherPath' is a list of names still to be traversed. This
         method is allowed to change the contents of furtherPath.
         """
+
+
+class ITraverser(Interface):
+    """Provide traverse features"""
+
+    # XXX This is used like a utility but implemented as an adapter: The
+    # traversal policy is only implemented once and repeated for all objects
+    # along the path.
+
+    def traverse(path, default=_RAISE_KEYERROR):
+        """Return an object given a path.
+
+        Path is either an immutable sequence of strings or a slash ('/')
+        delimited string.
+
+        If the first string in the path sequence is an empty string, or the
+        path begins with a '/', start at the root. Otherwise the path is
+        relative to the current context.
+
+        If the object is not found, return 'default' argument.
+
+        """
+
 
 class ITraversalAPI(Interface):
     """Common API functions to ease traversal computations

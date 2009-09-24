@@ -2,9 +2,12 @@
 Changes
 =======
 
-3.7.3 (unreleased)
+3.8.0 (unreleased)
 ------------------
 
+
+- Brought ITraverser back from zope.location where it had been moved to invert
+  the package interdependency, but is no longer used now.
 
 3.7.2 (2009-08-29)
 ------------------

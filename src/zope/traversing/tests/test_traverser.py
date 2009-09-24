@@ -23,14 +23,14 @@ from zope.interface.verify import verifyClass
 from zope.location.traversing \
     import LocationPhysicallyLocatable, RootPhysicallyLocatable
 from zope.location.interfaces \
-    import ILocationInfo, IRoot, LocationError, ITraverser
+    import ILocationInfo, IRoot, LocationError
 from zope.security.interfaces import Unauthorized
 from zope.security.checker \
     import ProxyFactory, defineChecker, CheckerPublic, Checker
 from zope.security.management import newInteraction, endInteraction
 
 from zope.traversing.adapters import Traverser, DefaultTraversable
-from zope.traversing.interfaces import ITraversable
+from zope.traversing.interfaces import ITraversable, ITraverser
 
 from zope.app.component.testing import PlacefulSetup
 from zope.container.contained import Contained, contained

@@ -16,9 +16,8 @@
 $Id$
 """
 from zope.interface import moduleProvides
-from zope.location.interfaces \
-    import ILocationInfo, IRoot, LocationError, ITraverser
-from zope.traversing.interfaces import ITraversalAPI
+from zope.location.interfaces import ILocationInfo, IRoot, LocationError
+from zope.traversing.interfaces import ITraversalAPI, ITraverser
 
 moduleProvides(ITraversalAPI)
 __all__ = tuple(ITraversalAPI)

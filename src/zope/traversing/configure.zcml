@@ -4,7 +4,7 @@
 <adapter
     for="*"
     factory="zope.traversing.adapters.Traverser"
-    provides="zope.location.interfaces.ITraverser" />
+    provides="zope.traversing.interfaces.ITraverser" />
 
 <adapter
     for="*"

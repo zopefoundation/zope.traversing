@@ -20,9 +20,8 @@ from types import StringTypes
 import zope.interface
 import zope.component
 
-from zope.location.interfaces \
-    import ILocationInfo, LocationError, ITraverser
-from zope.traversing.interfaces import ITraversable
+from zope.location.interfaces import ILocationInfo, LocationError
+from zope.traversing.interfaces import ITraversable, ITraverser
 
 from zope.traversing.namespace import namespaceLookup
 from zope.traversing.namespace import UnexpectedParameters

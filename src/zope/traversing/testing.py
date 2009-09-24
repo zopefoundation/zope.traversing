@@ -22,8 +22,8 @@ import zope.interface
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 from zope.location.traversing \
     import LocationPhysicallyLocatable, RootPhysicallyLocatable
-from zope.location.interfaces import ILocationInfo, IRoot, ITraverser
-from zope.traversing.interfaces import ITraversable
+from zope.location.interfaces import ILocationInfo, IRoot
+from zope.traversing.interfaces import ITraversable, ITraverser
 from zope.traversing.adapters import DefaultTraversable
 from zope.traversing.adapters import Traverser
 from zope.traversing.browser import SiteAbsoluteURL, AbsoluteURL

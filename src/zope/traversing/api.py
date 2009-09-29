@@ -19,6 +19,7 @@ from zope.interface import moduleProvides
 from zope.location.interfaces import ILocationInfo, IRoot, LocationError
 from zope.traversing.interfaces import ITraversalAPI, ITraverser
 
+
 moduleProvides(ITraversalAPI)
 __all__ = tuple(ITraversalAPI)
 
@@ -128,16 +129,26 @@ def getParent(obj):
     Raises TypeError if the object doesn't have enough context to get the
     parent.
     """
-    
+    try:
+        location_info = ILocationInfo(obj)
+    except TypeError:
+        pass
+    else:
+        return location_info.getParent()
+
+    # XXX Keep the old implementation as the fallback behaviour in the case
+    # that obj doesn't have a location parent. This seems advisable as the
+    # 'parent' is sometimes taken to mean the traversal parent, and the
+    # __parent__ attribute is used for both.
+
     if IRoot.providedBy(obj):
         return None
-    
+
     parent = getattr(obj, '__parent__', None)
     if parent is not None:
         return parent
 
     raise TypeError("Not enough context information to get parent", obj)
-
 
 
 def getParents(obj):

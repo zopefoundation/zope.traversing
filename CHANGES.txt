@@ -5,6 +5,9 @@ Changes
 3.8.0 (unreleased)
 ------------------
 
+- In zope.traversing.api.getParent(), try to delegate to
+  zope.location.interfaces.ILocationInfo.getParent(), analogous to
+  getParents(). Keep returning the traversal parent as a fallback.
 
 - Brought ITraverser back from zope.location where it had been moved to invert
   the package interdependency, but is no longer used now.

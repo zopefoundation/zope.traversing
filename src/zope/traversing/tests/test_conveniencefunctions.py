@@ -18,6 +18,7 @@ $Id$
 from unittest import TestCase, main, makeSuite
 
 import zope.component
+from zope.component.testing import PlacelessSetup
 from zope.interface import directlyProvides
 from zope.location.traversing \
     import LocationPhysicallyLocatable, RootPhysicallyLocatable
@@ -27,8 +28,8 @@ from zope.security.checker import selectChecker
 from zope.traversing.adapters import Traverser, DefaultTraversable
 from zope.traversing.interfaces import ITraversable, ITraverser
 
-from zope.app.component.testing import PlacefulSetup
 from zope.container.contained import contained
+
 
 class C(object):
     __parent__ = None
@@ -40,10 +41,10 @@ def _proxied(*args):
     return Proxy(args, selectChecker(args))
 
 
-class Test(PlacefulSetup, TestCase):
+class Test(PlacelessSetup, TestCase):
 
     def setUp(self):
-        PlacefulSetup.setUp(self)
+        PlacelessSetup.setUp(self)
         # Build up a wrapper chain
         root = C('root')
         directlyProvides(root, IRoot)

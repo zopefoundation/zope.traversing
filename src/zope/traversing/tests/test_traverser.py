@@ -18,6 +18,7 @@ $Id$
 import unittest
 
 import zope.component
+from zope.component.testing import PlacelessSetup
 from zope.interface import directlyProvides, implementedBy
 from zope.interface.verify import verifyClass
 from zope.location.traversing \
@@ -32,8 +33,8 @@ from zope.security.management import newInteraction, endInteraction
 from zope.traversing.adapters import Traverser, DefaultTraversable
 from zope.traversing.interfaces import ITraversable, ITraverser
 
-from zope.app.component.testing import PlacefulSetup
 from zope.container.contained import Contained, contained
+
 
 class ParticipationStub(object):
 
@@ -45,10 +46,10 @@ class C(Contained):
     def __init__(self, name):
         self.name = name
 
-class TraverserTests(PlacefulSetup, unittest.TestCase):
+class TraverserTests(PlacelessSetup, unittest.TestCase):
 
     def setUp(self):
-        PlacefulSetup.setUp(self)
+        PlacelessSetup.setUp(self)
         # Build up a wrapper chain
         self.root =   C('root')
         self.folder = contained(C('folder'), self.root,   name='folder')
@@ -78,9 +79,9 @@ class UnrestrictedNoTraverseTests(unittest.TestCase):
         self.assertRaises(LocationError, self.tr.traverse,
                           'folder')
 
-class UnrestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
+class UnrestrictedTraverseTests(PlacelessSetup, unittest.TestCase):
     def setUp(self):
-        PlacefulSetup.setUp(self)
+        PlacelessSetup.setUp(self)
 
         zope.component.provideAdapter(DefaultTraversable, (None,), ITraversable)
         zope.component.provideAdapter(LocationPhysicallyLocatable, (None,),
@@ -165,12 +166,12 @@ class UnrestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
         self.assertRaises(LocationError, tr.traverse, 'foo/baz')
 
 
-class RestrictedTraverseTests(PlacefulSetup, unittest.TestCase):
+class RestrictedTraverseTests(PlacelessSetup, unittest.TestCase):
     _oldPolicy = None
     _deniedNames = ()
 
     def setUp(self):
-        PlacefulSetup.setUp(self)
+        PlacelessSetup.setUp(self)
 
         zope.component.provideAdapter(DefaultTraversable, (None,), ITraversable)
         zope.component.provideAdapter(LocationPhysicallyLocatable, (None,),

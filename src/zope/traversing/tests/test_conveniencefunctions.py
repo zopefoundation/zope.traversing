@@ -173,14 +173,6 @@ class Test(PlacelessSetup, TestCase):
             self.broken_chain_item
             )
 
-    def testGetParentFromUnwrapped(self):
-        from zope.traversing.api import getParent
-        self.assertRaises(
-            TypeError,
-            getParent,
-            self.unwrapped_item
-            )
-
     def testGetPath(self):
         from zope.traversing.api import getPath
         self.assertEqual(

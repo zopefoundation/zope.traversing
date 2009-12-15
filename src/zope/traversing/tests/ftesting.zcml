@@ -1,5 +1,6 @@
 <configure
    xmlns="http://namespaces.zope.org/zope"
+   xmlns:browser="http://namespaces.zope.org/browser"
    i18n_domain="zope"
    package="zope.traversing"
    >
@@ -8,7 +9,24 @@
   <!-- used for functional testing setup -->
 
   <include package="zope.app.zcmlfiles" />
-  <include package="zope.app.zptpage"/>
+
+  <browser:page
+      name="index.html"
+      for="zope.traversing.tests.test_vhosting.MyPageTemplate"
+      class="zope.traversing.tests.test_vhosting.MyPageEval"
+      attribute="index"
+      permission="zope.View"
+      />
+
+  <class class="zope.traversing.tests.test_vhosting.MyPageTemplate">
+    <factory
+        id="zope.traversing.tests.test_vhosting.MyPageTemplate"
+        />
+    <require
+        permission="zope.View"
+        attributes="__call__ render"
+        />
+  </class>
 
   <!-- Principals -->
 

@@ -2,9 +2,11 @@
 Changes
 =======
 
-3.9.1 (unreleased)
-------------------
+3.10.0 (unreleased)
+-------------------
 
+- Replaced a test dependency on zope.app.zptpage with a dependency on
+  zope.pagetemplate.
 
 3.9.0 (2009-12-15)
 ------------------

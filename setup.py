@@ -27,7 +27,7 @@ long_description = (open('README.txt').read() +
                     open('CHANGES.txt').read())
 
 setup(name='zope.traversing',
-      version = '3.9.1dev',
+      version = '3.10.0dev',
       url='http://pypi.python.org/pypi/zope.traversing',
       license='ZPL 2.1',
       author='Zope Corporation and Contributors',
@@ -41,10 +41,10 @@ setup(name='zope.traversing',
       extras_require = dict(test=['zope.app.testing',
                                   'zope.app.securitypolicy',
                                   'zope.app.zcmlfiles',
-                                  'zope.app.zptpage',
                                   'zope.app.applicationcontrol>=3.5.0',
                                   'zope.app.component',
                                   'zope.container',
+                                  'zope.pagetemplate',
                                   'zope.site',
                                   # The tests expect a spec-compliant TAL
                                   # interpreter as found in zope.tal 3.5.0

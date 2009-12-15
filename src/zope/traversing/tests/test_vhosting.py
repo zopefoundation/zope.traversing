@@ -16,25 +16,55 @@
 $Id$
 """
 import unittest
+
 import transaction
-from zope.traversing.api import traverse
-from zope.traversing.testing import browserResource
+from persistent import Persistent
+
+from zope.container.contained import Contained
+from zope.pagetemplate.pagetemplate import PageTemplate
+from zope.pagetemplate.engine import AppPT
 from zope.security.checker import defineChecker, NamesChecker, NoProxy
 from zope.security.checker import _checkers, undefineChecker
+from zope.site.folder import Folder
+from zope.traversing.api import traverse
+from zope.traversing.testing import browserResource
+from zope.traversing.tests.layer import TraversingLayer
 
 from zope.app.testing import functional
 from zope.app.publisher.browser.resource import Resource
-from zope.container.contained import Contained
-from zope.app.zptpage.zptpage import ZPTPage
-from zope.site.folder import Folder
-from zope.traversing.tests.layer import TraversingLayer
+
 
 class MyObj(Contained):
     def __getitem__(self, key):
         return traverse(self, '/foo/bar/' + key)
 
 
+class MyPageTemplate(AppPT, PageTemplate, Persistent):
+
+    def pt_getContext(self, instance, request, **_kw):
+        # instance is a View component
+        namespace = super(MyPageTemplate, self).pt_getContext(**_kw)
+        namespace['template'] = self
+        namespace['request'] = request
+        namespace['container'] = namespace['context'] = instance
+        return namespace
+
+    def render(self, instance, request, *args, **kw):
+        return self.pt_render(self.pt_getContext(instance, request))
+
+
+class MyPageEval(object):
+
+    def index(self, **kw):
+        """Call a Page Template"""
+        template = self.context
+        request = self.request
+        return template.render(template.__parent__, request, **kw)
+
+
 class TestVirtualHosting(functional.BrowserTestCase):
+
+    layer = TraversingLayer
 
     def setUp(self):
         functional.BrowserTestCase.setUp(self)
@@ -46,56 +76,22 @@ class TestVirtualHosting(functional.BrowserTestCase):
 
     def test_request_url(self):
         self.addPage('/pt', u'<span tal:replace="request/URL"/>')
-        self.verify('/pt', 'http://localhost/pt')
+        self.verify('/pt', 'http://localhost/pt/index.html')
         self.verify('/++vh++/++/pt',
-                    'http://localhost/pt')
+                    'http://localhost/pt/index.html')
         self.verify('/++vh++https:localhost:443/++/pt',
-                    'https://localhost/pt')
+                    'https://localhost/pt/index.html')
         self.verify('/++vh++https:localhost:443/fake/folders/++/pt',
-                    'https://localhost/fake/folders/pt')
+                    'https://localhost/fake/folders/pt/index.html')
 
         self.addPage('/foo/bar/pt', u'<span tal:replace="request/URL"/>')
-        self.verify('/foo/bar/pt', 'http://localhost/foo/bar/pt')
+        self.verify('/foo/bar/pt', 'http://localhost/foo/bar/pt/index.html')
         self.verify('/foo/bar/++vh++/++/pt',
-                    'http://localhost/pt')
+                    'http://localhost/pt/index.html')
         self.verify('/foo/bar/++vh++https:localhost:443/++/pt',
-                    'https://localhost/pt')
+                    'https://localhost/pt/index.html')
         self.verify('/foo/++vh++https:localhost:443/fake/folders/++/bar/pt',
-                    'https://localhost/fake/folders/bar/pt')
-
-    def test_request_base(self):
-        self.addPage('/pt', u'<head></head>')
-        self.verify('/pt/',
-                    '<head>\n<base href="http://localhost/pt" />\n'
-                    '</head>')
-        self.verify('/++vh++/++/pt/',
-                    '<head>\n<base href="http://localhost/pt" />\n'
-                    '</head>')
-        self.verify('/++vh++https:localhost:443/++/pt/',
-                    '<head>\n'
-                    '<base href="https://localhost/pt" />'
-                    '\n</head>')
-        self.verify('/++vh++https:localhost:443/fake/folders/++/pt/',
-                    '<head>\n<base href='
-                    '"https://localhost/fake/folders/pt" />'
-                    '\n</head>')
-
-        self.addPage('/foo/bar/pt', u'<head></head>')
-        self.verify('/foo/bar/pt/',
-                    '<head>\n<base '
-                    'href="http://localhost/foo/bar/pt" />\n'
-                    '</head>')
-        self.verify('/foo/bar/++vh++/++/pt/',
-                    '<head>\n<base href="http://localhost/pt" />\n'
-                    '</head>')
-        self.verify('/foo/bar/++vh++https:localhost:443/++/pt/',
-                    '<head>\n'
-                    '<base href="https://localhost/pt" />'
-                    '\n</head>')
-        self.verify('/foo/++vh++https:localhost:443/fake/folders/++/bar/pt/',
-                    '<head>\n<base href='
-                    '"https://localhost/fake/folders/bar/pt" />'
-                    '\n</head>')
+                    'https://localhost/fake/folders/bar/pt/index.html')
 
     def test_request_redirect(self):
         self.addPage('/foo/index.html', u'Spam')
@@ -106,24 +102,24 @@ class TestVirtualHosting(functional.BrowserTestCase):
                             'https://localhost/bar/index.html')
 
     def test_absolute_url(self):
-        self.addPage('/pt', u'<span tal:replace="template/@@absolute_url"/>')
-        self.verify('/pt', 'http://localhost/pt')
+        self.addPage('/pt', u'<span tal:replace="context/@@absolute_url"/>')
+        self.verify('/pt', 'http://localhost')
         self.verify('/++vh++/++/pt',
-                    'http://localhost/pt')
+                    'http://localhost')
         self.verify('/++vh++https:localhost:443/++/pt',
-                    'https://localhost/pt')
+                    'https://localhost')
         self.verify('/++vh++https:localhost:443/fake/folders/++/pt',
-                    'https://localhost/fake/folders/pt')
+                    'https://localhost/fake/folders')
 
         self.addPage('/foo/bar/pt',
-                     u'<span tal:replace="template/@@absolute_url"/>')
-        self.verify('/foo/bar/pt', 'http://localhost/foo/bar/pt')
+                     u'<span tal:replace="context/@@absolute_url"/>')
+        self.verify('/foo/bar/pt', 'http://localhost/foo/bar')
         self.verify('/foo/bar/++vh++/++/pt',
-                    'http://localhost/pt')
+                    'http://localhost')
         self.verify('/foo/bar/++vh++https:localhost:443/++/pt',
-                    'https://localhost/pt')
+                    'https://localhost')
         self.verify('/foo/++vh++https:localhost:443/fake/folders/++/bar/pt',
-                    'https://localhost/fake/folders/bar/pt')
+                    'https://localhost/fake/folders/bar')
 
     def test_absolute_url_absolute_traverse(self):
         self.createObject('/foo/bar/obj', MyObj())
@@ -166,8 +162,8 @@ class TestVirtualHosting(functional.BrowserTestCase):
         transaction.commit()
 
     def addPage(self, path, content):
-        page = ZPTPage()
-        page.source = content
+        page = MyPageTemplate()
+        page.pt_edit(content, 'text/html')
         self.createObject(path, page)
 
     def verify(self, path, content):
@@ -183,7 +179,6 @@ class TestVirtualHosting(functional.BrowserTestCase):
 
 def test_suite():
     suite = unittest.TestSuite()
-    TestVirtualHosting.layer = TraversingLayer
     suite.addTest(unittest.makeSuite(TestVirtualHosting))
     return suite
 

@@ -2,11 +2,11 @@
 Changes
 =======
 
-3.8.1 (unreleased)
+3.9.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Moved IBeforeTraverseEvent from zope.app.publication into this package,
+  as we already deal with publication traversal.
 
 3.8.0 (2009-09-29)
 ------------------

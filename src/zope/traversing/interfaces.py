@@ -16,7 +16,10 @@
 $Id$
 """
 
+from zope.interface import Attribute
 from zope.interface import Interface
+from zope.interface import implements
+from zope.component.interfaces import IObjectEvent
 
 # BBB: Re-import symbols to their old location.
 from zope.location.interfaces import LocationError as TraversalError
@@ -161,10 +164,28 @@ class ITraversalAPI(Interface):
         Raises ValueError if a badly formed path is given.
         """
 
+
 class IPathAdapter(Interface):
     """Marker interface for adapters to be used in paths
     """
 
+
 class IEtcNamespace(Interface):
     """Marker for utility registrations in the ++etc++ namespace
     """
+
+
+class IBeforeTraverseEvent(IObjectEvent):
+    """An event which gets sent on publication traverse"""
+
+    request = Attribute("The current request")
+
+
+class BeforeTraverseEvent(object):
+    """An event which gets sent on publication traverse"""
+
+    implements(IBeforeTraverseEvent)
+
+    def __init__(self, ob, request):
+        self.object = ob
+        self.request = request

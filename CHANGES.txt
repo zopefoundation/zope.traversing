@@ -5,6 +5,8 @@ Changes
 3.10.0 (unreleased)
 -------------------
 
+- Replaced testing dependency on zope.app.security with zope.securitypolicy.
+
 - Removed testing dependency on zope.app.zcmlfiles in favor of more explicit
   dependencies.
 

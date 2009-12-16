@@ -2,7 +2,7 @@
 Changes
 =======
 
-3.10.0 (unreleased)
+3.10.0 (2009-12-16)
 -------------------
 
 - Removed stray test claiming a no longer existing dependency on

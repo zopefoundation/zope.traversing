@@ -17,14 +17,14 @@ $Id$
 """
 from unittest import TestCase, main, makeSuite
 
-import zope.traversing.testing
-from zope.location.interfaces import ILocationInfo, IRoot
+from zope.container.contained import contained
 from zope.interface import implements
+from zope.location.interfaces import ILocationInfo, IRoot
+from zope.site.site import LocalSiteManager
+from zope.site.site import SiteManagerContainer
 from zope.testing.cleanup import CleanUp
 
-from zope.app.testing import setup
-from zope.container.contained import contained
-from zope.site.site import SiteManagerContainer
+import zope.traversing.testing
 
 
 class Root(object):
@@ -54,7 +54,7 @@ class Test(CleanUp, TestCase):
         self.assertEqual(adapter.getRoot(), root)
         self.assertEqual(adapter.getNearestSite(), root)
 
-        setup.createSiteManager(f2)
+        f2.setSiteManager(LocalSiteManager(f2))
         self.assertEqual(adapter.getNearestSite(), f2)
 
         

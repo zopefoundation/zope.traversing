@@ -5,6 +5,9 @@ Changes
 3.10.0 (unreleased)
 -------------------
 
+- Removed stray test claiming a no longer existing dependency on
+  zope.app.applicationcontrol.
+
 - Refactored functional tests to loose dependency on both zope.app.appsetup
   and zope.app.testing.
 

@@ -134,6 +134,14 @@ class TestPublicationTraverser(CleanUp, TestCase):
         self.assertEqual(view.__class__, View)
         self.assertEqual(view.name, 'more')
 
+    def testMissingSkin(self):
+        ob = Content()
+        from zope.traversing.publicationtraverse import PublicationTraverser
+        t = PublicationTraverser()
+        request = TestRequest()
+        self.assertRaises(
+            NotFound, t.traversePath, request, ob, '/++skin++missingskin')
+
 
 class IContent(Interface):
     pass
@@ -180,4 +188,4 @@ def test_suite():
     return makeSuite(TestPublicationTraverser)
 
 if __name__ == '__main__':
-    unittest.main()
+    main()

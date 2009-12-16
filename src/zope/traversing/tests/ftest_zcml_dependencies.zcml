@@ -1,9 +1,0 @@
-<configure
-    xmlns="http://namespaces.zope.org/zope"
-    xmlns:webservice="http://namespaces.canonical.com/webservice">
-
-    <include package="zope.component" file="meta.zcml"/>
-
-    <include package="zope.traversing"/>
-
-</configure>

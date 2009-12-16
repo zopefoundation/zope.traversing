@@ -5,6 +5,9 @@ Changes
 3.10.0 (unreleased)
 -------------------
 
+- Simplified test_dependencies module by using zope.configuration instead of
+  zope.app.testing.functional.
+
 - Removed testing dependency on zope.app.publisher.
 
 - Replaced testing dependency on zope.app.security with zope.securitypolicy.

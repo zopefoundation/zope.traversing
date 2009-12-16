@@ -15,6 +15,7 @@
 
 $Id$
 """
+import os
 import unittest
 
 import transaction
@@ -29,9 +30,12 @@ from zope.security.checker import _checkers, undefineChecker
 from zope.site.folder import Folder
 from zope.traversing.api import traverse
 from zope.traversing.testing import browserResource
-from zope.traversing.tests.layer import TraversingLayer
 
 from zope.app.testing import functional
+
+TraversingLayer = functional.ZCMLLayer(
+    os.path.join(os.path.split(__file__)[0], 'ftesting.zcml'),
+    __name__, 'TraversingLayer', allow_teardown=True)
 
 
 class MyObj(Contained):

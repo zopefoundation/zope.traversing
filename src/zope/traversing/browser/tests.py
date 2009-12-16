@@ -19,6 +19,7 @@ from unittest import TestCase, main, makeSuite
 
 import zope.component
 from zope.component import getMultiAdapter, adapts
+from zope.component.testing import PlacelessSetup
 from zope.traversing.browser.absoluteurl import absoluteURL
 from zope.traversing.browser.interfaces import IAbsoluteURL
 from zope.traversing.testing import browserView
@@ -30,8 +31,6 @@ from zope.publisher.http import IHTTPRequest, HTTPCharsets
 from zope.location.interfaces import ILocation
 
 from zope.container.contained import contained
-from zope.app.testing import setup
-
 
 class IRoot(Interface):
     pass
@@ -61,10 +60,10 @@ class FooLocation(object):
     def __parent__(self):
         return contained(TrivialContent(), Root(), name='bar')
 
-class TestAbsoluteURL(TestCase):
+class TestAbsoluteURL(PlacelessSetup, TestCase):
 
     def setUp(self):
-        setup.placelessSetUp()
+        PlacelessSetup.setUp(self)
         from zope.traversing.browser import AbsoluteURL, SiteAbsoluteURL
         browserView(None, 'absolute_url', AbsoluteURL)
         browserView(IRoot, 'absolute_url', SiteAbsoluteURL)
@@ -75,7 +74,7 @@ class TestAbsoluteURL(TestCase):
                                       IUserPreferredCharsets)
 
     def tearDown(self):
-        setup.placelessTearDown()
+        PlacelessSetup.tearDown(self)
 
     def test_interface(self):
         request = TestRequest()

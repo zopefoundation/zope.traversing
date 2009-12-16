@@ -62,6 +62,14 @@ class MyPageEval(object):
         return template.render(template.__parent__, request, **kw)
 
 
+class MyFolderPage(object):
+
+    def index(self, **kw):
+        """My folder page"""
+        self.request.response.redirect('index.html')
+        return ''
+
+
 class TestVirtualHosting(functional.BrowserTestCase):
 
     layer = TraversingLayer

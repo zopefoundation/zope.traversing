@@ -5,10 +5,34 @@
    package="zope.traversing"
    >
 
-  <!-- This file is the equivalent of site.zcml and it is -->
-  <!-- used for functional testing setup -->
+  <include package="zope.browserpage" file="meta.zcml" />
+  <include package="zope.component" file="meta.zcml" />
+  <include package="zope.publisher" file="meta.zcml" />
+  <include package="zope.security" file="meta.zcml" />
+  <include package="zope.app.publication" file="meta.zcml" />
+  <include package="zope.app.securitypolicy" file="meta.zcml" />
 
-  <include package="zope.app.zcmlfiles" />
+  <include package="zope.browserresource" />
+  <include package="zope.container" />
+  <include package="zope.location" />
+  <include package="zope.principalregistry" />
+  <include package="zope.publisher" />
+  <include package="zope.security" />
+  <include package="zope.site" />
+  <include package="zope.traversing" />
+
+  <include package="zope.app.appsetup" />
+  <include package="zope.app.publication" />
+
+  <browser:defaultView name="index.html" />
+  <include package="zope.traversing.browser" />
+
+  <browser:page
+      for="zope.site.interfaces.IFolder"
+      permission="zope.View"
+      class="zope.traversing.tests.test_vhosting.MyFolderPage"
+      name="index.html" attribute="index"
+      />
 
   <browser:page
       name="index.html"
@@ -29,13 +53,6 @@
   </class>
 
   <!-- Principals -->
-
-  <unauthenticatedPrincipal
-      id="zope.anybody"
-      title="Unauthenticated User" />
-
-
-  <include package="zope.app.securitypolicy" file="meta.zcml" />
 
   <securityPolicy
     component="zope.securitypolicy.zopepolicy.ZopeSecurityPolicy" />

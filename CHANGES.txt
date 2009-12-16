@@ -5,6 +5,9 @@ Changes
 3.10.0 (unreleased)
 -------------------
 
+- Removed testing dependency on zope.app.zcmlfiles in favor of more explicit
+  dependencies.
+
 - Removed testing dependency on zope.app.component.
 
 - Replaced a test dependency on zope.app.zptpage with a dependency on

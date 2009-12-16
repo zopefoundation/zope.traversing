@@ -5,6 +5,9 @@ Changes
 3.10.0 (unreleased)
 -------------------
 
+- Refactored functional tests to loose dependency on both zope.app.appsetup
+  and zope.app.testing.
+
 - Simplified tests for the browser sub-package by using PlacelessSetup from
   zope.component.testing instead of zope.app.testing.
 

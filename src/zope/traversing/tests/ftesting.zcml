@@ -21,7 +21,6 @@
   <include package="zope.site" />
   <include package="zope.traversing" />
 
-  <include package="zope.app.appsetup" />
   <include package="zope.app.publication" />
 
   <browser:defaultView name="index.html" />

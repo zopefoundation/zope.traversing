@@ -17,25 +17,30 @@ $Id$
 """
 import os
 import unittest
+from StringIO import StringIO
 
 import transaction
 from persistent import Persistent
+from ZODB.DB import DB
+from ZODB.DemoStorage import DemoStorage
+
+from zope.app.publication.browser import BrowserPublication
 
 from zope.browserresource.resource import Resource
+from zope.configuration import xmlconfig
 from zope.container.contained import Contained
 from zope.pagetemplate.pagetemplate import PageTemplate
 from zope.pagetemplate.engine import AppPT
+from zope.publisher.browser import BrowserRequest
+from zope.publisher.publish import publish
+from zope.publisher.skinnable import setDefaultSkin
 from zope.security.checker import defineChecker, NamesChecker, NoProxy
 from zope.security.checker import _checkers, undefineChecker
 from zope.site.folder import Folder
+from zope.site.folder import rootFolder
+from zope.testing.cleanup import cleanUp
 from zope.traversing.api import traverse
 from zope.traversing.testing import browserResource
-
-from zope.app.testing import functional
-
-TraversingLayer = functional.ZCMLLayer(
-    os.path.join(os.path.split(__file__)[0], 'ftesting.zcml'),
-    __name__, 'TraversingLayer', allow_teardown=True)
 
 
 class MyObj(Contained):
@@ -74,17 +79,37 @@ class MyFolderPage(object):
         return ''
 
 
-class TestVirtualHosting(functional.BrowserTestCase):
-
-    layer = TraversingLayer
+class TestVirtualHosting(unittest.TestCase):
 
     def setUp(self):
-        functional.BrowserTestCase.setUp(self)
+        f = os.path.join(os.path.split(__file__)[0], 'ftesting.zcml')
+        xmlconfig.file(f)
+        self.db = DB(DemoStorage("Memory storage unnamed"))
+        self.connection = self.db.open()
+        root = self.connection.root()
+        root_folder = rootFolder()
+        root['Application'] = root_folder
         defineChecker(MyObj, NoProxy)
 
     def tearDown(self):
-        functional.BrowserTestCase.tearDown(self)
         undefineChecker(MyObj)
+        self.connection.close()
+        cleanUp()
+
+    def makeRequest(self, path=''):
+        env = {"HTTP_HOST": 'localhost',
+               "HTTP_REFERER": 'localhost'}
+        p = path.split('?')
+        if len(p) == 1:
+            env['PATH_INFO'] = p[0]
+
+        request = BrowserRequest(StringIO(''), env)
+        request.setPublication(BrowserPublication(self.db))
+        setDefaultSkin(request)
+        return request
+
+    def publish(self, path):
+        return publish(self.makeRequest(path)).response
 
     def test_request_url(self):
         self.addPage('/pt', u'<span tal:replace="request/URL"/>')
@@ -156,7 +181,7 @@ class TestVirtualHosting(functional.BrowserTestCase):
         """addFolders('/a/b/c/d') would traverse and/or create three nested
         folders (a, b, c) and return a tuple (c, 'd') where c is a Folder
         instance at /a/b/c."""
-        folder = self.getRootFolder()
+        folder = self.connection.root()['Application']
         if path[0] == '/':
             path = path[1:]
         path = path.split('/')
@@ -181,7 +206,7 @@ class TestVirtualHosting(functional.BrowserTestCase):
     def verify(self, path, content):
         result = self.publish(path)
         self.assertEquals(result.getStatus(), 200)
-        self.assertEquals(result.getBody(), content)
+        self.assertEquals(result.consumeBody(), content)
 
     def verifyRedirect(self, path, location):
         result = self.publish(path)

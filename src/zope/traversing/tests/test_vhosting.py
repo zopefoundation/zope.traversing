@@ -20,6 +20,7 @@ import unittest
 import transaction
 from persistent import Persistent
 
+from zope.browserresource.resource import Resource
 from zope.container.contained import Contained
 from zope.pagetemplate.pagetemplate import PageTemplate
 from zope.pagetemplate.engine import AppPT
@@ -31,7 +32,6 @@ from zope.traversing.testing import browserResource
 from zope.traversing.tests.layer import TraversingLayer
 
 from zope.app.testing import functional
-from zope.app.publisher.browser.resource import Resource
 
 
 class MyObj(Contained):

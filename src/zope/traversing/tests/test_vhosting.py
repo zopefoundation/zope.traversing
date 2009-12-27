@@ -20,11 +20,6 @@ import unittest
 from StringIO import StringIO
 
 import transaction
-from persistent import Persistent
-from ZODB.DB import DB
-from ZODB.DemoStorage import DemoStorage
-
-from zope.app.publication.browser import BrowserPublication
 
 from zope.browserresource.resource import Resource
 from zope.configuration import xmlconfig
@@ -48,7 +43,7 @@ class MyObj(Contained):
         return traverse(self, '/foo/bar/' + key)
 
 
-class MyPageTemplate(AppPT, PageTemplate, Persistent):
+class MyPageTemplate(AppPT, PageTemplate):
 
     def pt_getContext(self, instance, request, **_kw):
         # instance is a View component
@@ -84,16 +79,11 @@ class TestVirtualHosting(unittest.TestCase):
     def setUp(self):
         f = os.path.join(os.path.split(__file__)[0], 'ftesting.zcml')
         xmlconfig.file(f)
-        self.db = DB(DemoStorage("Memory storage unnamed"))
-        self.connection = self.db.open()
-        root = self.connection.root()
-        root_folder = rootFolder()
-        root['Application'] = root_folder
+        self.app = rootFolder()
         defineChecker(MyObj, NoProxy)
 
     def tearDown(self):
         undefineChecker(MyObj)
-        self.connection.close()
         cleanUp()
 
     def makeRequest(self, path=''):
@@ -104,7 +94,7 @@ class TestVirtualHosting(unittest.TestCase):
             env['PATH_INFO'] = p[0]
 
         request = BrowserRequest(StringIO(''), env)
-        request.setPublication(BrowserPublication(self.db))
+        request.setPublication(DummyPublication(self.app))
         setDefaultSkin(request)
         return request
 
@@ -181,7 +171,7 @@ class TestVirtualHosting(unittest.TestCase):
         """addFolders('/a/b/c/d') would traverse and/or create three nested
         folders (a, b, c) and return a tuple (c, 'd') where c is a Folder
         instance at /a/b/c."""
-        folder = self.connection.root()['Application']
+        folder = self.app  #self.connection.root()['Application']
         if path[0] == '/':
             path = path[1:]
         path = path.split('/')
@@ -212,6 +202,88 @@ class TestVirtualHosting(unittest.TestCase):
         result = self.publish(path)
         self.assertEquals(result.getStatus(), 302)
         self.assertEquals(result.getHeader('Location'), location)
+
+
+class DummyPublication:
+
+    def __init__(self, app):
+        self.app = app
+
+    def beforeTraversal(self, request):
+        """Pre-traversal hook.
+
+        This is called *once* before any traversal has been done.
+        """
+
+    def getApplication(self, request):
+        """Returns the object where traversal should commence.
+        """
+        return self.app
+
+    def callTraversalHooks(self, request, ob):
+        """Invokes any traversal hooks associated with the object.
+
+        This is called before traversing each object.  The ob argument
+        is the object that is about to be traversed.
+        """
+
+    def traverseName(self, request, ob, name):
+        """Traverses to the next object.
+
+        Name must be an ASCII string or Unicode object."""
+        if name == 'index.html':
+            from zope.component import queryMultiAdapter
+            view = queryMultiAdapter((ob, request), name=name)
+            if view is None:
+                from zope.publisher.interfaces import NotFound
+                raise NotFound(ob, name)
+            return view
+        else:
+            from zope.traversing.publicationtraverse \
+                import PublicationTraverserWithoutProxy
+            t = PublicationTraverserWithoutProxy()
+            return t.traverseName(request, ob, name)
+
+    def afterTraversal(self, request, ob):
+        """Post-traversal hook.
+
+        This is called after all traversal.
+        """
+
+    def callObject(self, request, ob):
+        """Call the object, returning the result.
+
+        For GET/POST this means calling it, but for other methods
+        (including those of WebDAV and FTP) this might mean invoking
+        a method of an adapter.
+        """
+        from zope.publisher.publish import mapply
+        return mapply(ob, request.getPositionalArguments(), request)
+
+    def afterCall(self, request, ob):
+        """Post-callObject hook (if it was successful).
+        """
+
+    def handleException(self, ob, request, exc_info, retry_allowed=1):
+        """Handle an exception
+
+        Either:
+        - sets the body of the response, request.response, or
+        - raises a Retry exception, or
+        - throws another exception, which is a Bad Thing.
+        """
+        import traceback
+        traceback.print_exception(*exc_info)
+
+    def endRequest(self, request, ob):
+        """Do any end-of-request cleanup
+        """
+
+    def getDefaultTraversal(self, request, ob):
+        if hasattr(ob, 'index'):
+            return ob, ()
+        else:
+            return ob, ('index.html',)
 
 
 def test_suite():

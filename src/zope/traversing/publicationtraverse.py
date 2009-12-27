@@ -43,6 +43,8 @@ class PublicationTraverser(object):
     - This version has a method, traverseRelativeURL(), that
       supports "browserDefault" traversal.
     """
+    def proxy(self, ob):
+        return ProxyFactory(ob)
 
     def traverseName(self, request, ob, name):
         nm = name # the name to look up the object with
@@ -56,7 +58,7 @@ class PublicationTraverser(object):
                 except TraversalError:
                     raise NotFound(ob, name)
 
-                return ProxyFactory(ob2)
+                return self.proxy(ob2)
 
         if nm == '.':
             return ob
@@ -72,7 +74,7 @@ class PublicationTraverser(object):
             else:
                 raise NotFound(ob, name, request)
 
-        return ProxyFactory(ob2)
+        return self.proxy(ob2)
 
     def traversePath(self, request, ob, path):
 
@@ -113,7 +115,7 @@ class PublicationTraverser(object):
             if adapter is None:
                 return ob
             ob, path = adapter.browserDefault(request)
-            ob = ProxyFactory(ob)
+            ob = self.proxy(ob)
             if not path:
                 return ob
 
@@ -121,3 +123,8 @@ class PublicationTraverser(object):
 
 # alternate spelling
 PublicationTraverse = PublicationTraverser
+
+class PublicationTraverserWithoutProxy(PublicationTraverse):
+
+    def proxy(self, ob):
+        return ob

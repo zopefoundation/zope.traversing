@@ -5,6 +5,7 @@ Changes
 3.10.1 (unreleased)
 -------------------
 
+- Removed testing dependency on zope.app.publication.
 
 3.10.0 (2009-12-16)
 -------------------

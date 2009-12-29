@@ -2,9 +2,11 @@
 Changes
 =======
 
-3.11.1 (unreleased)
+3.12.0 (unreleased)
 -------------------
 
+- Avoid testing dependencies on zope.securitypolicies and
+  zope.principalregistry.
 
 3.11.0 (2009-12-27)
 -------------------

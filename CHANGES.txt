@@ -2,11 +2,10 @@
 Changes
 =======
 
-3.12.1 (unreleased)
+3.12.1 (2010-04-30)
 -------------------
 
 - Removed use of 'zope.testing.doctestunit' in favor of stdlib's doctest.
-
 
 3.12.0 (2009-12-29)
 -------------------

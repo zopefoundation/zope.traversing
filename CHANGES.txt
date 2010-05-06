@@ -185,6 +185,13 @@ Changes
   application controller only if the package is available.
 
 
+3.4.1 (2008-07-30)
+------------------
+
+- Fixed deprecation warning caused by using an old module name for
+  ZopeSecurityPolicy in ftesting.zcml
+
+
 3.4.1a1 (2007-11-13)
 --------------------
 

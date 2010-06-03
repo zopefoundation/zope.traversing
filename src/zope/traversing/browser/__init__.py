@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Absolute URL View components
-
-$Id$
 """
 from zope.traversing.browser.absoluteurl import absoluteURL
 from zope.traversing.browser.absoluteurl import AbsoluteURL

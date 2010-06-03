@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Adapters for the traversing mechanism
-
-$Id$
 """
 from types import StringTypes
 

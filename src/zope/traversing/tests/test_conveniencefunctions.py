@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Test traversal convenience functions.
-
-$Id$
 """
 from unittest import TestCase, main, makeSuite
 

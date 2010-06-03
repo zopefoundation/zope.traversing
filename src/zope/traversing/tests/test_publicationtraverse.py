@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Tests of PublicationTraverser
-
-$Id: test_vh.py 82003 2007-11-28 08:49:12Z jukart $
 """
 from unittest import TestCase, main, makeSuite
 from zope.testing.cleanup import CleanUp

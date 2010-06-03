@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Absolute URL View components
-
-$Id$
 """
 import urllib
 import zope.component

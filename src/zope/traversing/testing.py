@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Traversing test fixtures
-
-$Id$
 """
 __docformat__ = "reStructuredText"
 

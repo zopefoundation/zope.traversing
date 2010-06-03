@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Physical Location Adapter Tests
-
-$Id$
 """
 from unittest import TestCase, main, makeSuite
 

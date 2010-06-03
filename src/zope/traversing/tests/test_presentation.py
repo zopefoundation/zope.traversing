@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Presentation Traverser Tests
-
-$Id$
 """
 from unittest import TestCase, main, makeSuite
 from zope.testing.cleanup import CleanUp

@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Functional tests for virtual hosting.
-
-$Id$
 """
 import os
 import unittest

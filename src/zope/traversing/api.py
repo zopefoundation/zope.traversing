@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Convenience functions for traversing the object tree.
-
-$Id$
 """
 from zope.interface import moduleProvides
 from zope.location.interfaces import ILocationInfo, IRoot, LocationError

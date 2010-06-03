@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """URL Namespace Implementations
-
-$Id$
 """
 __docformat__ = 'restructuredtext'
 

@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Traversal Namespace Tests
-
-$Id$
 """
 from unittest import main
 from doctest import DocTestSuite

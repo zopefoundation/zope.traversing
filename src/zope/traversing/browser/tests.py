@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Test the AbsoluteURL view
-
-$Id$
 """
 from unittest import TestCase, main, makeSuite
 

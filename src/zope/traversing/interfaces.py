@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Interfaces to do with traversing.
-
-$Id$
 """
 
 from zope.interface import Attribute

@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Publication Traverser
-
-$Id: publicationtraverse.py 67630 2006-04-27 00:54:03Z jim $
 """
 __docformat__ = 'restructuredtext'
 from types import StringTypes

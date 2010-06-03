@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Browser traversal interfaces
-
-$Id$
 """
 from zope.interface import Interface
 

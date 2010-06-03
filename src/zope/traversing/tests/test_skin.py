@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Test skin traversal.
-
-$Id$
 """
 from unittest import TestCase, main, makeSuite
 

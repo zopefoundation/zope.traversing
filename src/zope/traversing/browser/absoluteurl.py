@@ -49,8 +49,20 @@ class AbsoluteURL(BrowserView):
             or sameProxiedObjects(context, request.getVirtualHostRoot())):
             return request.getApplicationURL()
 
-        context = ILocation(context)
-        container = getattr(context, '__parent__', None)
+        # first try to get the __parent__ of the object, no matter whether
+        # it provides ILocation or not. If this fails, look up an ILocation
+        # adapter. This will always work, as a general ILocation adapter
+        # is registered for interface in zope.location (a LocationProxy)
+        # This proxy will return a parent of None, causing this to fail
+        # More specific ILocation adapters can be provided however.
+        try:
+            container = context.__parent__
+        except AttributeError:
+            # we need to assign to context here so we can get
+            # __name__ from it below
+            context = ILocation(context)
+            container = context.__parent__
+
         if container is None:
             raise TypeError(_insufficientContext)
 

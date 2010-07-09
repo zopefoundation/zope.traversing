@@ -27,6 +27,7 @@ from zope.interface.verify import verifyObject
 from zope.publisher.browser import TestRequest
 from zope.publisher.http import IHTTPRequest, HTTPCharsets
 from zope.location.interfaces import ILocation
+from zope.location.location import LocationProxy
 
 from zope.container.contained import contained
 
@@ -39,6 +40,9 @@ class Root(object):
 class TrivialContent(object):
     """Trivial content object, used because instances of object are rocks."""
 
+class AdaptedContent(object):
+    """A simple content object that has an ILocation adapter for it."""
+    
 class FooContent(object):
     """Class whose location will be provided by an adapter."""
 
@@ -70,7 +74,12 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
         zope.component.provideAdapter(FooLocation)
         zope.component.provideAdapter(HTTPCharsets, (IHTTPRequest,),
                                       IUserPreferredCharsets)
-
+        # LocationProxy as set by zope.location
+        # this makes a default LocationProxy for all objects that
+        # don't define a more specific adapter
+        zope.component.provideAdapter(LocationProxy, (Interface,),
+                                      ILocation)
+            
     def tearDown(self):
         PlacelessSetup.tearDown(self)
 
@@ -112,6 +121,27 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
                           {'name': 'c', 'url': 'http://127.0.0.1/a/b/c'},
                           ))
 
+
+    def testParentButNoLocation(self):
+        request = TestRequest()
+
+        content1 = TrivialContent()
+        content1.__parent__ = Root()
+        content1.__name__ = 'a'
+
+        content2 = TrivialContent()
+        content2.__parent__ = content1
+        content2.__name__ = 'b'
+
+        content3 = TrivialContent()
+        content3.__parent__ = content2
+        content3.__name__ = 'c'
+
+        view = getMultiAdapter((content3, request), name='absolute_url')
+        self.assertEqual(str(view), 'http://127.0.0.1/a/b/c')
+        self.assertEqual(absoluteURL(content3, request),
+                         'http://127.0.0.1/a/b/c')
+    
     def testAdaptedContext(self):
         request = TestRequest()
 
@@ -128,6 +158,23 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
                           {'name': 'foo', 'url': 'http://127.0.0.1/bar/foo'},
                           ))
 
+    def testParentTrumpsAdapter(self):
+        # if we have a location adapter for a content object but
+        # the object also has its own __parent__, this will trump the
+        # adapter
+        request = TestRequest()
+
+        
+        content = FooContent()
+        content.__parent__ = Root()
+        content.__name__ = 'foo'
+        
+        view = getMultiAdapter((content, request), name='absolute_url')
+        self.assertEqual(str(view), 'http://127.0.0.1/foo')
+        self.assertEqual(absoluteURL(content, request),
+                         'http://127.0.0.1/foo')
+
+        
     def testBasicContext_unicode(self):
         #Tests so that AbsoluteURL handle unicode names as well
         request = TestRequest()
@@ -242,6 +289,7 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
         self.assertEqual(str(view), 'http://127.0.0.1')
         self.assertEqual(absoluteURL(None, request), 'http://127.0.0.1')
 
+        
     def testVirtualHostingWithoutContextInformation(self):
         request = TestRequest()
         request._vh_root = contained(TrivialContent(), Root(), name='a')

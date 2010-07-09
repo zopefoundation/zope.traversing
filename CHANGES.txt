@@ -2,9 +2,18 @@
 Changes
 =======
 
-3.12.2 (unreleased)
--------------------
+3.13 (unreleased)
+-----------------
 
+- When a ``__parent__`` attribute is available on an object, it is
+  always used for absolute URL construction, and no ILocation adapter
+  lookup is performed for it. This was the previous behavior but was
+  broken (around 3.5?) due to dependency refactoring. 
+ 
+  If the object provides no ``__parent__`` then an ILocation adapter
+  lookup will be performed. This will always succeed as zope.location
+  provides a default LocationProxy for everything, but more specific
+  ILocation adapters can also be provided.
 
 3.12.1 (2010-04-30)
 -------------------

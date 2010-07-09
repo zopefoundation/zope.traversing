@@ -2,7 +2,7 @@
 Changes
 =======
 
-3.13 (unreleased)
+3.13 (2010-07-09)
 -----------------
 
 - When a ``__parent__`` attribute is available on an object, it is

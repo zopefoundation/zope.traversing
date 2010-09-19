@@ -9,10 +9,7 @@ from zope.traversing.interfaces import ITraversable
 
 class ZCMLDependencies(unittest.TestCase):
 
-    def test_zcml_can_load_with_only_zope_component_meta(self):
-        import zope.component
-        XMLConfig('meta.zcml', zope.component)()
-
+    def test_zcml_can_load(self):
         import zope.traversing
         XMLConfig('configure.zcml', zope.traversing)()
 
@@ -23,11 +20,8 @@ class ZCMLDependencies(unittest.TestCase):
         self.failUnless(isinstance(res, zope.traversing.namespace.lang))
         self.failUnless(res.context is self)
 
+
 def test_suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(ZCMLDependencies))
     return suite
-
-
-if __name__ == '__main__':
-    unittest.main()

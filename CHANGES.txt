@@ -5,7 +5,7 @@ Changes
 3.13.1 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Fixed ZCML-related dependencies.
 
 
 3.13 (2010-07-09)

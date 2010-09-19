@@ -6,7 +6,6 @@
    >
 
   <include package="zope.browserpage" file="meta.zcml" />
-  <include package="zope.component" file="meta.zcml" />
   <include package="zope.publisher" file="meta.zcml" />
   <include package="zope.security" file="meta.zcml" />
 
@@ -14,8 +13,6 @@
   <include package="zope.container" />
   <include package="zope.location" />
   <include package="zope.publisher" />
-  <include package="zope.security" />
-  <include package="zope.site" />
   <include package="zope.traversing" />
 
   <browser:defaultView name="index.html" />

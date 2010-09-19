@@ -2,6 +2,9 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:browser="http://namespaces.zope.org/browser">
 
+  <include file="meta.zcml" package="zope.component" />
+  <include file="meta.zcml" package="zope.browserpage" />
+
   <view
       for="*"
       name="absolute_url"
@@ -10,7 +13,7 @@
       permission="zope.Public"
       allowed_interface=".interfaces.IAbsoluteURL"
       />
-      
+
   <view
       for="*"
       factory=".AbsoluteURL"
@@ -27,7 +30,7 @@
       permission="zope.Public"
       allowed_interface=".interfaces.IAbsoluteURL"
       />
-      
+
   <view
       for="zope.location.interfaces.IRoot"
       factory=".SiteAbsoluteURL"

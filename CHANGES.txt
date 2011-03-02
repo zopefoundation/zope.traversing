@@ -2,9 +2,11 @@
 Changes
 =======
 
-3.13.2 (unreleased)
+3.14.0 (2011-03-02)
 -------------------
 
+- Re-release of 3.13.1 as a feature version as it introduces dependencies on
+  new feature releases.
 
 3.13.1 (2010-12-14)
 -------------------

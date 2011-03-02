@@ -2,6 +2,17 @@
 Changes
 =======
 
+3.13.2 (2011-03-02)
+-------------------
+
+- Re-release of 3.13.0. 3.13.1 introduced dependencies unsuitable for a
+  bugfix release.
+
+3.13.1 (2010-12-14)
+-------------------
+
+- Fixed ZCML-related dependencies.
+
 3.13 (2010-07-09)
 -----------------
 

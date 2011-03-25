@@ -5,6 +5,9 @@ Changes
 3.14.1 (unreleased)
 -------------------
 
+- Fixed dependencies : removed ``zope.tal`` and added ``zope.browserpage``.
+
+- ...
 
 3.14.0 (2011-03-02)
 -------------------

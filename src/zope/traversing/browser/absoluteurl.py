@@ -27,10 +27,12 @@ _insufficientContext = _("There isn't enough context to get URL information. "
                        "This is probably due to a bug in setting up location "
                        "information.")
 
-_safe = '@+' # Characters that we don't want to have quoted
+_safe = '@+'  # Characters that we don't want to have quoted
+
 
 def absoluteURL(ob, request):
     return zope.component.getMultiAdapter((ob, request), IAbsoluteURL)()
+
 
 class AbsoluteURL(BrowserView):
     implements(IAbsoluteURL)
@@ -92,7 +94,7 @@ class AbsoluteURL(BrowserView):
 
         if sameProxiedObjects(context, request.getVirtualHostRoot()) or \
                isinstance(context, Exception):
-            return ({'name':'', 'url': self.request.getApplicationURL()}, )
+            return ({'name': '', 'url': self.request.getApplicationURL()}, )
 
         base = tuple(zope.component.getMultiAdapter(
                 (container, request), IAbsoluteURL).breadcrumbs())
@@ -109,6 +111,7 @@ class AbsoluteURL(BrowserView):
                       }, )
 
         return base
+
 
 class SiteAbsoluteURL(BrowserView):
     implements(IAbsoluteURL)
@@ -138,9 +141,9 @@ class SiteAbsoluteURL(BrowserView):
         request = self.request
 
         if sameProxiedObjects(context, request.getVirtualHostRoot()):
-            return ({'name':'', 'url': self.request.getApplicationURL()}, )
+            return ({'name': '', 'url': self.request.getApplicationURL()}, )
 
-        base = ({'name':'', 'url': self.request.getApplicationURL()}, )
+        base = ({'name': '', 'url': self.request.getApplicationURL()}, )
 
         name = getattr(context, '__name__', None)
         if name:

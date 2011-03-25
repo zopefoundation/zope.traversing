@@ -25,6 +25,7 @@ from zope.traversing.interfaces import TraversalError
 from zope.publisher.interfaces import IPublishTraverse
 from zope.publisher.interfaces.browser import IBrowserPublisher
 
+
 class PublicationTraverser(object):
     """Traversal used for publication.
 
@@ -45,7 +46,7 @@ class PublicationTraverser(object):
         return ProxyFactory(ob)
 
     def traverseName(self, request, ob, name):
-        nm = name # the name to look up the object with
+        nm = name  # the name to look up the object with
 
         if name and name[:1] in '@+':
             # Process URI segment parameters.
@@ -92,9 +93,9 @@ class PublicationTraverser(object):
         # Remove double dots
         while '..' in path:
             l = path.index('..')
-            if l < 0 or l+2 > len(path):
+            if l < 0 or l + 2 > len(path):
                 break
-            del path[l:l+2]
+            del path[l:l + 2]
 
         pop = path.pop
 
@@ -119,8 +120,10 @@ class PublicationTraverser(object):
 
             ob = self.traversePath(request, ob, path)
 
+
 # alternate spelling
 PublicationTraverse = PublicationTraverser
+
 
 class PublicationTraverserWithoutProxy(PublicationTraverse):
 

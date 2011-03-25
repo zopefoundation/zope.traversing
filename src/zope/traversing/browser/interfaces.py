@@ -15,6 +15,7 @@
 """
 from zope.interface import Interface
 
+
 class IAbsoluteURL(Interface):
 
     def __unicode__():
@@ -35,6 +36,7 @@ class IAbsoluteURL(Interface):
         Name is the name to display for that segment of the breadcrumbs.
         URL is the link for that segment of the breadcrumbs.
         """
+
 
 class IAbsoluteURLAPI(Interface):
 

@@ -14,7 +14,7 @@
 """Convenience functions for traversing the object tree.
 """
 from zope.interface import moduleProvides
-from zope.location.interfaces import ILocationInfo, IRoot, LocationError
+from zope.location.interfaces import ILocationInfo, IRoot
 from zope.traversing.interfaces import ITraversalAPI, ITraverser
 
 
@@ -22,6 +22,7 @@ moduleProvides(ITraversalAPI)
 __all__ = tuple(ITraversalAPI)
 
 _marker = object()
+
 
 def joinPath(path, *args):
     """Join the given relative paths to the given path.
@@ -54,15 +55,18 @@ def joinPath(path, *args):
             raise ValueError("Leading or trailing slashes in path elements")
     return _normalizePath(path + u'/'.join(args))
 
+
 def getPath(obj):
     """Returns a string representing the physical path to the object.
     """
     return ILocationInfo(obj).getPath()
 
+
 def getRoot(obj):
     """Returns the root of the traversal for the given object.
     """
     return ILocationInfo(obj).getRoot()
+
 
 def traverse(object, path, default=_marker, request=None):
     """Traverse 'path' relative to the given object.
@@ -85,6 +89,7 @@ def traverse(object, path, default=_marker, request=None):
         return traverser.traverse(path, request=request)
     else:
         return traverser.traverse(path, default=default, request=request)
+
 
 def traverseName(obj, name, default=_marker, traversable=None, request=None):
     """Traverse a single step 'name' relative to the given object.
@@ -115,10 +120,12 @@ def traverseName(obj, name, default=_marker, traversable=None, request=None):
     else:
         return obj
 
+
 def getName(obj):
     """Get the name an object was traversed via
     """
     return ILocationInfo(obj).getName()
+
 
 def getParent(obj):
     """Returns the container the object was traversed via.
@@ -184,6 +191,7 @@ def _normalizePath(path):
         new_segments.append(segment)
 
     return prefix + u'/'.join(new_segments)
+
 
 def canonicalPath(path_or_object):
     """Returns a canonical absolute unicode path for the given path or object.

@@ -16,18 +16,17 @@
 from types import StringTypes
 
 import zope.interface
-import zope.component
 
 from zope.location.interfaces import ILocationInfo, LocationError
 from zope.traversing.interfaces import ITraversable, ITraverser
-
 from zope.traversing.namespace import namespaceLookup
-from zope.traversing.namespace import UnexpectedParameters
 from zope.traversing.namespace import nsParse
 
-from zope.location.traversing import RootPhysicallyLocatable # BBB
+from zope.location.traversing import RootPhysicallyLocatable  # BBB
+
 
 _marker = object()  # opaque marker that doesn't get security proxied
+
 
 class DefaultTraversable(object):
     """Traverses objects via attribute and item lookup"""
@@ -48,6 +47,7 @@ class DefaultTraversable(object):
             except (KeyError, TypeError):
                 pass
         raise LocationError(subject, name)
+
 
 class Traverser(object):
     """Provide traverse features"""
@@ -119,7 +119,7 @@ def traversePathElement(obj, name, further_path, default=_marker,
 
     if name == '..':
         return obj.__parent__
- 
+
     if name and name[:1] in '@+':
         ns, nm = nsParse(name)
         if ns:

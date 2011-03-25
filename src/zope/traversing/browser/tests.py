@@ -31,20 +31,26 @@ from zope.location.location import LocationProxy
 
 from zope.container.contained import contained
 
+
 class IRoot(Interface):
     pass
+
 
 class Root(object):
     implements(IRoot)
 
+
 class TrivialContent(object):
     """Trivial content object, used because instances of object are rocks."""
 
+
 class AdaptedContent(object):
     """A simple content object that has an ILocation adapter for it."""
-    
+
+
 class FooContent(object):
     """Class whose location will be provided by an adapter."""
+
 
 class FooLocation(object):
     """Adapts FooAdapter to the ILocation protocol."""
@@ -61,6 +67,7 @@ class FooLocation(object):
     @property
     def __parent__(self):
         return contained(TrivialContent(), Root(), name='bar')
+
 
 class TestAbsoluteURL(PlacelessSetup, TestCase):
 
@@ -79,7 +86,7 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
         # don't define a more specific adapter
         zope.component.provideAdapter(LocationProxy, (Interface,),
                                       ILocation)
-            
+
     def tearDown(self):
         PlacelessSetup.tearDown(self)
 
@@ -121,7 +128,6 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
                           {'name': 'c', 'url': 'http://127.0.0.1/a/b/c'},
                           ))
 
-
     def testParentButNoLocation(self):
         request = TestRequest()
 
@@ -141,7 +147,7 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
         self.assertEqual(str(view), 'http://127.0.0.1/a/b/c')
         self.assertEqual(absoluteURL(content3, request),
                          'http://127.0.0.1/a/b/c')
-    
+
     def testAdaptedContext(self):
         request = TestRequest()
 
@@ -164,17 +170,15 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
         # adapter
         request = TestRequest()
 
-        
         content = FooContent()
         content.__parent__ = Root()
         content.__name__ = 'foo'
-        
+
         view = getMultiAdapter((content, request), name='absolute_url')
         self.assertEqual(str(view), 'http://127.0.0.1/foo')
         self.assertEqual(absoluteURL(content, request),
                          'http://127.0.0.1/foo')
 
-        
     def testBasicContext_unicode(self):
         #Tests so that AbsoluteURL handle unicode names as well
         request = TestRequest()
@@ -289,7 +293,6 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
         self.assertEqual(str(view), 'http://127.0.0.1')
         self.assertEqual(absoluteURL(None, request), 'http://127.0.0.1')
 
-        
     def testVirtualHostingWithoutContextInformation(self):
         request = TestRequest()
         request._vh_root = contained(TrivialContent(), Root(), name='a')
@@ -301,5 +304,5 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
 def test_suite():
     return makeSuite(TestAbsoluteURL)
 
-if __name__=='__main__':
+if __name__ == '__main__':
     main(defaultTest='test_suite')

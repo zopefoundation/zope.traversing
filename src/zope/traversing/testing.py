@@ -28,6 +28,7 @@ from zope.traversing.browser import SiteAbsoluteURL, AbsoluteURL
 from zope.traversing.browser.interfaces import IAbsoluteURL
 from zope.traversing.namespace import etc
 
+
 def setUp():
     zope.component.provideAdapter(Traverser, (None,), ITraverser)
     zope.component.provideAdapter(DefaultTraversable, (None,), ITraversable)
@@ -49,6 +50,7 @@ def setUp():
 def browserView(for_, name, factory, providing=zope.interface.Interface):
     zope.component.provideAdapter(factory, (for_, IDefaultBrowserLayer),
                                   providing, name=name)
+
 
 def browserResource(name, factory, providing=zope.interface.Interface):
     zope.component.provideAdapter(factory, (IDefaultBrowserLayer,),

@@ -21,8 +21,8 @@ import zope.component
 import zope.interface
 from zope.i18n.interfaces import IModifiableUserPreferredLanguages
 from zope.component.interfaces import ComponentLookupError
-from zope.interface import providedBy, directlyProvides, directlyProvidedBy
-from zope.location.interfaces import IRoot, LocationError
+from zope.interface import providedBy, directlyProvides
+from zope.location.interfaces import LocationError
 from zope.publisher.interfaces.browser import IBrowserSkinType
 from zope.publisher.skinnable import applySkin
 from zope.security.proxy import removeSecurityProxy
@@ -34,8 +34,10 @@ from zope.traversing.interfaces import ITraversable
 class UnexpectedParameters(LocationError):
     "Unexpected namespace parameters were provided."
 
+
 class ExcessiveDepth(LocationError):
     "Too many levels of containment. We don't believe them."
+
 
 def namespaceLookup(ns, name, object, request=None):
     """Lookup a value from a namespace
@@ -114,6 +116,7 @@ def namespaceLookup(ns, name, object, request=None):
 
 namespace_pattern = re.compile('[+][+]([a-zA-Z0-9_]+)[+][+]')
 
+
 def nsParse(name):
     """Parse a namespace-qualified name into a namespace name and a
     name.  Returns the namespace name and a name.
@@ -154,11 +157,13 @@ def nsParse(name):
 
     return ns, name
 
+
 def getResource(site, name, request):
     resource = queryResource(site, name, request)
     if resource is None:
         raise LocationError(site, name)
     return resource
+
 
 def queryResource(site, name, request, default=None):
     resource = zope.component.queryAdapter(request, name=name)
@@ -173,6 +178,7 @@ def queryResource(site, name, request, default=None):
     r.__name__ = name
 
     return resource
+
 
 # ---- namespace processors below ----
 
@@ -193,6 +199,7 @@ class SimpleHandler(object):
           42
         """
         self.context = context
+
 
 class acquire(SimpleHandler):
     """Traversal adapter for the acquire namespace
@@ -262,6 +269,7 @@ class acquire(SimpleHandler):
 
         raise ExcessiveDepth(self.context, name)
 
+
 class attr(SimpleHandler):
 
     def traverse(self, name, ignored):
@@ -277,6 +285,7 @@ class attr(SimpleHandler):
         """
         return getattr(self.context, name)
 
+
 class item(SimpleHandler):
 
     def traverse(self, name, ignored):
@@ -290,6 +299,7 @@ class item(SimpleHandler):
               42
            """
         return self.context[name]
+
 
 class etc(SimpleHandler):
 
@@ -330,12 +340,14 @@ class view(object):
 
         return view
 
+
 class resource(view):
 
     def traverse(self, name, ignored):
         # The context is important here, since it becomes the parent of the
         # resource, which is needed to generate the absolute URL.
         return getResource(self.context, name, self.request)
+
 
 class lang(view):
 
@@ -344,6 +356,7 @@ class lang(view):
         languages = IModifiableUserPreferredLanguages(self.request)
         languages.setPreferredLanguages([name])
         return self.context
+
 
 class skin(view):
 
@@ -355,6 +368,7 @@ class skin(view):
             raise LocationError("++skin++%s" % name)
         applySkin(self.request, skin)
         return self.context
+
 
 class vh(view):
 
@@ -511,7 +525,7 @@ class debug(view):
                     # if we want to enable tracebacks when also trying to
                     # debug a different skin?
                     skin = zope.component.getUtility(IBrowserSkinType, 'Debug')
-                    directlyProvides(request, providedBy(request)+skin)
+                    directlyProvides(request, providedBy(request) + skin)
                 else:
                     raise ValueError("Unknown debug flag: %s" % flag)
             return self.context

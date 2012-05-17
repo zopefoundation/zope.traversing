@@ -16,13 +16,13 @@
 from unittest import TestCase, main, makeSuite
 
 import zope.component
-from zope.component import getMultiAdapter, adapts
+from zope.component import getMultiAdapter, adapter
 from zope.component.testing import PlacelessSetup
 from zope.traversing.browser.absoluteurl import absoluteURL
 from zope.traversing.browser.interfaces import IAbsoluteURL
 from zope.traversing.testing import browserView
 from zope.i18n.interfaces import IUserPreferredCharsets
-from zope.interface import Interface, implements
+from zope.interface import Interface, implementer
 from zope.interface.verify import verifyObject
 from zope.publisher.browser import TestRequest
 from zope.publisher.http import IHTTPRequest, HTTPCharsets
@@ -36,8 +36,9 @@ class IRoot(Interface):
     pass
 
 
+@implementer(IRoot)
 class Root(object):
-    implements(IRoot)
+    pass
 
 
 class TrivialContent(object):
@@ -52,10 +53,10 @@ class FooContent(object):
     """Class whose location will be provided by an adapter."""
 
 
+@implementer(ILocation)
+@adapter(FooContent)
 class FooLocation(object):
     """Adapts FooAdapter to the ILocation protocol."""
-    implements(ILocation)
-    adapts(FooContent)
 
     def __init__(self, context):
         self.context = context

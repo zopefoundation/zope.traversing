@@ -16,7 +16,7 @@
 from unittest import TestCase, main, makeSuite
 from zope.testing.cleanup import CleanUp
 from zope.component import provideAdapter
-from zope.interface import Interface, implements
+from zope.interface import Interface, implementer
 from zope.publisher.browser import TestRequest
 from zope.publisher.interfaces import IPublishTraverse
 from zope.publisher.interfaces import NotFound
@@ -144,15 +144,16 @@ class TestPublicationTraverser(CleanUp, TestCase):
 class IContent(Interface):
     pass
 
+@implementer(IContent)
 class Content(object):
-    implements(IContent)
+    pass
 
 class View(object):
     def __init__(self, name):
         self.name = name
 
+@implementer(ITraversable)
 class DummyViewTraverser(object):
-    implements(ITraversable)
 
     def __init__(self, content, request):
         self.content = content
@@ -160,8 +161,8 @@ class DummyViewTraverser(object):
     def traverse(self, name, furtherPath):
         return View(name)
 
+@implementer(IPublishTraverse)
 class DummyPublishTraverse(object):
-    implements(IPublishTraverse)
 
     def __init__(self, context, request):
         pass
@@ -169,8 +170,8 @@ class DummyPublishTraverse(object):
     def publishTraverse(self, request, name):
         return View(name)
 
+@implementer(IBrowserPublisher)
 class DummyBrowserPublisher(object):
-    implements(IBrowserPublisher)
 
     def __init__(self, context):
         self.context = removeSecurityProxy(context)

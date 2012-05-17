@@ -15,7 +15,7 @@
 """
 from unittest import TestCase, main, makeSuite
 from zope.testing.cleanup import CleanUp
-from zope.interface import Interface, implements
+from zope.interface import Interface, implementer
 from zope.publisher.browser import TestRequest
 from zope.traversing.namespace import view, resource
 from zope.traversing.testing import browserView, browserResource
@@ -23,8 +23,9 @@ from zope.traversing.testing import browserView, browserResource
 class IContent(Interface):
     pass
 
+@implementer(IContent)
 class Content(object):
-    implements(IContent)
+    pass
 
 class Resource(object):
 

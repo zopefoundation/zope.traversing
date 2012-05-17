@@ -16,7 +16,7 @@
 
 from zope.interface import Attribute
 from zope.interface import Interface
-from zope.interface import implements
+from zope.interface import implementer
 from zope.component.interfaces import IObjectEvent
 
 # BBB: Re-import symbols to their old location.
@@ -179,10 +179,10 @@ class IBeforeTraverseEvent(IObjectEvent):
     request = Attribute("The current request")
 
 
+@implementer(IBeforeTraverseEvent)
 class BeforeTraverseEvent(object):
     """An event which gets sent on publication traverse"""
 
-    implements(IBeforeTraverseEvent)
 
     def __init__(self, ob, request):
         self.object = ob

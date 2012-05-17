@@ -16,7 +16,7 @@
 from unittest import TestCase, main, makeSuite
 
 from zope.container.contained import contained
-from zope.interface import implements
+from zope.interface import implementer
 from zope.location.interfaces import ILocationInfo, IRoot
 from zope.site.site import LocalSiteManager
 from zope.site.site import SiteManagerContainer
@@ -25,8 +25,8 @@ from zope.testing.cleanup import CleanUp
 import zope.traversing.testing
 
 
+@implementer(IRoot)
 class Root(object):
-    implements(IRoot)
 
     __parent__ = None
 

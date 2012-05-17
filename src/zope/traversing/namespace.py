@@ -49,8 +49,9 @@ def namespaceLookup(ns, name, object, request=None):
 
       >>> class I(zope.interface.Interface):
       ...     'Test interface'
-      >>> class C(object):
-      ...     zope.interface.implements(I)
+      >>> @zope.interface.implementer(I)
+      ... class C(object):
+      ...     pass
 
     We'll register a simple testing adapter:
 
@@ -182,9 +183,8 @@ def queryResource(site, name, request, default=None):
 
 # ---- namespace processors below ----
 
+@zope.interface.implementer(ITraversable)
 class SimpleHandler(object):
-
-    zope.interface.implements(ITraversable)
 
     def __init__(self, context, request=None):
         """Simple handlers can be used as adapters or views
@@ -210,8 +210,8 @@ class acquire(SimpleHandler):
 
         Let's set up some example data:
 
-          >>> class testcontent(object):
-          ...     zope.interface.implements(ITraversable)
+          >>> @zope.interface.implementer(ITraversable)
+          ... class testcontent(object):
           ...     def traverse(self, name, remaining):
           ...         v = getattr(self, name, None)
           ...         if v is None:
@@ -324,9 +324,8 @@ class etc(SimpleHandler):
             raise LocationError(ob, name)
 
 
+@zope.interface.implementer(ITraversable)
 class view(object):
-
-    zope.interface.implements(ITraversable)
 
     def __init__(self, context, request):
         self.context = context

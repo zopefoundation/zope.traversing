@@ -15,7 +15,7 @@
 """
 import urllib
 import zope.component
-from zope.interface import implements
+from zope.interface import implementer
 from zope.location.interfaces import ILocation
 from zope.proxy import sameProxiedObjects
 from zope.publisher.browser import BrowserView
@@ -34,8 +34,8 @@ def absoluteURL(ob, request):
     return zope.component.getMultiAdapter((ob, request), IAbsoluteURL)()
 
 
+@implementer(IAbsoluteURL)
 class AbsoluteURL(BrowserView):
-    implements(IAbsoluteURL)
 
     def __unicode__(self):
         return urllib.unquote(self.__str__()).decode('utf-8')
@@ -113,8 +113,8 @@ class AbsoluteURL(BrowserView):
         return base
 
 
+@implementer(IAbsoluteURL)
 class SiteAbsoluteURL(BrowserView):
-    implements(IAbsoluteURL)
 
     def __unicode__(self):
         return urllib.unquote(self.__str__()).decode('utf-8')

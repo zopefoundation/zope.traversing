@@ -28,9 +28,9 @@ from zope.location.traversing import RootPhysicallyLocatable  # BBB
 _marker = object()  # opaque marker that doesn't get security proxied
 
 
+@zope.interface.implementer(ITraversable)
 class DefaultTraversable(object):
     """Traverses objects via attribute and item lookup"""
-    zope.interface.implements(ITraversable)
 
     def __init__(self, subject):
         self._subject = subject
@@ -49,10 +49,9 @@ class DefaultTraversable(object):
         raise LocationError(subject, name)
 
 
+@zope.interface.implementer(ITraverser)
 class Traverser(object):
     """Provide traverse features"""
-
-    zope.interface.implements(ITraverser)
 
     # This adapter can be used for any object.
 

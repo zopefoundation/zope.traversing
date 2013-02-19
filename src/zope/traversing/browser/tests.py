@@ -194,7 +194,7 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
                          'http://127.0.0.1/%D0%B9/%D1%82/%D0%B5/%D1%81')
         self.assertEqual(view(),
                          'http://127.0.0.1/%D0%B9/%D1%82/%D0%B5/%D1%81')
-        self.assertEqual(unicode(view),
+        self.assertEqual(view.__unicode__(),
                          u'http://127.0.0.1/\u0439/\u0442/\u0435/\u0441')
         self.assertEqual(absoluteURL(content, request),
                          'http://127.0.0.1/%D0%B9/%D1%82/%D0%B5/%D1%81')

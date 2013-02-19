@@ -17,8 +17,8 @@ class ZCMLDependencies(unittest.TestCase):
         res = zope.component.getMultiAdapter(
             (self, request), ITraversable, 'lang')
         import zope.traversing.namespace
-        self.failUnless(isinstance(res, zope.traversing.namespace.lang))
-        self.failUnless(res.context is self)
+        self.assertTrue(isinstance(res, zope.traversing.namespace.lang))
+        self.assertTrue(res.context is self)
 
 
 def test_suite():

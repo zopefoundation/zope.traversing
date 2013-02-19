@@ -13,13 +13,24 @@
 ##############################################################################
 """Traversal Namespace Tests
 """
+import re
 from unittest import main
 from doctest import DocTestSuite
 from zope.component.testing import setUp, tearDown
+from zope.testing.renormalizing import RENormalizing
+
+
 
 def test_suite():
+    checker = RENormalizing([
+        # Python 3 includes module name in exceptions
+        (re.compile(r"zope.location.interfaces.LocationError"),
+         "LocationError"),
+    ])
+
     return DocTestSuite('zope.traversing.namespace',
-                        setUp=setUp, tearDown=tearDown)
+                        setUp=setUp, tearDown=tearDown,
+                        checker=checker)
 
 if __name__ == '__main__':
     main(defaultTest='test_suite')

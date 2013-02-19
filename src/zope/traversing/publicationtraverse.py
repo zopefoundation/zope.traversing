@@ -14,8 +14,8 @@
 """Publication Traverser
 """
 __docformat__ = 'restructuredtext'
-from types import StringTypes
 
+import six
 from zope.component import queryMultiAdapter
 from zope.publisher.interfaces import NotFound
 from zope.security.checker import ProxyFactory
@@ -77,7 +77,7 @@ class PublicationTraverser(object):
 
     def traversePath(self, request, ob, path):
 
-        if isinstance(path, StringTypes):
+        if isinstance(path, six.string_types):
             path = path.split('/')
             if len(path) > 1 and not path[-1]:
                 # Remove trailing slash

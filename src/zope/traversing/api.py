@@ -13,6 +13,7 @@
 ##############################################################################
 """Convenience functions for traversing the object tree.
 """
+import six
 from zope.interface import moduleProvides
 from zope.location.interfaces import ILocationInfo, IRoot
 from zope.traversing.interfaces import ITraversalAPI, ITraverser
@@ -200,7 +201,7 @@ def canonicalPath(path_or_object):
 
     Raises ValueError if a badly formed path is given.
     """
-    if isinstance(path_or_object, (str, unicode)):
+    if isinstance(path_or_object, six.string_types):
         path = path_or_object
         if not path:
             raise ValueError("path must be non-empty: %s" % path)

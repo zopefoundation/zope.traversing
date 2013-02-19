@@ -13,8 +13,8 @@
 ##############################################################################
 """Adapters for the traversing mechanism
 """
-from types import StringTypes
 
+import six
 import zope.interface
 
 from zope.location.interfaces import ILocationInfo, LocationError
@@ -62,7 +62,7 @@ class Traverser(object):
         if not path:
             return self.context
 
-        if isinstance(path, StringTypes):
+        if isinstance(path, six.string_types):
             path = path.split('/')
             if len(path) > 1 and not path[-1]:
                 # Remove trailing slash

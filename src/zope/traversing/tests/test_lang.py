@@ -48,13 +48,13 @@ class Test(CleanUp, unittest.TestCase):
     def test_adapter(self):
         request = self.request
         browser_languages = IModifiableUserPreferredLanguages(request)
-        self.failUnlessEqual(["en"], browser_languages.getPreferredLanguages())
+        self.assertEqual(["en"], browser_languages.getPreferredLanguages())
 
         ob = object()
         ob2 = lang(ob, request).traverse('ru', ())
-        self.failUnless(ob is ob2)
-        self.failUnless(request.shifted)
-        self.failUnlessEqual(["ru"], browser_languages.getPreferredLanguages())
+        self.assertTrue(ob is ob2)
+        self.assertTrue(request.shifted)
+        self.assertEqual(["ru"], browser_languages.getPreferredLanguages())
 
 
 def test_suite():

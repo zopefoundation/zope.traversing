@@ -83,7 +83,7 @@ class TestVHNamespace(unittest.TestCase):
         ob = object()
 
         result = vh(ob, request).traverse(u'http:www.fubarco.com:80', ())
-        assert(isinstance(request._app_server, str))
+        self.assertTrue(isinstance(request._app_server, str), repr(request._app_server))
 
 
 def test_suite():

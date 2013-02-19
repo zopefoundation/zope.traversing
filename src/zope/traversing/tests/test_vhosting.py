@@ -15,7 +15,10 @@
 """
 import os
 import unittest
-from StringIO import StringIO
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 
 import transaction
 

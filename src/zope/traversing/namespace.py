@@ -17,6 +17,7 @@ __docformat__ = 'restructuredtext'
 
 import re
 
+import six
 import zope.component
 import zope.interface
 from zope.i18n.interfaces import IModifiableUserPreferredLanguages
@@ -73,7 +74,7 @@ def namespaceLookup(ns, name, object, request=None):
 
       >>> namespaceLookup('fiz', 'bar', C())    # doctest: +ELLIPSIS
       Traceback (most recent call last):
-      ...
+        ...
       LocationError: (<zope.traversing.namespace.C object at 0x...>, '++fiz++bar')
 
     We'll get the same thing if we provide a request:
@@ -82,7 +83,7 @@ def namespaceLookup(ns, name, object, request=None):
       >>> request = TestRequest()
       >>> namespaceLookup('foo', 'bar', C(), request)    # doctest: +ELLIPSIS
       Traceback (most recent call last):
-      ...
+        ...
       LocationError: (<zope.traversing.namespace.C object at 0x...>, '++foo++bar')
 
     We need to provide a view:
@@ -279,7 +280,7 @@ class attr(SimpleHandler):
 
           >>> ob = {'x': 1}
           >>> adapter = attr(ob)
-          >>> adapter.traverse('keys', ())()
+          >>> list(adapter.traverse('keys', ())())
           ['x']
 
         """
@@ -378,7 +379,11 @@ class vh(view):
         traversal_stack = request.getTraversalStack()
         app_names = []
 
-        name = name.encode('utf8')
+        if not six.PY3:
+            # `name` comes in as unicode, we need to make it a string
+            # so absolute URLs don't all become unicode.
+            name = name.encode('utf-8')
+
         if name:
             try:
                 proto, host, port = name.split(":")
@@ -434,7 +439,7 @@ class adapter(SimpleHandler):
           >>> try:
           ...     adapter.traverse('bob', ())
           ... except LocationError:
-          ...     print 'no adapter'
+          ...     print('no adapter')
           no adapter
 
         Clean up:
@@ -508,7 +513,7 @@ class debug(view):
             >>> try:
             ...     adapter.traverse('badflag', ())
             ... except ValueError:
-            ...     print 'unknown debugging flag'
+            ...     print('unknown debugging flag')
             unknown debugging flag
 
         """

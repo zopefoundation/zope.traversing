@@ -42,7 +42,7 @@ class Test(CleanUp, TestCase):
         ob = object()
         ob2 = skin(ob, request).traverse('foo', ())
         self.assertEqual(ob, ob2)
-        self.assert_(IFoo.providedBy(request))
+        self.assertTrue(IFoo.providedBy(request))
         self.assertEqual(request.shifted, 1)
 
     def test_missing_skin(self):

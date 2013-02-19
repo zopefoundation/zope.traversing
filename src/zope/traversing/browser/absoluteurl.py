@@ -13,7 +13,12 @@
 ##############################################################################
 """Absolute URL View components
 """
-import urllib
+try:
+    from urllib import quote as quote, unquote
+except ImportError:
+    from urllib.parse import quote_from_bytes as quote
+    from urllib.parse import unquote_to_bytes as unquote
+
 import zope.component
 from zope.interface import implementer
 from zope.location.interfaces import ILocation
@@ -38,7 +43,7 @@ def absoluteURL(ob, request):
 class AbsoluteURL(BrowserView):
 
     def __unicode__(self):
-        return urllib.unquote(self.__str__()).decode('utf-8')
+        return unquote(self.__str__()).decode('utf-8')
 
     def __str__(self):
         context = self.context
@@ -75,7 +80,7 @@ class AbsoluteURL(BrowserView):
             raise TypeError(_insufficientContext)
 
         if name:
-            url += '/' + urllib.quote(name.encode('utf-8'), _safe)
+            url += '/' + quote(name.encode('utf-8'), _safe)
 
         return url
 
@@ -106,8 +111,7 @@ class AbsoluteURL(BrowserView):
         if name:
             base += ({'name': name,
                       'url': ("%s/%s" % (base[-1]['url'],
-                                         urllib.quote(name.encode('utf-8'),
-                                                      _safe)))
+                                         quote(name.encode('utf-8'), _safe)))
                       }, )
 
         return base
@@ -117,7 +121,7 @@ class AbsoluteURL(BrowserView):
 class SiteAbsoluteURL(BrowserView):
 
     def __unicode__(self):
-        return urllib.unquote(self.__str__()).decode('utf-8')
+        return unquote(self.__str__()).decode('utf-8')
 
     def __str__(self):
         context = self.context
@@ -129,7 +133,7 @@ class SiteAbsoluteURL(BrowserView):
         url = request.getApplicationURL()
         name = getattr(context, '__name__', None)
         if name:
-            url += '/' + urllib.quote(name.encode('utf-8'), _safe)
+            url += '/' + quote(name.encode('utf-8'), _safe)
 
         return url
 
@@ -149,8 +153,7 @@ class SiteAbsoluteURL(BrowserView):
         if name:
             base += ({'name': name,
                       'url': ("%s/%s" % (base[-1]['url'],
-                                         urllib.quote(name.encode('utf-8'),
-                                                      _safe)))
+                                         quote(name.encode('utf-8'), _safe)))
                       }, )
 
         return base

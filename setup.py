@@ -43,7 +43,7 @@ def test_suite():
 
 
 setup(name='zope.traversing',
-      version='4.0.0a1',
+      version='4.0.0.dev0',
       url='http://pypi.python.org/pypi/zope.traversing',
       license='ZPL 2.1',
       author='Zope Foundation and Contributors',

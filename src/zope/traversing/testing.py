@@ -29,7 +29,8 @@ from zope.traversing.browser.interfaces import IAbsoluteURL
 from zope.traversing.namespace import etc
 
 
-def setUp():
+# BBB: Kept for backward-compatibility, in case some package depends on it.
+def setUp(): #pragma: nocover
     zope.component.provideAdapter(Traverser, (None,), ITraverser)
     zope.component.provideAdapter(DefaultTraversable, (None,), ITraversable)
     zope.component.provideAdapter(LocationPhysicallyLocatable,

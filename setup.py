@@ -75,7 +75,6 @@ setup(name='zope.traversing',
           'zope.container',
           'zope.pagetemplate',
           'zope.security[zcml]>=3.8',
-          'zope.site',
           'zope.testing',
           ]),
       install_requires=[

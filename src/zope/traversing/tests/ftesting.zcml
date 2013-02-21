@@ -19,7 +19,7 @@
   <include package="zope.traversing.browser" />
 
   <browser:page
-      for="zope.site.interfaces.IFolder"
+      for="zope.traversing.tests.test_vhosting.IFolder"
       permission="zope.View"
       class="zope.traversing.tests.test_vhosting.MyFolderPage"
       name="index.html" attribute="index"

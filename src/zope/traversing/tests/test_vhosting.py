@@ -22,9 +22,13 @@ except ImportError:
 
 import transaction
 
+import zope.interface
 from zope.browserresource.resource import Resource
 from zope.configuration import xmlconfig
+from zope.container import btree
 from zope.container.contained import Contained
+from zope.container.interfaces import IContainer
+from zope.location.interfaces import IRoot
 from zope.pagetemplate.pagetemplate import PageTemplate
 from zope.pagetemplate.engine import AppPT
 from zope.publisher.browser import BrowserRequest
@@ -32,9 +36,8 @@ from zope.publisher.publish import publish
 from zope.publisher.skinnable import setDefaultSkin
 from zope.security.checker import defineChecker, NamesChecker, NoProxy
 from zope.security.checker import _checkers, undefineChecker
-from zope.site.folder import Folder
-from zope.site.folder import rootFolder
 from zope.testing.cleanup import cleanUp
+
 from zope.traversing.api import traverse
 from zope.traversing.testing import browserResource
 
@@ -42,6 +45,18 @@ from zope.traversing.testing import browserResource
 class MyObj(Contained):
     def __getitem__(self, key):
         return traverse(self, '/foo/bar/' + key)
+
+
+class IFolder(IContainer):
+    pass
+
+@zope.interface.implementer(IFolder)
+class Folder(btree.BTreeContainer):
+    pass
+
+@zope.interface.implementer(IRoot)
+class RootFolder(Folder):
+    pass
 
 
 class MyPageTemplate(AppPT, PageTemplate):
@@ -80,8 +95,10 @@ class TestVirtualHosting(unittest.TestCase):
     def setUp(self):
         f = os.path.join(os.path.split(__file__)[0], 'ftesting.zcml')
         xmlconfig.file(f)
-        self.app = rootFolder()
         defineChecker(MyObj, NoProxy)
+        defineChecker(RootFolder, NoProxy)
+        defineChecker(Folder, NoProxy)
+        self.app = RootFolder()
 
     def tearDown(self):
         undefineChecker(MyObj)
@@ -162,11 +179,11 @@ class TestVirtualHosting(unittest.TestCase):
         # Only register the checker once, so that multiple test runs pass.
         if Resource not in _checkers:
             defineChecker(Resource, NamesChecker(['__call__']))
-        self.addPage('/foo/bar/pt',
+        self.addPage(u'/foo/bar/pt',
                      u'<span tal:replace="context/++resource++quux" />')
-        self.verify('/foo/bar/pt', 'http://localhost/@@/quux')
-        self.verify('/foo/++vh++https:localhost:443/fake/folders/++/bar/pt',
-                    'https://localhost/fake/folders/@@/quux')
+        self.verify(u'/foo/bar/pt', u'http://localhost/@@/quux')
+        self.verify(u'/foo/++vh++https:localhost:443/fake/folders/++/bar/pt',
+                    u'https://localhost/fake/folders/@@/quux')
 
     def createFolders(self, path):
         """addFolders('/a/b/c/d') would traverse and/or create three nested

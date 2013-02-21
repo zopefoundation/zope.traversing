@@ -5,7 +5,12 @@ Changes
 4.0.0dev (unreleased)
 ---------------------
 
-- Nothing changed yet.
+- Removed ``zope.pagetemplate`` testing dependency to break another circular
+  dependency.
+
+- Removed ``zope.browserpage`` (ZCML) dependency by using low-level directives.
+
+- Removed ``zope.site`` testing dependency.
 
 
 4.0.0a1 (2013-02-20)
@@ -41,8 +46,8 @@ Changes
 - When a ``__parent__`` attribute is available on an object, it is
   always used for absolute URL construction, and no ILocation adapter
   lookup is performed for it. This was the previous behavior but was
-  broken (around 3.5?) due to dependency refactoring. 
- 
+  broken (around 3.5?) due to dependency refactoring.
+
   If the object provides no ``__parent__`` then an ILocation adapter
   lookup will be performed. This will always succeed as zope.location
   provides a default LocationProxy for everything, but more specific
@@ -221,7 +226,7 @@ Changes
 
 - Added a traverer for ++skin++ for XMLRPC skins (IXMLRPCSkinType). This also
   means that the normal ++skin++ namespace handler is only bound to
-  IBrowserRequest. 
+  IBrowserRequest.
 
 - Resolved the dependency on zope.app.applicationcontrol by importing the
   application controller only if the package is available.

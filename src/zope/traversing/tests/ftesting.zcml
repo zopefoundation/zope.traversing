@@ -5,7 +5,6 @@
    package="zope.traversing"
    >
 
-  <include package="zope.browserpage" file="meta.zcml" />
   <include package="zope.publisher" file="meta.zcml" />
   <include package="zope.security" file="meta.zcml" />
 
@@ -18,24 +17,33 @@
   <browser:defaultView name="index.html" />
   <include package="zope.traversing.browser" />
 
-  <browser:page
-      for="zope.traversing.tests.test_vhosting.IFolder"
-      permission="zope.View"
-      class="zope.traversing.tests.test_vhosting.MyFolderPage"
-      name="index.html" attribute="index"
-      />
-
-  <browser:page
+  <view
       name="index.html"
-      for="zope.traversing.tests.test_vhosting.MyPageTemplate"
-      class="zope.traversing.tests.test_vhosting.MyPageEval"
-      attribute="index"
+      for="zope.traversing.tests.test_vhosting.IFolder"
+      factory="zope.traversing.tests.test_vhosting.MyFolderPage"
+      type="zope.publisher.interfaces.browser.IDefaultBrowserLayer"
       permission="zope.View"
       />
 
-  <class class="zope.traversing.tests.test_vhosting.MyPageTemplate">
+  <class class="zope.traversing.tests.test_vhosting.MyFolderPage">
+    <allow attributes="__call__" />
+  </class>
+
+  <view
+      name="index.html"
+      for="zope.traversing.tests.test_vhosting.MyTalesPage"
+      factory="zope.traversing.tests.test_vhosting.MyPageEval"
+      type="zope.publisher.interfaces.browser.IDefaultBrowserLayer"
+      permission="zope.View"
+      />
+
+  <class class="zope.traversing.tests.test_vhosting.MyPageEval">
+    <allow attributes="__call__" />
+  </class>
+
+  <class class="zope.traversing.tests.test_vhosting.MyTalesPage">
     <factory
-        id="zope.traversing.tests.test_vhosting.MyPageTemplate"
+        id="zope.traversing.tests.test_vhosting.MyTalesPage"
         />
     <require
         permission="zope.View"

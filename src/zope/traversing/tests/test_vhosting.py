@@ -29,15 +29,16 @@ from zope.container import btree
 from zope.container.contained import Contained
 from zope.container.interfaces import IContainer
 from zope.location.interfaces import IRoot
-from zope.pagetemplate.pagetemplate import PageTemplate
-from zope.pagetemplate.engine import AppPT
-from zope.publisher.browser import BrowserRequest
+from zope.publisher.browser import BrowserRequest, BrowserView
 from zope.publisher.publish import publish
 from zope.publisher.skinnable import setDefaultSkin
 from zope.security.checker import defineChecker, NamesChecker, NoProxy
 from zope.security.checker import _checkers, undefineChecker
+from zope.tales import expressions
+from zope.tales.tales import ExpressionEngine
 from zope.testing.cleanup import cleanUp
 
+from zope.traversing.adapters import traversePathElement
 from zope.traversing.api import traverse
 from zope.traversing.testing import browserResource
 
@@ -59,35 +60,74 @@ class RootFolder(Folder):
     pass
 
 
-class MyPageTemplate(AppPT, PageTemplate):
+# Copy some code from zope.pagetemplate to avoid the depedency (break circle)
+class ZopeTraverser(object):
+
+    def __call__(self, object, path_items, econtext):
+        request = econtext._vars_stack[0].get('request', None)
+        path_items = list(path_items)
+        path_items.reverse()
+
+        while path_items:
+            name = path_items.pop()
+            if getattr(object, '__class__', None) == dict:
+                object = object[name]
+            else:
+                object = traversePathElement(object, name, path_items,
+                                             request=request)
+        return object
+zopeTraverser = ZopeTraverser()
+
+class PathExpr(expressions.PathExpr):
+
+    def __init__(self, name, expr, engine):
+        super(PathExpr, self).__init__(name, expr, engine, zopeTraverser)
+
+def Engine():
+    e = ExpressionEngine()
+    for pt in PathExpr._default_type_names:
+        e.registerType(pt, PathExpr)
+    return e
+
+Engine = Engine()
+
+class MyTalesPage(object):
+
+    def __init__(self, source):
+        self.source = source
 
     def pt_getContext(self, instance, request, **_kw):
         # instance is a View component
-        namespace = super(MyPageTemplate, self).pt_getContext(**_kw)
+        namespace = {}
         namespace['template'] = self
         namespace['request'] = request
         namespace['container'] = namespace['context'] = instance
         return namespace
 
     def render(self, instance, request, *args, **kw):
-        return self.pt_render(self.pt_getContext(instance, request))
+        context = self.pt_getContext(instance, request)
+        code = Engine.compile(self.source)
+        return str(code(Engine.getContext(context)))
 
 
-class MyPageEval(object):
+class MyPageEval(BrowserView):
 
-    def index(self, **kw):
+    def __call__(self, **kw):
         """Call a Page Template"""
         template = self.context
         request = self.request
         return template.render(template.__parent__, request, **kw)
 
+    index = __call__
 
-class MyFolderPage(object):
+class MyFolderPage(BrowserView):
 
-    def index(self, **kw):
+    def __call__(self, **kw):
         """My folder page"""
         self.request.response.redirect('index.html')
         return ''
+
+    index = __call__
 
 
 class TestVirtualHosting(unittest.TestCase):
@@ -120,7 +160,7 @@ class TestVirtualHosting(unittest.TestCase):
         return publish(self.makeRequest(path)).response
 
     def test_request_url(self):
-        self.addPage('/pt', u'<span tal:replace="request/URL"/>')
+        self.addPage('/pt', u'request/URL')
         self.verify('/pt', 'http://localhost/pt/index.html')
         self.verify('/++vh++/++/pt',
                     'http://localhost/pt/index.html')
@@ -129,7 +169,7 @@ class TestVirtualHosting(unittest.TestCase):
         self.verify('/++vh++https:localhost:443/fake/folders/++/pt',
                     'https://localhost/fake/folders/pt/index.html')
 
-        self.addPage('/foo/bar/pt', u'<span tal:replace="request/URL"/>')
+        self.addPage('/foo/bar/pt', u'request/URL')
         self.verify('/foo/bar/pt', 'http://localhost/foo/bar/pt/index.html')
         self.verify('/foo/bar/++vh++/++/pt',
                     'http://localhost/pt/index.html')
@@ -147,7 +187,7 @@ class TestVirtualHosting(unittest.TestCase):
                             'https://localhost/bar/index.html')
 
     def test_absolute_url(self):
-        self.addPage('/pt', u'<span tal:replace="context/@@absolute_url"/>')
+        self.addPage('/pt', u'context/@@absolute_url')
         self.verify('/pt', 'http://localhost')
         self.verify('/++vh++/++/pt',
                     'http://localhost')
@@ -157,7 +197,7 @@ class TestVirtualHosting(unittest.TestCase):
                     'https://localhost/fake/folders')
 
         self.addPage('/foo/bar/pt',
-                     u'<span tal:replace="context/@@absolute_url"/>')
+                     u'context/@@absolute_url')
         self.verify('/foo/bar/pt', 'http://localhost/foo/bar')
         self.verify('/foo/bar/++vh++/++/pt',
                     'http://localhost')
@@ -169,7 +209,7 @@ class TestVirtualHosting(unittest.TestCase):
     def test_absolute_url_absolute_traverse(self):
         self.createObject('/foo/bar/obj', MyObj())
         self.addPage('/foo/bar/pt',
-                     u'<span tal:replace="container/obj/pt/@@absolute_url"/>')
+                     u'container/obj/pt/@@absolute_url')
         self.verify('/foo/bar/pt', 'http://localhost/foo/bar/pt')
         self.verify('/foo/++vh++https:localhost:443/++/bar/pt',
                     'https://localhost/bar/pt')
@@ -180,7 +220,7 @@ class TestVirtualHosting(unittest.TestCase):
         if Resource not in _checkers:
             defineChecker(Resource, NamesChecker(['__call__']))
         self.addPage(u'/foo/bar/pt',
-                     u'<span tal:replace="context/++resource++quux" />')
+                     u'context/++resource++quux')
         self.verify(u'/foo/bar/pt', u'http://localhost/@@/quux')
         self.verify(u'/foo/++vh++https:localhost:443/fake/folders/++/bar/pt',
                     u'https://localhost/fake/folders/@@/quux')
@@ -207,8 +247,7 @@ class TestVirtualHosting(unittest.TestCase):
         transaction.commit()
 
     def addPage(self, path, content):
-        page = MyPageTemplate()
-        page.pt_edit(content, 'text/html')
+        page = MyTalesPage(content)
         self.createObject(path, page)
 
     def verify(self, path, content):
@@ -254,6 +293,7 @@ class DummyPublication:
             view = queryMultiAdapter((ob, request), name=name)
             if view is None:
                 from zope.publisher.interfaces import NotFound
+                import pdb; pdb.set_trace()
                 raise NotFound(ob, name)
             return view
         else:

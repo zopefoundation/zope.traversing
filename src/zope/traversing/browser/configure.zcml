@@ -3,7 +3,6 @@
     xmlns:browser="http://namespaces.zope.org/browser">
 
   <include file="meta.zcml" package="zope.component" />
-  <include file="meta.zcml" package="zope.browserpage" />
 
   <view
       for="*"
@@ -39,20 +38,28 @@
       provides=".interfaces.IAbsoluteURL"
       />
 
-  <browser:page
+  <view
       for="*"
       name="absolute_url"
-      class=".AbsoluteURL"
+      factory=".AbsoluteURL"
+      type="zope.publisher.interfaces.browser.IDefaultBrowserLayer"
       permission="zope.Public"
-      allowed_interface=".interfaces.IAbsoluteURL"
       />
 
-  <browser:page
+  <class class=".AbsoluteURL">
+    <allow interface=".interfaces.IAbsoluteURL" />
+  </class>
+
+  <view
       for="zope.location.interfaces.IRoot"
       name="absolute_url"
-      class=".SiteAbsoluteURL"
+      factory=".SiteAbsoluteURL"
+      type="zope.publisher.interfaces.browser.IDefaultBrowserLayer"
       permission="zope.Public"
-      allowed_interface=".interfaces.IAbsoluteURL"
       />
+
+  <class class=".SiteAbsoluteURL">
+    <allow interface=".interfaces.IAbsoluteURL" />
+  </class>
 
 </configure>

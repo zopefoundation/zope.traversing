@@ -2,8 +2,8 @@
 Changes
 =======
 
-4.0.0dev (unreleased)
----------------------
+4.0.0a2 (2013-02-21)
+--------------------
 
 - Removed ``zope.container`` testing dependency to break another circular
   dependency.

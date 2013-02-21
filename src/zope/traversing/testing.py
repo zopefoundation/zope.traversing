@@ -20,7 +20,7 @@ import zope.interface
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 from zope.location.traversing \
     import LocationPhysicallyLocatable, RootPhysicallyLocatable
-from zope.location.interfaces import ILocationInfo, IRoot
+from zope.location.interfaces import IContained, ILocationInfo, IRoot
 from zope.traversing.interfaces import ITraversable, ITraverser
 from zope.traversing.adapters import DefaultTraversable
 from zope.traversing.adapters import Traverser
@@ -28,6 +28,39 @@ from zope.traversing.browser import SiteAbsoluteURL, AbsoluteURL
 from zope.traversing.browser.interfaces import IAbsoluteURL
 from zope.traversing.namespace import etc
 
+@zope.interface.implementer(IContained)
+class Contained(object):
+    __parent__ = None
+    __name__ = None
+
+@zope.interface.implementer(IContained)
+class ContainedProxy(object):
+    __parent__ = None
+    __name__ = None
+    __obj__ = None
+
+    def __init__(self, obj):
+        self.__obj__ = obj
+
+    def __getattr__(self, name):
+        return getattr(self.__obj__, name)
+
+    def __setattr__(self, name, value):
+        if name in ['__parent__', '__name__', '__obj__']:
+            self.__dict__[name] = value
+            return
+        setattr(self.__obj__, name, value)
+
+    def __eq__(self, value):
+        return self.__obj__ == value
+
+
+def contained(obj, root, name=None):
+    if not IContained.providedBy(obj):
+        obj = ContainedProxy(obj)
+    obj.__parent__ = root
+    obj.__name__ = name
+    return obj
 
 # BBB: Kept for backward-compatibility, in case some package depends on it.
 def setUp(): #pragma: nocover

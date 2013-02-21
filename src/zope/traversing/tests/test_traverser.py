@@ -30,9 +30,7 @@ from zope.security.management import newInteraction, endInteraction
 
 from zope.traversing.adapters import Traverser, DefaultTraversable
 from zope.traversing.interfaces import ITraversable, ITraverser
-
-from zope.container.contained import Contained, contained
-
+from zope.traversing.testing import contained, Contained
 
 class ParticipationStub(object):
 

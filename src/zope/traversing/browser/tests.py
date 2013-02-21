@@ -29,7 +29,7 @@ from zope.publisher.http import IHTTPRequest, HTTPCharsets
 from zope.location.interfaces import ILocation
 from zope.location.location import LocationProxy
 
-from zope.container.contained import contained
+from zope.traversing.testing import contained, Contained
 
 
 class IRoot(Interface):
@@ -37,7 +37,7 @@ class IRoot(Interface):
 
 
 @implementer(IRoot)
-class Root(object):
+class Root(Contained):
     pass
 
 

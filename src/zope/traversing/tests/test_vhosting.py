@@ -14,22 +14,26 @@
 """Functional tests for virtual hosting.
 """
 import os
+import transaction
 import unittest
 try:
     from StringIO import StringIO
 except ImportError:
     from io import StringIO
 
-import transaction
+try:
+    from UserDict import UserDict
+except ImportError:
+    from collections import UserDict
 
+import zope.component
 import zope.interface
 from zope.browserresource.resource import Resource
 from zope.configuration import xmlconfig
-from zope.container import btree
-from zope.container.contained import Contained
-from zope.container.interfaces import IContainer
 from zope.location.interfaces import IRoot
 from zope.publisher.browser import BrowserRequest, BrowserView
+from zope.publisher.interfaces import NotFound
+from zope.publisher.interfaces.browser import IBrowserPublisher
 from zope.publisher.publish import publish
 from zope.publisher.skinnable import setDefaultSkin
 from zope.security.checker import defineChecker, NamesChecker, NoProxy
@@ -40,20 +44,32 @@ from zope.testing.cleanup import cleanUp
 
 from zope.traversing.adapters import traversePathElement
 from zope.traversing.api import traverse
-from zope.traversing.testing import browserResource
+from zope.traversing.testing import browserResource, Contained, contained
 
 
 class MyObj(Contained):
     def __getitem__(self, key):
         return traverse(self, '/foo/bar/' + key)
 
-
-class IFolder(IContainer):
+class IFolder(zope.interface.Interface):
     pass
 
-@zope.interface.implementer(IFolder)
-class Folder(btree.BTreeContainer):
-    pass
+@zope.interface.implementer(IFolder, IBrowserPublisher)
+class Folder(Contained, UserDict):
+    def __init__(self):
+        UserDict.__init__(self, {})
+
+    def __setitem__(self, name, value):
+        value.__parent__ = self
+        value.__name__ = name
+        UserDict.__setitem__(self, name, value)
+
+    def publishTraverse(self, request, name):
+        subob = self.get(name, None)
+        if subob is None:
+            raise NotFound(self.context, name, request)
+        return subob
+
 
 @zope.interface.implementer(IRoot)
 class RootFolder(Folder):
@@ -142,6 +158,8 @@ class TestVirtualHosting(unittest.TestCase):
 
     def tearDown(self):
         undefineChecker(MyObj)
+        undefineChecker(RootFolder)
+        undefineChecker(Folder)
         cleanUp()
 
     def makeRequest(self, path=''):
@@ -253,7 +271,7 @@ class TestVirtualHosting(unittest.TestCase):
     def verify(self, path, content):
         result = self.publish(path)
         self.assertEquals(result.getStatus(), 200)
-        self.assertEquals(result.consumeBody(), content)
+        self.assertEquals(result.consumeBody().decode(), content)
 
     def verifyRedirect(self, path, location):
         result = self.publish(path)

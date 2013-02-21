@@ -5,6 +5,9 @@ Changes
 4.0.0dev (unreleased)
 ---------------------
 
+- Removed ``zope.container`` testing dependency to break another circular
+  dependency.
+
 - Removed ``zope.pagetemplate`` testing dependency to break another circular
   dependency.
 

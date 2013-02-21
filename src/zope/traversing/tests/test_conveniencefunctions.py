@@ -23,11 +23,10 @@ from zope.location.traversing \
 from zope.location.interfaces import ILocationInfo, IRoot, LocationError
 from zope.security.proxy import Proxy
 from zope.security.checker import selectChecker
+
 from zope.traversing.adapters import Traverser, DefaultTraversable
 from zope.traversing.interfaces import ITraversable, ITraverser
-
-from zope.container.contained import contained
-
+from zope.traversing.testing import contained, Contained
 
 class C(object):
     __parent__ = None

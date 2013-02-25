@@ -162,6 +162,16 @@ class UnrestrictedTraverseTests(PlacelessSetup, unittest.TestCase):
         self.assertRaises(LocationError, tr.traverse, 'foo/baz')
 
 
+class ExceptionRaiser(C):
+    @property
+    def valueerror(self):
+        raise ValueError('booom')
+
+    @property
+    def attributeerror(self):
+        raise AttributeError('booom')
+
+
 class RestrictedTraverseTests(PlacelessSetup, unittest.TestCase):
     _oldPolicy = None
     _deniedNames = ()
@@ -210,6 +220,24 @@ class RestrictedTraverseTests(PlacelessSetup, unittest.TestCase):
         self.assertEquals(tr.traverse(('folder', '..', 'folder')),
                           folder)
         self.assertEquals(tr.traverse(('folder',)), folder)
+
+    def testException(self):
+        # nail the fact that AttributeError raised in a @property
+        # decorated method gets masked by traversal
+        self.root.foobar = ExceptionRaiser('foobar')
+
+        endInteraction()
+        newInteraction(ParticipationStub('no one'))
+        tr = Traverser(self.root)
+
+        # AttributeError becomes LocationError if there's no __getitem__
+        # on the object
+        self.assertRaises(LocationError, tr.traverse,
+            ('foobar', 'attributeerror'))
+        # Other exceptions raised as usual
+        self.assertRaises(ValueError, tr.traverse,
+            ('foobar', 'valueerror'))
+
 
 class DefaultTraversableTests(unittest.TestCase):
     def testImplementsITraversable(self):

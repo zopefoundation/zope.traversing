@@ -49,6 +49,7 @@ TESTS_REQUIRE = [
     'zope.security[zcml]>=3.8',
     'zope.tales',
     'zope.testing',
+    'zope.testrunner'
     ]
 
 setup(name='zope.traversing',

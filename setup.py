@@ -22,6 +22,7 @@ import os
 import sys
 from setuptools import setup, find_packages
 
+
 long_description = (open('README.txt').read() +
                     '\n\n' +
                     open('CHANGES.txt').read())
@@ -50,17 +51,18 @@ TESTS_REQUIRE = [
     'zope.tales',
     'zope.testing',
     'zope.testrunner'
-    ]
+]
 
-setup(name='zope.traversing',
-      version='4.0.0a4.dev0',
-      url='http://pypi.python.org/pypi/zope.traversing',
-      license='ZPL 2.1',
-      author='Zope Foundation and Contributors',
-      author_email='zope-dev@zope.org',
-      description="Resolving paths in the object hierarchy",
-      long_description=long_description,
-      classifiers=[
+setup(
+    name='zope.traversing',
+    version='4.0.0a4.dev0',
+    url='http://pypi.python.org/pypi/zope.traversing',
+    license='ZPL 2.1',
+    author='Zope Foundation and Contributors',
+    author_email='zope-dev@zope.org',
+    description="Resolving paths in the object hierarchy",
+    long_description=long_description,
+    classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Zope Public License',
@@ -76,26 +78,26 @@ setup(name='zope.traversing',
         'Operating System :: OS Independent',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Software Development',
-        ],
-      packages=find_packages('src'),
-      package_dir = {'': 'src'},
-      namespace_packages=['zope',],
-      extras_require = dict(test=TESTS_REQUIRE),
-      install_requires=[
-          'setuptools',
-          'six',
-          'transaction',
-          'zope.component',
-          'zope.i18n',
-          'zope.i18nmessageid',
-          'zope.interface>=4.0.4',
-          'zope.location>=3.7.0',
-          'zope.proxy',
-          'zope.publisher',
-          'zope.security',
-          ],
-      tests_require=TESTS_REQUIRE,
-      test_suite='__main__.test_suite',
-      include_package_data = True,
-      zip_safe = False,
-      )
+    ],
+    packages=find_packages('src'),
+    package_dir={'': 'src'},
+    namespace_packages=['zope'],
+    extras_require=dict(test=TESTS_REQUIRE),
+    install_requires=[
+        'setuptools',
+        'six',
+        'transaction',
+        'zope.component',
+        'zope.i18n',
+        'zope.i18nmessageid',
+        'zope.interface>=4.0.4',
+        'zope.location>=3.7.0',
+        'zope.proxy',
+        'zope.publisher',
+        'zope.security',
+    ],
+    tests_require=TESTS_REQUIRE,
+    test_suite='__main__.test_suite',
+    include_package_data=True,
+    zip_safe=False,
+)

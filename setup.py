@@ -27,9 +27,9 @@ def read(filename):
     with open(filename) as f:
         return f.read()
 
-long_description = (read('README.txt') +
+long_description = (read('README.rst') +
                     '\n\n' +
-                    read('CHANGES.txt'))
+                    read('CHANGES.rst'))
 
 
 def test_suite():

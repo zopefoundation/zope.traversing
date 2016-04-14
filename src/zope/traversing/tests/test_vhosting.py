@@ -270,13 +270,13 @@ class TestVirtualHosting(unittest.TestCase):
 
     def verify(self, path, content):
         result = self.publish(path)
-        self.assertEquals(result.getStatus(), 200)
-        self.assertEquals(result.consumeBody().decode(), content)
+        self.assertEqual(result.getStatus(), 200)
+        self.assertEqual(result.consumeBody().decode(), content)
 
     def verifyRedirect(self, path, location):
         result = self.publish(path)
-        self.assertEquals(result.getStatus(), 302)
-        self.assertEquals(result.getHeader('Location'), location)
+        self.assertEqual(result.getStatus(), 302)
+        self.assertEqual(result.getHeader('Location'), location)
 
 
 class DummyPublication:

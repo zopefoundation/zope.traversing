@@ -53,7 +53,7 @@ class TraverserTests(PlacelessSetup, unittest.TestCase):
         self.tr = Traverser(self.item)
 
     def testImplementsITraverser(self):
-        self.failUnless(ITraverser.providedBy(self.tr))
+        self.assertTrue(ITraverser.providedBy(self.tr))
 
     def testVerifyInterfaces(self):
         for interface in implementedBy(Traverser):
@@ -100,36 +100,33 @@ class UnrestrictedTraverseTests(PlacelessSetup, unittest.TestCase):
         tr = self.tr
         item = self.item
 
-        self.assertEquals(tr.traverse('/folder/item'), item)
-        self.assertEquals(tr.traverse('folder/item'), item)
-        self.assertEquals(tr.traverse('/folder/item/'), item)
+        self.assertEqual(tr.traverse('/folder/item'), item)
+        self.assertEqual(tr.traverse('folder/item'), item)
+        self.assertEqual(tr.traverse('/folder/item/'), item)
 
     def testSimplePathUnicode(self):
         tr = self.tr
         item = self.item
 
-        self.assertEquals(tr.traverse(u'/folder/item'), item)
-        self.assertEquals(tr.traverse(u'folder/item'), item)
-        self.assertEquals(tr.traverse(u'/folder/item/'), item)
+        self.assertEqual(tr.traverse(u'/folder/item'), item)
+        self.assertEqual(tr.traverse(u'folder/item'), item)
+        self.assertEqual(tr.traverse(u'/folder/item/'), item)
 
     def testSimplePathTuple(self):
         tr = self.tr
         item = self.item
 
-        self.assertEquals(tr.traverse(('', 'folder', 'item')),
-                          item)
-        self.assertEquals(tr.traverse(('folder', 'item')), item)
+        self.assertEqual(tr.traverse(('', 'folder', 'item')), item)
+        self.assertEqual(tr.traverse(('folder', 'item')), item)
 
     def testComplexPathString(self):
         tr = self.tr
         item = self.item
 
-        self.assertEquals(tr.traverse('/folder/../folder/./item'),
-            item)
+        self.assertEqual(tr.traverse('/folder/../folder/./item'), item)
 
     def testNotFoundDefault(self):
-        self.assertEquals(self.tr.traverse('foo', 'notFound'),
-            'notFound')
+        self.assertEqual(self.tr.traverse('foo', 'notFound'), 'notFound')
 
     def testNotFoundNoDefault(self):
         self.assertRaises(LocationError, self.tr.traverse, 'foo')
@@ -141,7 +138,7 @@ class UnrestrictedTraverseTests(PlacelessSetup, unittest.TestCase):
         container['theclass'] = AnOldStyleClass
 
         tr = Traverser(container)
-        self.assert_(tr.traverse('theclass/x') is AnOldStyleClass.x)
+        self.assertTrue(tr.traverse('theclass/x') is AnOldStyleClass.x)
 
     def testTraversingDictSeesDictAPI(self):
         adict = {
@@ -202,8 +199,8 @@ class RestrictedTraverseTests(PlacelessSetup, unittest.TestCase):
         tr = Traverser(ProxyFactory(self.root))
         item = self.item
 
-        self.assertEquals(tr.traverse(('', 'folder', 'item')), item)
-        self.assertEquals(tr.traverse(('folder', 'item')), item)
+        self.assertEqual(tr.traverse(('', 'folder', 'item')), item)
+        self.assertEqual(tr.traverse(('folder', 'item')), item)
 
     def testItemDenied(self):
         endInteraction()
@@ -216,10 +213,10 @@ class RestrictedTraverseTests(PlacelessSetup, unittest.TestCase):
             ('', 'folder', 'item'))
         self.assertRaises(Unauthorized, tr.traverse,
             ('folder', 'item'))
-        self.assertEquals(tr.traverse(('', 'folder')), folder)
-        self.assertEquals(tr.traverse(('folder', '..', 'folder')),
+        self.assertEqual(tr.traverse(('', 'folder')), folder)
+        self.assertEqual(tr.traverse(('folder', '..', 'folder')),
                           folder)
-        self.assertEquals(tr.traverse(('folder',)), folder)
+        self.assertEqual(tr.traverse(('folder',)), folder)
 
     def testException(self):
         # nail the fact that AttributeError raised in a @property
@@ -241,7 +238,7 @@ class RestrictedTraverseTests(PlacelessSetup, unittest.TestCase):
 
 class DefaultTraversableTests(unittest.TestCase):
     def testImplementsITraversable(self):
-        self.failUnless(ITraversable.providedBy(DefaultTraversable(None)))
+        self.assertTrue(ITraversable.providedBy(DefaultTraversable(None)))
 
     def testVerifyInterfaces(self):
         for interface in implementedBy(DefaultTraversable):
@@ -255,8 +252,8 @@ class DefaultTraversableTests(unittest.TestCase):
 
         further = []
         next = df.traverse('item', further)
-        self.failUnless(next is item)
-        self.assertEquals(further, [])
+        self.assertTrue(next is item)
+        self.assertEqual(further, [])
 
     def testDictionaryTraverse(self):
         dict = {}
@@ -266,8 +263,8 @@ class DefaultTraversableTests(unittest.TestCase):
 
         further = []
         next = df.traverse('foo', further)
-        self.failUnless(next is foo)
-        self.assertEquals(further, [])
+        self.assertTrue(next is foo)
+        self.assertEqual(further, [])
 
     def testNotFound(self):
         df = DefaultTraversable(C('dummy'))

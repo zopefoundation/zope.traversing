@@ -271,6 +271,10 @@ class DefaultTraversableTests(unittest.TestCase):
 
         self.assertRaises(LocationError, df.traverse, 'bar', [])
 
+    def testUnicodeTraversal(self):
+        df = DefaultTraversable(object())
+        self.assertRaises(LocationError, df.traverse, u'\u2019', ())
+
 def test_suite():
     loader = unittest.TestLoader()
     suite = loader.loadTestsFromTestCase(TraverserTests)

@@ -38,7 +38,14 @@ class DefaultTraversable(object):
     def traverse(self, name, furtherPath):
         subject = self._subject
         __traceback_info__ = (subject, name, furtherPath)
-        attr = getattr(subject, name, _marker)
+        try:
+            attr = getattr(subject, name, _marker)
+        except UnicodeEncodeError:
+            # If we're on Python 2, and name was a unicode string the
+            # name would have been encoded using the system encoding
+            # (usually ascii). Failure to encode means invalid
+            # attribute name.
+            attr = _marker
         if attr is not _marker:
             return attr
         if hasattr(subject, '__getitem__'):
@@ -133,6 +140,14 @@ def traversePathElement(obj, name, further_path, default=_marker,
 
     try:
         return traversable.traverse(nm, further_path)
+    except UnicodeEncodeError:
+        # If we're on Python 2, and nm was a unicode string, and the traversable
+        # tried to do an attribute lookup, the nm would have been encoded using the
+        # system encoding (usually ascii). Failure to encode means invalid attribute
+        # name.
+        if default is not _marker:
+            return default
+        raise LocationError(obj, name)
     except LocationError:
         if default is not _marker:
             return default

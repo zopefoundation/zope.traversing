@@ -8,6 +8,8 @@ Changes
 
 - Drop support for Python 2.6.
 
+- Gracefully handle ``UnicodeEncodeError`` that can be produced when
+  doing attribute lookup on Python 2 by instead raising a ``LocationError``.
 
 4.0.0 (2014-03-21)
 ------------------
@@ -283,4 +285,3 @@ No further changes since 3.4.0a1.
 
 Initial release as a separate project, corresponds to ``zope.traversing``
 from Zope 3.4.0a1
-

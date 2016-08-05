@@ -118,6 +118,23 @@ class Test(PlacelessSetup, TestCase):
             self.folder, './item'
             )
 
+    def testTraverseNameUnicode(self):
+        from zope.traversing.api import traverseName
+        from zope.interface import implementer
+
+        @implementer(ITraversable)
+        class BrokenTraversable(object):
+            def traverse(self, name, furtherPath):
+                getattr(self, u'\u2019', None)
+                # The above actually works on Python 3
+                raise LocationError()
+
+        self.assertRaises(
+            LocationError,
+            traverseName,
+            BrokenTraversable(), '')
+
+
     def testGetName(self):
         from zope.traversing.api import getName
         self.assertEqual(

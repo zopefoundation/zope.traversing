@@ -151,7 +151,4 @@ def traversePathElement(obj, name, further_path, default=_marker,
     except LocationError:
         if default is not _marker:
             return default
-        else:
-            raise
-
-    return obj
+        raise

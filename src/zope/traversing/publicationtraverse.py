@@ -90,10 +90,10 @@ class PublicationTraverser(object):
 
         path.reverse()
 
-        # Remove double dots
+        # Remove double dots if possible
         while '..' in path:
             l = path.index('..')
-            if l < 0 or l + 2 > len(path):
+            if l + 2 > len(path):
                 break
             del path[l:l + 2]
 

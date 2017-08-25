@@ -13,7 +13,8 @@
 ##############################################################################
 """Tests of PublicationTraverser
 """
-from unittest import TestCase, main, makeSuite
+import unittest
+
 from zope.testing.cleanup import CleanUp
 from zope.component import provideAdapter
 from zope.interface import Interface, implementer
@@ -23,21 +24,20 @@ from zope.publisher.interfaces import NotFound
 from zope.publisher.interfaces.browser import IBrowserPublisher
 from zope.security.proxy import removeSecurityProxy
 from zope.traversing.interfaces import ITraversable
+from zope.traversing.publicationtraverse import PublicationTraverser
 
-class TestPublicationTraverser(CleanUp, TestCase):
+class TestPublicationTraverser(CleanUp, unittest.TestCase):
 
     def testViewNotFound(self):
         ob = Content()
-        from zope.traversing.publicationtraverse import PublicationTraverser
         t = PublicationTraverser()
         request = TestRequest()
         self.assertRaises(NotFound, t.traverseName, request, ob, '@@foo')
 
     def testViewFound(self):
         provideAdapter(DummyViewTraverser, (Interface, Interface),
-            ITraversable, name='view')
+                       ITraversable, name='view')
         ob = Content()
-        from zope.traversing.publicationtraverse import PublicationTraverser
         t = PublicationTraverser()
         request = TestRequest()
         proxy = t.traverseName(request, ob, '@@foo')
@@ -48,23 +48,20 @@ class TestPublicationTraverser(CleanUp, TestCase):
 
     def testDot(self):
         ob = Content()
-        from zope.traversing.publicationtraverse import PublicationTraverser
         t = PublicationTraverser()
         request = TestRequest()
         self.assertEqual(ob, t.traverseName(request, ob, '.'))
 
     def testNameNotFound(self):
         ob = Content()
-        from zope.traversing.publicationtraverse import PublicationTraverser
         t = PublicationTraverser()
         request = TestRequest()
         self.assertRaises(NotFound, t.traverseName, request, ob, 'foo')
 
     def testNameFound(self):
         provideAdapter(DummyPublishTraverse, (Interface, Interface),
-            IPublishTraverse)
+                       IPublishTraverse)
         ob = Content()
-        from zope.traversing.publicationtraverse import PublicationTraverser
         t = PublicationTraverser()
         request = TestRequest()
         proxy = t.traverseName(request, ob, 'foo')
@@ -76,7 +73,6 @@ class TestPublicationTraverser(CleanUp, TestCase):
     def testDirectTraversal(self):
         request = TestRequest()
         ob = DummyPublishTraverse(Content(), request)
-        from zope.traversing.publicationtraverse import PublicationTraverser
         t = PublicationTraverser()
         proxy = t.traverseName(request, ob, 'foo')
         view = removeSecurityProxy(proxy)
@@ -86,16 +82,14 @@ class TestPublicationTraverser(CleanUp, TestCase):
 
     def testPathNotFound(self):
         ob = Content()
-        from zope.traversing.publicationtraverse import PublicationTraverser
         t = PublicationTraverser()
         request = TestRequest()
         self.assertRaises(NotFound, t.traversePath, request, ob, 'foo/bar')
 
     def testPathFound(self):
         provideAdapter(DummyPublishTraverse, (Interface, Interface),
-            IPublishTraverse)
+                       IPublishTraverse)
         ob = Content()
-        from zope.traversing.publicationtraverse import PublicationTraverser
         t = PublicationTraverser()
         request = TestRequest()
         proxy = t.traversePath(request, ob, 'foo/bar')
@@ -106,9 +100,8 @@ class TestPublicationTraverser(CleanUp, TestCase):
 
     def testComplexPath(self):
         provideAdapter(DummyPublishTraverse, (Interface, Interface),
-            IPublishTraverse)
+                       IPublishTraverse)
         ob = Content()
-        from zope.traversing.publicationtraverse import PublicationTraverser
         t = PublicationTraverser()
         request = TestRequest()
         proxy = t.traversePath(request, ob, 'foo/../alpha//beta/./bar')
@@ -119,11 +112,11 @@ class TestPublicationTraverser(CleanUp, TestCase):
 
     def testTraverseRelativeURL(self):
         provideAdapter(DummyPublishTraverse, (Interface, Interface),
-            IPublishTraverse)
+                       IPublishTraverse)
         provideAdapter(DummyBrowserPublisher, (Interface,),
-            IBrowserPublisher)
+                       IBrowserPublisher)
         ob = Content()
-        from zope.traversing.publicationtraverse import PublicationTraverser
+
         t = PublicationTraverser()
         request = TestRequest()
         proxy = t.traverseRelativeURL(request, ob, 'foo/bar')
@@ -134,12 +127,77 @@ class TestPublicationTraverser(CleanUp, TestCase):
 
     def testMissingSkin(self):
         ob = Content()
-        from zope.traversing.publicationtraverse import PublicationTraverser
         t = PublicationTraverser()
         request = TestRequest()
         self.assertRaises(
             NotFound, t.traversePath, request, ob, '/++skin++missingskin')
 
+
+    def test_traversePath_trailing_slash(self):
+        class Traverser(PublicationTraverser):
+            def __init__(self):
+                self.names = []
+
+            def traverseName(self, request, ob, name):
+                self.names.append(name)
+
+
+        t = Traverser()
+        t.traversePath(None, None, 'abc/def/')
+        self.assertEqual(t.names, ['abc', 'def'])
+
+        t = Traverser()
+        t.traversePath(None, None, 'abc/def///')
+
+        # Note that only *one* trailing slash is removed
+        self.assertEqual(t.names, ['abc', 'def', '', ''])
+
+
+    def test_traversePath_double_dots_cannot_remove(self):
+        class Traverser(PublicationTraverser):
+            def __init__(self):
+                self.names = []
+
+            def traverseName(self, request, ob, name):
+                self.names.append(name)
+
+
+        t = Traverser()
+        t.traversePath(None, None, '..')
+        self.assertEqual(t.names, ['..'])
+
+    def test_traverseRelativeURL_to_no_browser_publisher(self):
+        test = self
+        class Traverser(PublicationTraverser):
+            def traversePath(self, request, ob, path):
+                return ob
+
+
+        class Context(object):
+            called = False
+            def __conform__(self, iface):
+                self.called = True
+                test.assertEqual(iface, IBrowserPublisher)
+                return None
+
+        t = Traverser()
+        context = Context()
+        ob = t.traverseRelativeURL(None, context, None)
+        self.assertIs(ob, context)
+
+        self.assertTrue(context.called)
+
+class TestBeforeTraverseEvent(unittest.TestCase):
+
+    def test_interfaces(self):
+        from zope.traversing.interfaces import IBeforeTraverseEvent
+        from zope.traversing.interfaces import BeforeTraverseEvent
+        from zope.interface.verify import verifyObject
+
+        ob = BeforeTraverseEvent(self, self)
+        self.assertIs(self, ob.request)
+        self.assertIs(self, ob.object)
+        verifyObject(IBeforeTraverseEvent, ob)
 
 class IContent(Interface):
     pass
@@ -179,12 +237,4 @@ class DummyBrowserPublisher(object):
     def browserDefault(self, request):
         if self.context.name != 'more':
             return self.context, ['more']
-        else:
-            return self.context, ()
-
-
-def test_suite():
-    return makeSuite(TestPublicationTraverser)
-
-if __name__ == '__main__':
-    main()
+        return self.context, ()

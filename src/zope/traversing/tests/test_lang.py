@@ -55,10 +55,3 @@ class Test(CleanUp, unittest.TestCase):
         self.assertTrue(ob is ob2)
         self.assertTrue(request.shifted)
         self.assertEqual(["ru"], browser_languages.getPreferredLanguages())
-
-
-def test_suite():
-    return unittest.makeSuite(Test)
-
-if __name__=='__main__':
-    unittest.main(defaultTest='test_suite')

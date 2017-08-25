@@ -14,10 +14,15 @@
 """Absolute URL View components
 """
 try:
-    from urllib import quote as quote, unquote
-except ImportError:
     from urllib.parse import quote_from_bytes as quote
+except ImportError:
+    from urllib import quote
+
+try:
     from urllib.parse import unquote_to_bytes as unquote
+except ImportError:
+    from urllib import unquote
+
 
 import zope.component
 from zope.interface import implementer
@@ -29,8 +34,8 @@ from zope.i18nmessageid import MessageFactory
 _ = MessageFactory('zope')
 
 _insufficientContext = _("There isn't enough context to get URL information. "
-                       "This is probably due to a bug in setting up location "
-                       "information.")
+                         "This is probably due to a bug in setting up location "
+                         "information.")
 
 _safe = '@+'  # Characters that we don't want to have quoted
 
@@ -38,12 +43,15 @@ _safe = '@+'  # Characters that we don't want to have quoted
 def absoluteURL(ob, request):
     return zope.component.getMultiAdapter((ob, request), IAbsoluteURL)()
 
-
-@implementer(IAbsoluteURL)
-class AbsoluteURL(BrowserView):
+class _EncodedUnicode(object):
 
     def __unicode__(self):
         return unquote(self.__str__()).decode('utf-8')
+
+
+@implementer(IAbsoluteURL)
+class AbsoluteURL(_EncodedUnicode,
+                  BrowserView):
 
     def __str__(self):
         context = self.context
@@ -102,26 +110,27 @@ class AbsoluteURL(BrowserView):
             return ({'name': '', 'url': self.request.getApplicationURL()}, )
 
         base = tuple(zope.component.getMultiAdapter(
-                (container, request), IAbsoluteURL).breadcrumbs())
+            (container, request), IAbsoluteURL).breadcrumbs())
 
         name = getattr(context, '__name__', None)
         if name is None:
             raise TypeError(_insufficientContext)
 
         if name:
-            base += ({'name': name,
-                      'url': ("%s/%s" % (base[-1]['url'],
-                                         quote(name.encode('utf-8'), _safe)))
-                      }, )
+            base += (
+                {
+                    'name': name,
+                    'url': ("%s/%s" % (base[-1]['url'],
+                                       quote(name.encode('utf-8'), _safe)))
+                },
+            )
 
         return base
 
 
 @implementer(IAbsoluteURL)
-class SiteAbsoluteURL(BrowserView):
-
-    def __unicode__(self):
-        return unquote(self.__str__()).decode('utf-8')
+class SiteAbsoluteURL(_EncodedUnicode,
+                      BrowserView):
 
     def __str__(self):
         context = self.context
@@ -151,9 +160,12 @@ class SiteAbsoluteURL(BrowserView):
 
         name = getattr(context, '__name__', None)
         if name:
-            base += ({'name': name,
-                      'url': ("%s/%s" % (base[-1]['url'],
-                                         quote(name.encode('utf-8'), _safe)))
-                      }, )
+            base += (
+                {
+                    'name': name,
+                    'url': ("%s/%s" % (base[-1]['url'],
+                                       quote(name.encode('utf-8'), _safe)))
+                },
+            )
 
         return base

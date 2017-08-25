@@ -11,7 +11,7 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""Traverser Adapter tests.
+"""Traverser Adapter tests (adapter.py)
 """
 import unittest
 
@@ -29,6 +29,7 @@ from zope.security.checker \
 from zope.security.management import newInteraction, endInteraction
 
 from zope.traversing.adapters import Traverser, DefaultTraversable
+from zope.traversing import adapters
 from zope.traversing.interfaces import ITraversable, ITraverser
 from zope.traversing.testing import contained, Contained
 
@@ -47,9 +48,9 @@ class TraverserTests(PlacelessSetup, unittest.TestCase):
     def setUp(self):
         PlacelessSetup.setUp(self)
         # Build up a wrapper chain
-        self.root =   C('root')
-        self.folder = contained(C('folder'), self.root,   name='folder')
-        self.item =   contained(C('item'),   self.folder, name='item')
+        self.root = C('root')
+        self.folder = contained(C('folder'), self.root, name='folder')
+        self.item = contained(C('item'), self.folder, name='item')
         self.tr = Traverser(self.item)
 
     def testImplementsITraverser(self):
@@ -58,6 +59,9 @@ class TraverserTests(PlacelessSetup, unittest.TestCase):
     def testVerifyInterfaces(self):
         for interface in implementedBy(Traverser):
             verifyClass(interface, Traverser)
+
+    def test_traverse_empty_path_is_context(self):
+        self.assertIs(self.item, self.tr.traverse(''))
 
 class UnrestrictedNoTraverseTests(unittest.TestCase):
     def setUp(self):
@@ -193,9 +197,11 @@ class RestrictedTraverseTests(PlacelessSetup, unittest.TestCase):
         self.tr = Traverser(ProxyFactory(root))
 
     def testAllAllowed(self):
-        defineChecker(C, Checker({'folder': CheckerPublic,
-                                  'item': CheckerPublic,
-                                  }))
+        defineChecker(C,
+                      Checker({
+                          'folder': CheckerPublic,
+                          'item': CheckerPublic,
+                      }))
         tr = Traverser(ProxyFactory(self.root))
         item = self.item
 
@@ -210,12 +216,12 @@ class RestrictedTraverseTests(PlacelessSetup, unittest.TestCase):
         folder = self.folder
 
         self.assertRaises(Unauthorized, tr.traverse,
-            ('', 'folder', 'item'))
+                          ('', 'folder', 'item'))
         self.assertRaises(Unauthorized, tr.traverse,
-            ('folder', 'item'))
+                          ('folder', 'item'))
         self.assertEqual(tr.traverse(('', 'folder')), folder)
         self.assertEqual(tr.traverse(('folder', '..', 'folder')),
-                          folder)
+                         folder)
         self.assertEqual(tr.traverse(('folder',)), folder)
 
     def testException(self):
@@ -230,10 +236,10 @@ class RestrictedTraverseTests(PlacelessSetup, unittest.TestCase):
         # AttributeError becomes LocationError if there's no __getitem__
         # on the object
         self.assertRaises(LocationError, tr.traverse,
-            ('foobar', 'attributeerror'))
+                          ('foobar', 'attributeerror'))
         # Other exceptions raised as usual
         self.assertRaises(ValueError, tr.traverse,
-            ('foobar', 'valueerror'))
+                          ('foobar', 'valueerror'))
 
 
 class DefaultTraversableTests(unittest.TestCase):
@@ -275,14 +281,37 @@ class DefaultTraversableTests(unittest.TestCase):
         df = DefaultTraversable(object())
         self.assertRaises(LocationError, df.traverse, u'\u2019', ())
 
-def test_suite():
-    loader = unittest.TestLoader()
-    suite = loader.loadTestsFromTestCase(TraverserTests)
-    suite.addTest(loader.loadTestsFromTestCase(DefaultTraversableTests))
-    suite.addTest(loader.loadTestsFromTestCase(UnrestrictedNoTraverseTests))
-    suite.addTest(loader.loadTestsFromTestCase(UnrestrictedTraverseTests))
-    suite.addTest(loader.loadTestsFromTestCase(RestrictedTraverseTests))
-    return suite
 
-if __name__=='__main__':
-    unittest.TextTestRunner().run(test_suite())
+class TestFunctions(unittest.TestCase):
+
+    def test_traversePathElement_UnicodeEncodeError_with_default(self):
+        test = self
+        class Traversable(object):
+            called = False
+            fail = test.fail
+            def traverse(self, nm, further_path):
+                self.called = True
+                u'\xff'.encode("ascii")
+                self.fail("Should not be reached")
+
+        t = Traversable()
+        self.assertIs(self,
+                      adapters.traversePathElement(None, None, (),
+                                                   default=self,
+                                                   traversable=t))
+        self.assertTrue(t.called)
+
+
+    def test_traversePathElement_LocationError_with_default(self):
+        class Traversable(object):
+            called = False
+            def traverse(self, nm, further_path):
+                self.called = True
+                raise LocationError()
+
+        t = Traversable()
+        self.assertIs(self,
+                      adapters.traversePathElement(None, None, (),
+                                                   default=self,
+                                                   traversable=t))
+        self.assertTrue(t.called)

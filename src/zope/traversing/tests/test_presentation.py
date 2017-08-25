@@ -13,7 +13,7 @@
 ##############################################################################
 """Presentation Traverser Tests
 """
-from unittest import TestCase, main, makeSuite
+import unittest
 from zope.testing.cleanup import CleanUp
 from zope.interface import Interface, implementer
 from zope.publisher.browser import TestRequest
@@ -38,7 +38,7 @@ class View(object):
         self.content = content
 
 
-class Test(CleanUp, TestCase):
+class Test(CleanUp, unittest.TestCase):
 
     def testView(self):
         browserView(IContent, 'foo', View)
@@ -53,10 +53,3 @@ class Test(CleanUp, TestCase):
         ob = Content()
         r = resource(ob, TestRequest()).traverse('foo', ())
         self.assertEqual(r.__class__, Resource)
-
-
-def test_suite():
-    return makeSuite(Test)
-
-if __name__=='__main__':
-    main(defaultTest='test_suite')

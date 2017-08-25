@@ -1,8 +1,21 @@
-``zope.traversing``
-===================
+=====================
+ ``zope.traversing``
+=====================
+
+.. image:: https://img.shields.io/pypi/v/zope.traversing.svg
+        :target: https://pypi.python.org/pypi/zope.traversing/
+        :alt: Latest release
+
+.. image:: https://img.shields.io/pypi/pyversions/zope.traversing.svg
+        :target: https://pypi.org/project/zope.traversing/
+        :alt: Supported Python versions
 
 .. image:: https://travis-ci.org/zopefoundation/zope.traversing.png?branch=master
         :target: https://travis-ci.org/zopefoundation/zope.traversing
+
+.. image:: https://coveralls.io/repos/github/zopefoundation/zope.traversing/badge.svg?branch=master
+        :target: https://coveralls.io/github/zopefoundation/zope.traversing?branch=master
+
 
 This package provides adapters for resolving object paths by traversing
 an object hierarchy.  This package also includes support for traversal

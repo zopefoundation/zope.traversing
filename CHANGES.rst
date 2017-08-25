@@ -1,14 +1,18 @@
-Changes
-=======
+=========
+ Changes
+=========
 
 4.2.0 (unreleased)
-------------------
+==================
 
-- Nothing changed yet.
+- Add support for Python 3.6.
 
+- Drop support for Python 3.3.
+
+- Drop support for ``python setup.py test``.
 
 4.1.0 (2016-08-05)
-------------------
+==================
 
 - Add support for Python 3.5.
 
@@ -18,19 +22,19 @@ Changes
   doing attribute lookup on Python 2 by instead raising a ``LocationError``.
 
 4.0.0 (2014-03-21)
-------------------
+==================
 
 - Add support for Python 3.4.
 
 
 4.0.0a3 (2013-03-12)
---------------------
+====================
 
 - Add support for PyPy.
 
 
 4.0.0a2 (2013-02-21)
---------------------
+====================
 
 - Remove ``zope.container`` testing dependency to break another circular
   dependency.
@@ -44,7 +48,7 @@ Changes
 
 
 4.0.0a1 (2013-02-20)
---------------------
+====================
 
 - Replace deprecated ``zope.component.adapts`` usage with equivalent
   ``zope.component.adapter`` decorator.
@@ -60,18 +64,18 @@ Changes
 
 
 3.14.0 (2011-03-02)
--------------------
+===================
 
 - Re-release of 3.13.1 as a feature version as it introduces dependencies on
   new feature releases.
 
 3.13.1 (2010-12-14)
--------------------
+===================
 
 - Fix ZCML-related dependencies.
 
 3.13 (2010-07-09)
------------------
+=================
 
 - When a ``__parent__`` attribute is available on an object, it is
   always used for absolute URL construction, and no ILocation adapter
@@ -84,23 +88,23 @@ Changes
   ILocation adapters can also be provided.
 
 3.12.1 (2010-04-30)
--------------------
+===================
 
 - Remove use of ``zope.testing.doctestunit`` in favor of stdlib's doctest.
 
 3.12.0 (2009-12-29)
--------------------
+===================
 
 - Avoid testing dependencies on ``zope.securitypolicies`` and
   ``zope.principalregistry``.
 
 3.11.0 (2009-12-27)
--------------------
+===================
 
 - Remove testing dependency on ``zope.app.publication``.
 
 3.10.0 (2009-12-16)
--------------------
+===================
 
 - Remove stray test claiming a no longer existing dependency on
   ``zope.app.applicationcontrol``.
@@ -128,13 +132,13 @@ Changes
   ``zope.pagetemplate``.
 
 3.9.0 (2009-12-15)
-------------------
+==================
 
 - Move ``IBeforeTraverseEvent`` here from ``zope.app.publication``,
   as we already deal with publication traversal.
 
 3.8.0 (2009-09-29)
-------------------
+==================
 
 - In ``zope.traversing.api.getParent()``, try to delegate to
   ``zope.location.interfaces.ILocationInfo.getParent()``, analogous to
@@ -144,21 +148,21 @@ Changes
   to invert the package interdependency, but where it is now no longer used.
 
 3.7.2 (2009-08-29)
-------------------
+==================
 
 - Make virtual hosting tests compatible with ``zope.publisher`` 3.9.
   Redirecting to a different host requires an explicit ``trusted``
   redirect now.
 
 3.7.1 (2009-06-16)
-------------------
+==================
 
 - ``AbsoluteURL`` now implements the fact that ``__call__`` returns the same
   as ``__str__`` in a manner that it applies for subclasses, too, so they only
   have to override ``__str__`` and not both.
 
 3.7.0 (2009-05-23)
-------------------
+==================
 
 - Move the ``publicationtraverse`` module to ``zope.traversing``, removing the
   ``zope.app.publisher`` -> ``zope.app.publication`` dependency (which was a
@@ -168,7 +172,7 @@ Changes
   rather than a direct reference.
 
 3.6.0 (2009-04-06)
-------------------
+==================
 
 - Change ``configure.zcml`` not to depend on ``zope.app.component``.
 
@@ -176,14 +180,14 @@ Changes
   change from 3.5.3.
 
 3.5.4 (2009-04-06)
-------------------
+==================
 
 - Revert BBB-incompatible use of ``zope.publisher.skinnable``:  that
   change belongs in a 3.6.0 release, because it requires a BBB-incompatible
   version of ``zope.publisher``.
 
 3.5.3 (2009-03-10)
-------------------
+==================
 
 - Use applySkin from new location. zope.publisher.skinnable instead of
   zope.publisher.browser.
@@ -192,14 +196,14 @@ Changes
   recursive AbsoluteURL adapters (LP: #338101).
 
 3.5.2 (2009-02-04)
-------------------
+==================
 
 - ``RootPhysicallyLocatable`` is not the same as
   ``LocationPhysicallyLocatable`` (now in ``zope.location``).
   Fix the import and testing setups.
 
 3.5.1 (2009-02-02)
-------------------
+==================
 
 - Obsolete the ``RootPhysicallyLocatable`` adapter, which has been superseded
   by the refactored ``zope.location.traversing.LocationPhysicallyLocatable``
@@ -222,7 +226,7 @@ Changes
   of retired zope3-dev at zope.org
 
 3.5.0 (2009-01-31)
-------------------
+==================
 
 - Use zope.container instead of ``zope.app.container``.
 
@@ -231,7 +235,7 @@ Changes
 - Reduce, but not eliminate, test dependencies on ``zope.app.component``.
 
 3.5.0a4 (2008-08-01)
---------------------
+====================
 
 - Reverse dependencies between ``zope.location`` and ``zope.traversing``.
 
@@ -246,13 +250,13 @@ Changes
 
 
 3.5.0a3 (2007-12-28)
---------------------
+====================
 
 - Back out the controversial ``++skin++`` traverser for XML-RPC.
 
 
 3.5.0a2 (2007-11-28)
---------------------
+====================
 
 - Port 3.4.1a1 to trunk
 
@@ -268,26 +272,26 @@ Changes
 
 
 3.4.1 (2008-07-30)
-------------------
+==================
 
 - Fix deprecation warning caused by using an old module name for
   ``ZopeSecurityPolicy`` in ``ftesting.zcml``.
 
 
 3.4.1a1 (2007-11-13)
---------------------
+====================
 
 - Do not use unicode strings to set the application server in the virtual
   host namespace. This caused absolute_url to create unicode URL's.
 
 
 3.4.0 (2007-09-29)
-------------------
+==================
 
 No further changes since 3.4.0a1.
 
 3.4.0a1 (2007-04-22)
---------------------
+====================
 
 Initial release as a separate project, corresponds to ``zope.traversing``
 from Zope 3.4.0a1

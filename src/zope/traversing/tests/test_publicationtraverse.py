@@ -150,6 +150,9 @@ class TestPublicationTraverser(CleanUp, unittest.TestCase):
         t.traversePath(None, None, 'abc/def///')
 
         # Note that only *one* trailing slash is removed
+        # leaving empty trailing path segments.
+        # This could be considered a bug, although no one has
+        # complained yet.
         self.assertEqual(t.names, ['abc', 'def', '', ''])
 
 
@@ -194,9 +197,11 @@ class TestBeforeTraverseEvent(unittest.TestCase):
         from zope.traversing.interfaces import BeforeTraverseEvent
         from zope.interface.verify import verifyObject
 
-        ob = BeforeTraverseEvent(self, self)
-        self.assertIs(self, ob.request)
-        self.assertIs(self, ob.object)
+        request = object()
+        target = object()
+        ob = BeforeTraverseEvent(target, request)
+        self.assertIs(request, ob.request)
+        self.assertIs(target, ob.object)
         verifyObject(IBeforeTraverseEvent, ob)
 
 class IContent(Interface):

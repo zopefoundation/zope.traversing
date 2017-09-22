@@ -17,7 +17,8 @@
 from zope.interface import Attribute
 from zope.interface import Interface
 from zope.interface import implementer
-from zope.component.interfaces import IObjectEvent
+from zope.interface.interfaces import IObjectEvent
+from zope.interface.interfaces import ObjectEvent
 
 # BBB: Re-import symbols to their old location.
 from zope.location.interfaces import LocationError as TraversalError
@@ -180,10 +181,10 @@ class IBeforeTraverseEvent(IObjectEvent):
 
 
 @implementer(IBeforeTraverseEvent)
-class BeforeTraverseEvent(object):
+class BeforeTraverseEvent(ObjectEvent):
     """An event which gets sent on publication traverse"""
 
 
     def __init__(self, ob, request):
-        self.object = ob
+        ObjectEvent.__init__(self, ob)
         self.request = request

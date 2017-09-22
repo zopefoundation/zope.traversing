@@ -88,8 +88,7 @@ def traverse(object, path, default=_marker, request=None):
     traverser = ITraverser(object)
     if default is _marker:
         return traverser.traverse(path, request=request)
-    else:
-        return traverser.traverse(path, default=default, request=request)
+    return traverser.traverse(path, default=default, request=request)
 
 
 def traverseName(obj, name, default=_marker, traversable=None, request=None):
@@ -118,8 +117,8 @@ def traverseName(obj, name, default=_marker, traversable=None, request=None):
                                   traversable=traversable, request=request)
     if further_path:
         raise NotImplementedError('further_path returned from traverse')
-    else:
-        return obj
+
+    return obj
 
 
 def getName(obj):

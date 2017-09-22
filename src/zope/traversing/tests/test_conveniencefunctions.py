@@ -13,20 +13,18 @@
 ##############################################################################
 """Test traversal convenience functions.
 """
-from unittest import TestCase, main, makeSuite
+import unittest
 
+from zope import interface
 import zope.component
 from zope.component.testing import PlacelessSetup
-from zope.interface import directlyProvides
 from zope.location.traversing \
     import LocationPhysicallyLocatable, RootPhysicallyLocatable
 from zope.location.interfaces import ILocationInfo, IRoot, LocationError
-from zope.security.proxy import Proxy
-from zope.security.checker import selectChecker
 
 from zope.traversing.adapters import Traverser, DefaultTraversable
 from zope.traversing.interfaces import ITraversable, ITraverser
-from zope.traversing.testing import contained, Contained
+from zope.traversing.testing import contained
 
 class C(object):
     __parent__ = None
@@ -34,29 +32,28 @@ class C(object):
     def __init__(self, name):
         self.name = name
 
-def _proxied(*args):
-    return Proxy(args, selectChecker(args))
 
 
-class Test(PlacelessSetup, TestCase):
+class TestFunctional(PlacelessSetup, unittest.TestCase):
 
     def setUp(self):
         PlacelessSetup.setUp(self)
         # Build up a wrapper chain
         root = C('root')
-        directlyProvides(root, IRoot)
+        interface.directlyProvides(root, IRoot)
         folder = C('folder')
         item = C('item')
 
         self.root = root  # root is not usually wrapped
-        self.folder = contained(folder, self.root,   name='folder')
-        self.item =   contained(item,   self.folder, name='item')
+        self.folder = contained(folder, self.root, name='folder')
+        self.item = contained(item, self.folder, name='item')
         self.unwrapped_item = item
         self.broken_chain_folder = contained(folder, None)
-        self.broken_chain_item = contained(item,
-                                    self.broken_chain_folder,
-                                    name='item'
-                                    )
+        self.broken_chain_item = contained(
+            item,
+            self.broken_chain_folder,
+            name='item'
+        )
         root.folder = folder
         folder.item = item
 
@@ -75,6 +72,13 @@ class Test(PlacelessSetup, TestCase):
             self.tr.traverse('/folder/item')
             )
 
+    def test_traverse_with_default(self):
+        from zope.traversing.api import traverse
+        self.assertIs(
+            traverse(self.item, '/no/path', self),
+            self
+        )
+
     def testTraverseFromUnwrapped(self):
         from zope.traversing.api import traverse
         self.assertRaises(
@@ -88,15 +92,23 @@ class Test(PlacelessSetup, TestCase):
         self.assertEqual(
             traverseName(self.folder, 'item'),
             self.tr.traverse('/folder/item')
-            )
+        )
         self.assertEqual(
             traverseName(self.item, '.'),
             self.tr.traverse('/folder/item')
-            )
+        )
         self.assertEqual(
             traverseName(self.item, '..'),
             self.tr.traverse('/folder')
-            )
+        )
+        self.assertEqual(
+            traverseName(self.folder, 'item', default=self),
+            self.tr.traverse('/folder/item')
+        )
+        self.assertIs(
+            traverseName(self.folder, 'nothing', default=self),
+            self,
+        )
 
         # TODO test that ++names++ and @@names work too
 
@@ -127,7 +139,7 @@ class Test(PlacelessSetup, TestCase):
             def traverse(self, name, furtherPath):
                 getattr(self, u'\u2019', None)
                 # The above actually works on Python 3
-                raise LocationError()
+                raise unittest.SkipTest("Unicode attrs legal on Py3")
 
         self.assertRaises(
             LocationError,
@@ -241,19 +253,20 @@ class Test(PlacelessSetup, TestCase):
 
         _good_locations = (
             # location returned as string
-            ( u'/xx/yy/zz',
-                # arguments to try in addition to the above
-                '/xx/yy/zz',
-                '/xx/./yy/ww/../zz',
+            (u'/xx/yy/zz',
+             # arguments to try in addition to the above
+             '/xx/yy/zz',
+             '/xx/./yy/ww/../zz',
             ),
-            ( u'/xx/yy/zz',
-                '/xx/yy/zz',
+            (u'/xx/yy/zz',
+             '/xx/yy/zz',
             ),
-            ( u'/xx',
-                '/xx',
+            (u'/xx',
+             '/xx',
             ),
-            ( u'/',
-                '/',
+            (u'/',
+             '/',
+             self.root,
             ),
         )
 
@@ -285,26 +298,26 @@ class Test(PlacelessSetup, TestCase):
 
         _good_locations = (
             # location returned as string
-            ( '/xx/yy/zz',
-              # arguments to try in addition to the above
-              '/xx/yy/zz',
-              '/xx/./yy/ww/../zz',
-              '/xx/./yy/ww/./../zz',
+            ('/xx/yy/zz',
+             # arguments to try in addition to the above
+             '/xx/yy/zz',
+             '/xx/./yy/ww/../zz',
+             '/xx/./yy/ww/./../zz',
             ),
-            ( 'xx/yy/zz',
-              # arguments to try in addition to the above
-              'xx/yy/zz',
-              'xx/./yy/ww/../zz',
-              'xx/./yy/ww/./../zz',
+            ('xx/yy/zz',
+             # arguments to try in addition to the above
+             'xx/yy/zz',
+             'xx/./yy/ww/../zz',
+             'xx/./yy/ww/./../zz',
             ),
-            ( '/xx/yy/zz',
-              '/xx/yy/zz',
+            ('/xx/yy/zz',
+             '/xx/yy/zz',
             ),
-            ( '/xx',
-              '/xx',
+            ('/xx',
+             '/xx',
             ),
-            ( '/',
-              '/',
+            ('/',
+             '/',
             ),
         )
 
@@ -361,9 +374,41 @@ class Test(PlacelessSetup, TestCase):
         args = ('foo', 'bar', '.', 'baz', 'bone')
         self.assertEqual(joinPath(path, *args), u'/foo/bar/baz/bone')
 
+    def test_joinPath_empty_args(self):
+        from zope.traversing.api import joinPath
+        path = 'abc'
+        self.assertEqual(joinPath(path), u'abc')
 
-def test_suite():
-    return makeSuite(Test)
 
-if __name__=='__main__':
-    main(defaultTest='test_suite')
+class TestStandalone(unittest.TestCase):
+    # Unlike TestFunctional, we don't register gobs of
+    # adapters, making these tests more self-contained
+
+    def test_getParent_no_location_info(self):
+        from zope.traversing.api import getParent
+        test = self
+        class Context(object):
+            called = False
+            def __conform__(self, iface):
+                self.called = True
+                test.assertEqual(iface, ILocationInfo)
+                raise TypeError()
+
+        context = Context()
+        with self.assertRaisesRegexp(TypeError,
+                                     "Not enough context"):
+            getParent(context)
+
+        self.assertTrue(context.called)
+        context.called = False
+
+        # Now give it a parent
+        context.__parent__ = self
+        self.assertIs(self, getParent(context))
+
+        self.assertTrue(context.called)
+        context.called = False
+
+        # Now if it's a root, it has no parent
+        interface.alsoProvides(context, IRoot)
+        self.assertIsNone(getParent(context))

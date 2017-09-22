@@ -13,7 +13,7 @@
 ##############################################################################
 """Test skin traversal.
 """
-from unittest import TestCase, main, makeSuite
+import unittest
 
 import zope.component
 from zope.testing.cleanup import CleanUp
@@ -29,7 +29,7 @@ class IFoo(Interface):
 directlyProvides(IFoo, IBrowserSkinType)
 
 
-class Test(CleanUp, TestCase):
+class Test(CleanUp, unittest.TestCase):
 
     def setUp(self):
         super(Test, self).setUp()
@@ -52,9 +52,3 @@ class Test(CleanUp, TestCase):
         ob = object()
         traverser = skin(ob, request)
         self.assertRaises(LocationError, traverser.traverse, 'bar', ())
-
-def test_suite():
-    return makeSuite(Test)
-
-if __name__=='__main__':
-    main(defaultTest='test_suite')

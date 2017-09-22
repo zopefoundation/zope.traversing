@@ -13,12 +13,13 @@
 ##############################################################################
 """Test the AbsoluteURL view
 """
-from unittest import TestCase, main, makeSuite
+import unittest
 
 import zope.component
 from zope.component import getMultiAdapter, adapter
 from zope.component.testing import PlacelessSetup
 from zope.traversing.browser.absoluteurl import absoluteURL
+from zope.traversing.browser.absoluteurl import AbsoluteURL
 from zope.traversing.browser.interfaces import IAbsoluteURL
 from zope.traversing.testing import browserView
 from zope.i18n.interfaces import IUserPreferredCharsets
@@ -70,7 +71,7 @@ class FooLocation(object):
         return contained(TrivialContent(), Root(), name='bar')
 
 
-class TestAbsoluteURL(PlacelessSetup, TestCase):
+class TestAbsoluteURL(PlacelessSetup, unittest.TestCase):
 
     def setUp(self):
         PlacelessSetup.setUp(self)
@@ -127,7 +128,7 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
                           {'name': 'a', 'url': 'http://127.0.0.1/a'},
                           {'name': 'b', 'url': 'http://127.0.0.1/a/b'},
                           {'name': 'c', 'url': 'http://127.0.0.1/a/b/c'},
-                          ))
+                         ))
 
     def testParentButNoLocation(self):
         request = TestRequest()
@@ -163,7 +164,7 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
                          ({'name':  '', 'url': 'http://127.0.0.1'},
                           {'name': 'bar', 'url': 'http://127.0.0.1/bar'},
                           {'name': 'foo', 'url': 'http://127.0.0.1/bar/foo'},
-                          ))
+                         ))
 
     def testParentTrumpsAdapter(self):
         # if we have a location adapter for a content object but
@@ -210,7 +211,7 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
                           {'name': u'\u0441',
                            'url':
                            'http://127.0.0.1/%D0%B9/%D1%82/%D0%B5/%D1%81'},
-                          ))
+                         ))
 
     def testRetainSkin(self):
         request = TestRequest()
@@ -230,7 +231,7 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
                           {'name': 'a', 'url': base + '/a'},
                           {'name': 'b', 'url': base + '/a/b'},
                           {'name': 'c', 'url': base + '/a/b/c'},
-                          ))
+                         ))
 
     def testVirtualHosting(self):
         request = TestRequest()
@@ -245,10 +246,10 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
 
         breadcrumbs = view.breadcrumbs()
         self.assertEqual(breadcrumbs,
-         ({'name':  '', 'url': 'http://127.0.0.1'},
-          {'name': 'b', 'url': 'http://127.0.0.1/b'},
-          {'name': 'c', 'url': 'http://127.0.0.1/b/c'},
-          ))
+                         ({'name':  '', 'url': 'http://127.0.0.1'},
+                          {'name': 'b', 'url': 'http://127.0.0.1/b'},
+                          {'name': 'c', 'url': 'http://127.0.0.1/b/c'},
+                         ))
 
     def testVirtualHostingWithVHElements(self):
         request = TestRequest()
@@ -263,10 +264,10 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
 
         breadcrumbs = view.breadcrumbs()
         self.assertEqual(breadcrumbs,
-         ({'name':  '', 'url': 'http://127.0.0.1'},
-          {'name': 'b', 'url': 'http://127.0.0.1/b'},
-          {'name': 'c', 'url': 'http://127.0.0.1/b/c'},
-          ))
+                         ({'name':  '', 'url': 'http://127.0.0.1'},
+                          {'name': 'b', 'url': 'http://127.0.0.1/b'},
+                          {'name': 'c', 'url': 'http://127.0.0.1/b/c'},
+                         ))
 
     def testVirtualHostingInFront(self):
         request = TestRequest()
@@ -282,11 +283,11 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
 
         breadcrumbs = view.breadcrumbs()
         self.assertEqual(breadcrumbs,
-         ({'name':  '', 'url': 'http://127.0.0.1'},
-          {'name': 'a', 'url': 'http://127.0.0.1/a'},
-          {'name': 'b', 'url': 'http://127.0.0.1/a/b'},
-          {'name': 'c', 'url': 'http://127.0.0.1/a/b/c'},
-          ))
+                         ({'name':  '', 'url': 'http://127.0.0.1'},
+                          {'name': 'a', 'url': 'http://127.0.0.1/a'},
+                          {'name': 'b', 'url': 'http://127.0.0.1/a/b'},
+                          {'name': 'c', 'url': 'http://127.0.0.1/a/b/c'},
+                         ))
 
     def testNoContextInformation(self):
         request = TestRequest()
@@ -302,8 +303,57 @@ class TestAbsoluteURL(PlacelessSetup, TestCase):
         self.assertEqual(absoluteURL(None, request), 'http://127.0.0.1')
 
 
-def test_suite():
-    return makeSuite(TestAbsoluteURL)
+    def test_breadcrumbs_no_parent(self):
 
-if __name__ == '__main__':
-    main(defaultTest='test_suite')
+        view = AbsoluteURL(self, None)
+        with self.assertRaisesRegexp(TypeError,
+                                     "There isn't enough context"):
+            view.breadcrumbs()
+
+    def test_nameless_context(self):
+
+        @implementer(ILocation)
+        class Context(object):
+            __parent__ = self
+            __name__ = None
+
+        class DummyAbsoluteURL(object):
+            # Our implementation of IAbsoluteURL
+            # for our parent
+
+            def __init__(self, *args):
+                pass
+
+            called = False
+
+            def __str__(self):
+                DummyAbsoluteURL.called = True
+                return ''
+
+            def breadcrumbs(self):
+                DummyAbsoluteURL.called = True
+                return ()
+
+        browserView(type(self), '', DummyAbsoluteURL, IAbsoluteURL)
+
+        request = TestRequest()
+        self.assertIsInstance(zope.component.getMultiAdapter((self, request), IAbsoluteURL),
+                              DummyAbsoluteURL)
+        context = Context()
+
+        # First the view
+        view = AbsoluteURL(context, request)
+        with self.assertRaisesRegexp(TypeError,
+                                     "There isn't enough context"):
+            str(view)
+
+        self.assertTrue(DummyAbsoluteURL.called)
+        DummyAbsoluteURL.called = False
+
+        # Now the breadcrumbs
+        view = AbsoluteURL(context, request)
+        with self.assertRaisesRegexp(TypeError,
+                                     "There isn't enough context"):
+            view.breadcrumbs()
+
+        self.assertTrue(DummyAbsoluteURL.called)

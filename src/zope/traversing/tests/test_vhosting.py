@@ -14,17 +14,10 @@
 """Functional tests for virtual hosting.
 """
 import os
-import transaction
 import unittest
-try:
-    from StringIO import StringIO
-except ImportError:
-    from io import StringIO
+from io import StringIO
 
-try:
-    from UserDict import UserDict
-except ImportError:
-    from collections import UserDict
+import transaction
 
 import zope.component
 import zope.interface
@@ -44,7 +37,7 @@ from zope.testing.cleanup import cleanUp
 
 from zope.traversing.adapters import traversePathElement
 from zope.traversing.api import traverse
-from zope.traversing.testing import browserResource, Contained, contained
+from zope.traversing.testing import browserResource, Contained
 
 
 class MyObj(Contained):
@@ -55,19 +48,19 @@ class IFolder(zope.interface.Interface):
     pass
 
 @zope.interface.implementer(IFolder, IBrowserPublisher)
-class Folder(Contained, UserDict):
+class Folder(Contained, dict):
     def __init__(self):
-        UserDict.__init__(self, {})
+        dict.__init__(self, {})
 
     def __setitem__(self, name, value):
         value.__parent__ = self
         value.__name__ = name
-        UserDict.__setitem__(self, name, value)
+        dict.__setitem__(self, name, value)
 
     def publishTraverse(self, request, name):
         subob = self.get(name, None)
         if subob is None:
-            raise NotFound(self.context, name, request)
+            raise NotFound(self.context, name, request) # pragma: no cover
         return subob
 
 
@@ -86,11 +79,9 @@ class ZopeTraverser(object):
 
         while path_items:
             name = path_items.pop()
-            if getattr(object, '__class__', None) == dict:
-                object = object[name]
-            else:
-                object = traversePathElement(object, name, path_items,
-                                             request=request)
+            assert getattr(object, '__class__', None) != dict
+            object = traversePathElement(object, name, path_items,
+                                         request=request)
         return object
 zopeTraverser = ZopeTraverser()
 
@@ -169,7 +160,7 @@ class TestVirtualHosting(unittest.TestCase):
         if len(p) == 1:
             env['PATH_INFO'] = p[0]
 
-        request = BrowserRequest(StringIO(''), env)
+        request = BrowserRequest(StringIO(u''), env)
         request.setPublication(DummyPublication(self.app))
         setDefaultSkin(request)
         return request
@@ -279,7 +270,7 @@ class TestVirtualHosting(unittest.TestCase):
         self.assertEqual(result.getHeader('Location'), location)
 
 
-class DummyPublication:
+class DummyPublication(object):
 
     def __init__(self, app):
         self.app = app
@@ -307,18 +298,13 @@ class DummyPublication:
 
         Name must be an ASCII string or Unicode object."""
         if name == 'index.html':
-            from zope.component import queryMultiAdapter
-            view = queryMultiAdapter((ob, request), name=name)
-            if view is None:
-                from zope.publisher.interfaces import NotFound
-                import pdb; pdb.set_trace()
-                raise NotFound(ob, name)
+            from zope.component import getMultiAdapter
+            view = getMultiAdapter((ob, request), name=name)
             return view
-        else:
-            from zope.traversing.publicationtraverse \
-                import PublicationTraverserWithoutProxy
-            t = PublicationTraverserWithoutProxy()
-            return t.traverseName(request, ob, name)
+
+        from zope.traversing.publicationtraverse import PublicationTraverserWithoutProxy
+        t = PublicationTraverserWithoutProxy()
+        return t.traverseName(request, ob, name)
 
     def afterTraversal(self, request, ob):
         """Post-traversal hook.
@@ -340,7 +326,7 @@ class DummyPublication:
         """Post-callObject hook (if it was successful).
         """
 
-    def handleException(self, ob, request, exc_info, retry_allowed=1):
+    def handleException(self, ob, request, exc_info, retry_allowed=1): # pragma: no cover
         """Handle an exception
 
         Either:
@@ -358,15 +344,4 @@ class DummyPublication:
     def getDefaultTraversal(self, request, ob):
         if hasattr(ob, 'index'):
             return ob, ()
-        else:
-            return ob, ('index.html',)
-
-
-def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestVirtualHosting))
-    return suite
-
-
-if __name__ == '__main__':
-    unittest.main()
+        return ob, ('index.html',)

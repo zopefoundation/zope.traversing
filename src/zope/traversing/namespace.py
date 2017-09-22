@@ -376,9 +376,6 @@ class vh(view):
 
         request = self.request
 
-        traversal_stack = request.getTraversalStack()
-        app_names = []
-
         if not six.PY3:
             # `name` comes in as unicode, we need to make it a string
             # so absolute URLs don't all become unicode.
@@ -392,6 +389,9 @@ class vh(view):
                                  "++vh++protocol:host:port")
 
             request.setApplicationServer(host, proto, port)
+
+        traversal_stack = request.getTraversalStack()
+        app_names = []
 
         if '++' in traversal_stack:
             segment = traversal_stack.pop()
@@ -455,6 +455,8 @@ class adapter(SimpleHandler):
 
 class debug(view):
 
+    enable_debug = __debug__
+
     def traverse(self, name, ignored):
         """Debug traversal adapter
 
@@ -516,27 +518,37 @@ class debug(view):
             ...     print('unknown debugging flag')
             unknown debugging flag
 
+        Of course, if Python was started with the ``-O`` flag to
+        disable debugging, none of this is allowed (we simulate this
+        with a private setting on the instance):
+
+            >>> adapter.enable_debug = False
+            >>> adapter.traverse('source', ())
+            Traceback (most recent call last):
+            ...
+            ValueError: Debug flags only allowed in debug mode
+
         """
-        if __debug__:
-            request = self.request
-            for flag in name.split(','):
-                if flag == 'source':
-                    request.debug.sourceAnnotations = True
-                elif flag == 'tal':
-                    request.debug.showTAL = True
-                elif flag == 'errors':
-                    # TODO: I am not sure this is the best solution.  What
-                    # if we want to enable tracebacks when also trying to
-                    # debug a different skin?
-                    skin = zope.component.getUtility(IBrowserSkinType, 'Debug')
-                    directlyProvides(request, providedBy(request) + skin)
-                else:
-                    raise ValueError("Unknown debug flag: %s" % flag)
-            return self.context
-        else:
+        if not self.enable_debug or not __debug__:
             raise ValueError("Debug flags only allowed in debug mode")
 
-    if not __debug__:
+        request = self.request
+        for flag in name.split(','):
+            if flag == 'source':
+                request.debug.sourceAnnotations = True
+            elif flag == 'tal':
+                request.debug.showTAL = True
+            elif flag == 'errors':
+                # TODO: I am not sure this is the best solution.  What
+                # if we want to enable tracebacks when also trying to
+                # debug a different skin?
+                skin = zope.component.getUtility(IBrowserSkinType, 'Debug')
+                directlyProvides(request, providedBy(request) + skin)
+            else:
+                raise ValueError("Unknown debug flag: %s" % flag)
+        return self.context
+
+    if not __debug__: # pragma: no cover
         # If not in debug mode, we should get an error:
         traverse.__doc__ = """Disabled debug traversal adapter
 

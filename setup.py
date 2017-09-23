@@ -51,6 +51,7 @@ setup(
     author_email='zope-dev@zope.org',
     description="Resolving paths in the object hierarchy",
     long_description=long_description,
+    keywords="zope traversal route URL view",
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',

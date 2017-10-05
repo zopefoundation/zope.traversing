@@ -10,7 +10,7 @@
         :target: https://pypi.org/project/zope.traversing/
         :alt: Supported Python versions
 
-.. image:: https://travis-ci.org/zopefoundation/zope.traversing.png?branch=master
+.. image:: https://travis-ci.org/zopefoundation/zope.traversing.svg?branch=master
         :target: https://travis-ci.org/zopefoundation/zope.traversing
 
 .. image:: https://coveralls.io/repos/github/zopefoundation/zope.traversing/badge.svg?branch=master

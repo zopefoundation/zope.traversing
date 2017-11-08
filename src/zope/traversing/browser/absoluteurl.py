@@ -11,7 +11,12 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
-"""Absolute URL View components
+"""
+Absolute URL View components.
+
+These are registered as views and named views (``absolute_url``) if
+you load this package's ``configure.zcml`` with
+:mod:`zope.configuration.xmlconfig`.
 """
 try:
     from urllib.parse import quote_from_bytes as quote
@@ -52,6 +57,10 @@ class _EncodedUnicode(object):
 @implementer(IAbsoluteURL)
 class AbsoluteURL(_EncodedUnicode,
                   BrowserView):
+    """
+    The default implementation of
+    :class:`zope.traversing.browser.interfaces.IAbsoluteURL`.
+    """
 
     def __str__(self):
         context = self.context
@@ -131,6 +140,11 @@ class AbsoluteURL(_EncodedUnicode,
 @implementer(IAbsoluteURL)
 class SiteAbsoluteURL(_EncodedUnicode,
                       BrowserView):
+    """
+    An implementation of
+    :class:`zope.traversing.browser.interfaces.IAbsoluteURL` for site
+    root objects (:class:`zope.location.interfaces.IRoot`).
+    """
 
     def __str__(self):
         context = self.context

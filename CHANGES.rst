@@ -5,7 +5,7 @@
 4.2.1 (unreleased)
 ==================
 
-- Nothing changed yet.
+- Host documentation at https://zopetraversing.readthedocs.io/
 
 
 4.2.0 (2017-09-23)

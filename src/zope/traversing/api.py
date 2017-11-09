@@ -21,7 +21,9 @@ from zope.interface import moduleProvides
 from zope.location.interfaces import ILocationInfo, IRoot
 from zope.traversing.interfaces import ITraversalAPI, ITraverser
 
-
+# The authoritative documentation for these functions
+# is in this interface. Later, we replace all our docstrings
+# with those defined in the interface.
 moduleProvides(ITraversalAPI)
 __all__ = tuple(ITraversalAPI)
 
@@ -31,6 +33,8 @@ _marker = object()
 def joinPath(path, *args):
     """
     Join the given relative paths to the given path.
+
+    See `ITraversalAPI` for details.
     """
 
     if not args:
@@ -49,6 +53,8 @@ def joinPath(path, *args):
 def getPath(obj):
     """
     Returns a string representing the physical path to the object.
+
+    See `ITraversalAPI` for details.
     """
     return ILocationInfo(obj).getPath()
 
@@ -56,12 +62,17 @@ def getPath(obj):
 def getRoot(obj):
     """
     Returns the root of the traversal for the given object.
+
+    See `ITraversalAPI` for details.
     """
     return ILocationInfo(obj).getRoot()
 
 
 def traverse(object, path, default=_marker, request=None):
     """
+    Traverse *path* relative to the given object.
+
+    See `ITraversalAPI` for details.
     """
     traverser = ITraverser(object)
     if default is _marker:
@@ -72,6 +83,8 @@ def traverse(object, path, default=_marker, request=None):
 def traverseName(obj, name, default=_marker, traversable=None, request=None):
     """
     Traverse a single step 'name' relative to the given object.
+
+    See `ITraversalAPI` for details.
     """
     further_path = []
     if default is _marker:
@@ -88,7 +101,9 @@ def traverseName(obj, name, default=_marker, traversable=None, request=None):
 
 def getName(obj):
     """
-    Get the name an object was traversed via
+    Get the name an object was traversed via.
+
+    See `ITraversalAPI` for details.
     """
     return ILocationInfo(obj).getName()
 
@@ -96,6 +111,8 @@ def getName(obj):
 def getParent(obj):
     """
     Returns the container the object was traversed via.
+
+    See `ITraversalAPI` for details.
     """
     try:
         location_info = ILocationInfo(obj)
@@ -123,6 +140,8 @@ def getParents(obj):
     """
     Returns a list starting with the given object's parent followed by
     each of its parents.
+
+    See `ITraversalAPI` for details.
     """
     return ILocationInfo(obj).getParents()
 
@@ -158,6 +177,8 @@ def canonicalPath(path_or_object):
     """
     Returns a canonical absolute unicode path for the given path or
     object.
+
+    See `ITraversalAPI` for details.
     """
     if isinstance(path_or_object, six.string_types):
         path = path_or_object

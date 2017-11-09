@@ -14,9 +14,14 @@
 """
 URL Namespace Implementations
 
-A URL Namespace is usually a path segment that looks like ``++ns++name``.
-(It can also look like ``@@name``, which is a
-shortcut for ``++view++name``. See :func:`nsParse` for details.)
+URL namespaces are an extensible mechanism to provide additional
+control over traversal (for example, disambiguating :class:`item
+<item>` versus :class:`attribute <attr>` access) or access to an
+additional set of traversable names (such as :class:`registered views
+<view>` or :class:`path adapters <adapter>`).  This mechanism is used
+for path segments that look like ``++ns++name``.  (It is also used for
+segments like ``@@name``, which is a shortcut for ``++view++name``.
+See :func:`nsParse` for details.)
 
 ``ns`` is the name of the namespace (a named, registered adapter that
 implements `ITraversable`) and ``name`` is the name to traverse to in
@@ -25,34 +30,34 @@ that namespace.
 The function :func:`namespaceLookup` handles this process.
 
 If you configure this package by loading its ``configure.zcml`` using
-:mod:`zope.configuration.xmlconfig`, several namespaces are registered.  They
-are registered both as single adapters for any object, and as
-multi-adapters (views) for any object together with a
+:mod:`zope.configuration.xmlconfig`, several namespaces are
+registered.  They are registered both as single adapters for any
+object, and as multi-adapters (views) for any object together with a
 `zope.publisher.interfaces.IRequest`.  Those namespaces are:
 
 etc
-  Implemented in `etc`
+    Implemented in `etc`
 attribute
-  Implemented in `attr`
+    Implemented in `attr`
 adapter
-  Implemented in `adapter`
+    Implemented in `adapter`
 item
-  Implemented in `item`
+    Implemented in `item`
 acquire
-  Implemented in `acquire`
+    Implemented in `acquire`
 view
-  Implemented in `view`
+    Implemented in `view`
 resource
-  Implemented in `resource`
+    Implemented in `resource`
 lang
-  Implemented in `lang`
+    Implemented in `lang`
 skin
-  Implemented in `skin`
+    Implemented in `skin`
 vh
-  Implemented in `vh`
+    Implemented in `vh`
 debug
-  Implemented in `debug` (only if the ZCML feature ``devmode`` is enabled)
-  and only registered as a multi-adapter.
+    Implemented in `debug` (only if the ZCML feature ``devmode`` is enabled)
+    and only registered as a multi-adapter.
 """
 __docformat__ = 'restructuredtext'
 

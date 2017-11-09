@@ -46,7 +46,7 @@ class IAbsoluteURL(Interface):
 
 class IAbsoluteURLAPI(Interface):
     """
-    The api to compute absolute URLs of objects.
+    The API to compute absolute URLs of objects.
 
     Provided by :mod:`zope.traversing.browser.absoluteurl`
     """

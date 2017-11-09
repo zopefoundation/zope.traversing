@@ -102,7 +102,8 @@ class ITraversalAPI(Interface):
         """
 
     def traverse(object, path, default=None, request=None):
-        """Traverse *path* relative to the given object.
+        """
+        Traverse *path* relative to the given object.
 
         :param str path: a string with path segments separated by '/'.
         :keyword request: Passed in when traversing from
@@ -118,7 +119,8 @@ class ITraversalAPI(Interface):
 
     def traverseName(obj, name, default=None, traversable=None,
                      request=None):
-        """Traverse a single step *name* relative to the given object.
+        """
+        Traverse a single step *name* relative to the given object.
 
         *name* must be a string.  '.' and '..' are treated specially,
         as well as names starting with '@' or '+'.  Otherwise *name*
@@ -136,11 +138,13 @@ class ITraversalAPI(Interface):
         """
 
     def getName(obj):
-        """Get the name an object was traversed via
+        """
+        Get the name an object was traversed via.
         """
 
     def getParent(obj):
-        """Returns the container the object was traversed via.
+        """
+        Returns the container the object was traversed via.
 
         Returns `None` if the object is a containment root.
 
@@ -168,17 +172,25 @@ class ITraversalAPI(Interface):
 
 
 class IPathAdapter(Interface):
-    """Marker interface for adapters to be used in paths
+    """
+    Marker interface for adapters to be used in paths.
+
+    .. seealso:: :class:`.namespace.adapter`.
     """
 
 
 class IEtcNamespace(Interface):
-    """Marker for utility registrations in the ++etc++ namespace
+    """
+    Marker for utility registrations in the ``++etc++`` namespace.
+
+    .. seealso:: :class:`.namespace.etc`
     """
 
 
 class IBeforeTraverseEvent(IObjectEvent):
-    """An event which gets sent on publication traverse"""
+    """
+    An event which gets sent on publication traverse.
+    """
 
     request = Attribute("The current request")
 

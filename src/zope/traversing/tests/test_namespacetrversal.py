@@ -27,6 +27,15 @@ from zope.component.testing import setUp, tearDown
 from zope.testing.renormalizing import RENormalizing
 
 
+class TestSimpleHandler(unittest.TestCase):
+
+    def test_constructor(self):
+        h = namespace.SimpleHandler(42)
+        self.assertEqual(h.context, 42)
+
+        h = namespace.SimpleHandler(42, 43)
+        self.assertEqual(h.context, 42)
+
 class TestFunctions(unittest.TestCase):
 
     def test_getResource_not_found(self):

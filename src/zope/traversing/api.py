@@ -11,14 +11,19 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""Convenience functions for traversing the object tree.
+"""
+Convenience functions for traversing the object tree.
+
+This module provides :class:`zope.traversing.interfaces.ITraversalAPI`
 """
 import six
 from zope.interface import moduleProvides
 from zope.location.interfaces import ILocationInfo, IRoot
 from zope.traversing.interfaces import ITraversalAPI, ITraverser
 
-
+# The authoritative documentation for these functions
+# is in this interface. Later, we replace all our docstrings
+# with those defined in the interface.
 moduleProvides(ITraversalAPI)
 __all__ = tuple(ITraversalAPI)
 
@@ -26,22 +31,10 @@ _marker = object()
 
 
 def joinPath(path, *args):
-    """Join the given relative paths to the given path.
+    """
+    Join the given relative paths to the given path.
 
-    Returns a unicode path.
-
-    The path should be well-formed, and not end in a '/' unless it is
-    the root path. It can be either a string (ascii only) or unicode.
-    The positional arguments are relative paths to be added to the
-    path as new path segments.  The path may be absolute or relative.
-
-    A segment may not start with a '/' because that would be confused
-    with an absolute path. A segment may not end with a '/' because we
-    do not allow '/' at the end of relative paths.  A segment may
-    consist of . or .. to mean "the same place", or "the parent path"
-    respectively. A '.' should be removed and a '..' should cause the
-    segment to the left to be removed.  joinPath('/', '..') should
-    raise an exception.
+    See `ITraversalAPI` for details.
     """
 
     if not args:
@@ -58,32 +51,28 @@ def joinPath(path, *args):
 
 
 def getPath(obj):
-    """Returns a string representing the physical path to the object.
+    """
+    Returns a string representing the physical path to the object.
+
+    See `ITraversalAPI` for details.
     """
     return ILocationInfo(obj).getPath()
 
 
 def getRoot(obj):
-    """Returns the root of the traversal for the given object.
+    """
+    Returns the root of the traversal for the given object.
+
+    See `ITraversalAPI` for details.
     """
     return ILocationInfo(obj).getRoot()
 
 
 def traverse(object, path, default=_marker, request=None):
-    """Traverse 'path' relative to the given object.
+    """
+    Traverse *path* relative to the given object.
 
-    'path' is a string with path segments separated by '/'.
-
-    'request' is passed in when traversing from presentation code. This
-    allows paths like @@foo to work.
-
-    Raises LocationError if path cannot be found
-
-    Note: calling traverse with a path argument taken from an untrusted
-          source, such as an HTTP request form variable, is a bad idea.
-          It could allow a maliciously constructed request to call
-          code unexpectedly.
-          Consider using traverseName instead.
+    See `ITraversalAPI` for details.
     """
     traverser = ITraverser(object)
     if default is _marker:
@@ -92,21 +81,10 @@ def traverse(object, path, default=_marker, request=None):
 
 
 def traverseName(obj, name, default=_marker, traversable=None, request=None):
-    """Traverse a single step 'name' relative to the given object.
+    """
+    Traverse a single step 'name' relative to the given object.
 
-    'name' must be a string. '.' and '..' are treated specially, as well as
-    names starting with '@' or '+'. Otherwise 'name' will be treated as a
-    single path segment.
-
-    You can explicitly pass in an ITraversable as the 'traversable'
-    argument. If you do not, the given object will be adapted to ITraversable.
-
-    'request' is passed in when traversing from presentation code. This
-    allows paths like @@foo to work.
-
-    Raises LocationError if path cannot be found and 'default' was
-    not provided.
-
+    See `ITraversalAPI` for details.
     """
     further_path = []
     if default is _marker:
@@ -122,17 +100,19 @@ def traverseName(obj, name, default=_marker, traversable=None, request=None):
 
 
 def getName(obj):
-    """Get the name an object was traversed via
+    """
+    Get the name an object was traversed via.
+
+    See `ITraversalAPI` for details.
     """
     return ILocationInfo(obj).getName()
 
 
 def getParent(obj):
-    """Returns the container the object was traversed via.
+    """
+    Returns the container the object was traversed via.
 
-    Returns None if the object is a containment root.
-    Raises TypeError if the object doesn't have enough context to get the
-    parent.
+    See `ITraversalAPI` for details.
     """
     try:
         location_info = ILocationInfo(obj)
@@ -157,11 +137,11 @@ def getParent(obj):
 
 
 def getParents(obj):
-    """Returns a list starting with the given object's parent followed by
+    """
+    Returns a list starting with the given object's parent followed by
     each of its parents.
 
-    Raises a TypeError if the context doesn't go all the way down to
-    a containment root.
+    See `ITraversalAPI` for details.
     """
     return ILocationInfo(obj).getParents()
 
@@ -194,11 +174,11 @@ def _normalizePath(path):
 
 
 def canonicalPath(path_or_object):
-    """Returns a canonical absolute unicode path for the given path or object.
+    """
+    Returns a canonical absolute unicode path for the given path or
+    object.
 
-    Resolves segments that are '.' or '..'.
-
-    Raises ValueError if a badly formed path is given.
+    See `ITraversalAPI` for details.
     """
     if isinstance(path_or_object, six.string_types):
         path = path_or_object
@@ -223,3 +203,9 @@ def canonicalPath(path_or_object):
 
 # import this down here to avoid circular imports
 from zope.traversing.adapters import traversePathElement
+
+# Synchronize the documentation.
+for name in ITraversalAPI.names():
+    if name in globals():
+        globals()[name].__doc__ = ITraversalAPI[name].__doc__
+del name

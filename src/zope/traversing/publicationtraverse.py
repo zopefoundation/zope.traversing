@@ -30,16 +30,19 @@ class PublicationTraverser(object):
     """Traversal used for publication.
 
     The significant differences from
-    zope.traversing.adapters.traversePathElement() are:
+    `zope.traversing.adapters.traversePathElement` are:
 
-    - Instead of adapting each traversed object to ITraversable, this
-      version multi-adapts (ob, request) to IPublishTraverse.
+    - Instead of adapting each traversed object to ITraversable,
+      this version multi-adapts (ob, request) to
+      `zope.publisher.interfaces.IPublishTraverse`.
 
-    - This version wraps a security proxy around each traversed object.
+    - This version wraps a security proxy around each traversed
+      object.
 
-    - This version raises NotFound rather than LocationError.
+    - This version raises `zope.publisher.interfaces.NotFound`
+      rather than `zope.location.interfaces.LocationError`.
 
-    - This version has a method, traverseRelativeURL(), that
+    - This version has a method, :meth:`traverseRelativeURL`, that
       supports "browserDefault" traversal.
     """
     def proxy(self, ob):
@@ -126,6 +129,9 @@ PublicationTraverse = PublicationTraverser
 
 
 class PublicationTraverserWithoutProxy(PublicationTraverse):
+    """
+    A `PublicationTraverse` that does not add security proxies.
+    """
 
     def proxy(self, ob):
         return ob

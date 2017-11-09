@@ -75,6 +75,10 @@ setup(
     namespace_packages=['zope'],
     extras_require={
         'test': TESTS_REQUIRE,
+        'docs': [
+            'Sphinx',
+            'repoze.sphinx.autointerface',
+        ],
     },
     install_requires=[
         'setuptools',

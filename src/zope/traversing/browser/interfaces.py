@@ -17,6 +17,12 @@ from zope.interface import Interface
 
 
 class IAbsoluteURL(Interface):
+    """
+    An absolute URL.
+
+    These are typically registered as adapters or multi-adapters
+    for objects.
+    """
 
     def __unicode__():
         """Returns the URL as a unicode string."""
@@ -39,6 +45,16 @@ class IAbsoluteURL(Interface):
 
 
 class IAbsoluteURLAPI(Interface):
+    """
+    The API to compute absolute URLs of objects.
+
+    Provided by :mod:`zope.traversing.browser.absoluteurl`
+    """
 
     def absoluteURL(ob, request):
-        """Compute the absolute URL of an object """
+        """
+        Compute the absolute URL of an object.
+
+        This should return an ASCII string by looking up an adapter
+        from `(ob, request)` to :class:`IAbsoluteURL` and then calling it.
+        """

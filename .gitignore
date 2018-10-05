@@ -2,6 +2,7 @@
 .coverage
 .tox
 coverage
+coverage.xml
 src/*.egg-info
 __pycache__
 *.pyc

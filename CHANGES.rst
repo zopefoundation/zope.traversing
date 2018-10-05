@@ -5,8 +5,9 @@
 4.2.1 (unreleased)
 ==================
 
-- Host documentation at https://zopetraversing.readthedocs.io/
+- Add support for Python 3.7.
 
+- Host documentation at https://zopetraversing.readthedocs.io
 
 4.2.0 (2017-09-23)
 ==================

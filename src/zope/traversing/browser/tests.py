@@ -73,6 +73,9 @@ class FooLocation(object):
 
 class TestAbsoluteURL(PlacelessSetup, unittest.TestCase):
 
+    assertRaisesRegex = getattr(unittest.TestCase, 'assertRaisesRegex',
+                                getattr(unittest.TestCase, 'assertRaisesRegexp'))
+
     def setUp(self):
         PlacelessSetup.setUp(self)
         from zope.traversing.browser import AbsoluteURL, SiteAbsoluteURL
@@ -306,8 +309,8 @@ class TestAbsoluteURL(PlacelessSetup, unittest.TestCase):
     def test_breadcrumbs_no_parent(self):
 
         view = AbsoluteURL(self, None)
-        with self.assertRaisesRegexp(TypeError,
-                                     "There isn't enough context"):
+        with self.assertRaisesRegex(TypeError,
+                                    "There isn't enough context"):
             view.breadcrumbs()
 
     def test_nameless_context(self):
@@ -343,8 +346,8 @@ class TestAbsoluteURL(PlacelessSetup, unittest.TestCase):
 
         # First the view
         view = AbsoluteURL(context, request)
-        with self.assertRaisesRegexp(TypeError,
-                                     "There isn't enough context"):
+        with self.assertRaisesRegex(TypeError,
+                                    "There isn't enough context"):
             str(view)
 
         self.assertTrue(DummyAbsoluteURL.called)
@@ -352,8 +355,8 @@ class TestAbsoluteURL(PlacelessSetup, unittest.TestCase):
 
         # Now the breadcrumbs
         view = AbsoluteURL(context, request)
-        with self.assertRaisesRegexp(TypeError,
-                                     "There isn't enough context"):
+        with self.assertRaisesRegex(TypeError,
+                                    "There isn't enough context"):
             view.breadcrumbs()
 
         self.assertTrue(DummyAbsoluteURL.called)

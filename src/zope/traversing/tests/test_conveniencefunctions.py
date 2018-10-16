@@ -384,6 +384,9 @@ class TestStandalone(unittest.TestCase):
     # Unlike TestFunctional, we don't register gobs of
     # adapters, making these tests more self-contained
 
+    assertRaisesRegex = getattr(unittest.TestCase, 'assertRaisesRegex',
+                                getattr(unittest.TestCase, 'assertRaisesRegexp'))
+
     def test_getParent_no_location_info(self):
         from zope.traversing.api import getParent
         test = self
@@ -395,8 +398,8 @@ class TestStandalone(unittest.TestCase):
                 raise TypeError()
 
         context = Context()
-        with self.assertRaisesRegexp(TypeError,
-                                     "Not enough context"):
+        with self.assertRaisesRegex(TypeError,
+                                    "Not enough context"):
             getParent(context)
 
         self.assertTrue(context.called)

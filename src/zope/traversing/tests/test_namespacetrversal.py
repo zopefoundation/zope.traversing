@@ -123,9 +123,12 @@ class TestView(unittest.TestCase):
 
 class TestVh(unittest.TestCase):
 
+    assertRaisesRegex = getattr(unittest.TestCase, 'assertRaisesRegex',
+                                getattr(unittest.TestCase, 'assertRaisesRegexp'))
+
     def test_invalid_vh(self):
-        with self.assertRaisesRegexp(ValueError,
-                                     'Vhost directive should have the form'):
+        with self.assertRaisesRegex(ValueError,
+                                    'Vhost directive should have the form'):
             namespace.vh(None, None).traverse(u'invalid name', ())
 
 def test_suite():

@@ -44,7 +44,7 @@ TESTS_REQUIRE = [
 
 setup(
     name='zope.traversing',
-    version='4.3.1.dev0',
+    version='4.3.1',
     url='https://github.com/zopefoundation/zope.traversing',
     license='ZPL 2.1',
     author='Zope Foundation and Contributors',

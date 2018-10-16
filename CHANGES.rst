@@ -2,7 +2,7 @@
  Changes
 =========
 
-4.3.1 (unreleased)
+4.3.1 (2018-10-16)
 ==================
 
 - Fix DeprecationWarnings for ``ComponentLookupError`` by

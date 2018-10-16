@@ -67,7 +67,7 @@ import six
 import zope.component
 import zope.interface
 from zope.i18n.interfaces import IModifiableUserPreferredLanguages
-from zope.component.interfaces import ComponentLookupError
+from zope.interface.interfaces import ComponentLookupError
 from zope.interface import providedBy, directlyProvides
 from zope.location.interfaces import LocationError
 from zope.publisher.interfaces.browser import IBrowserSkinType

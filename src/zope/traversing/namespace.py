@@ -673,7 +673,7 @@ class debug(view):
                 # if we want to enable tracebacks when also trying to
                 # debug a different skin?
                 skin = zope.component.getUtility(IBrowserSkinType, 'Debug')
-                directlyProvides(request, providedBy(request) + skin)
+                directlyProvides(request, skin)
             else:
                 raise ValueError("Unknown debug flag: %s" % flag)
         return self.context

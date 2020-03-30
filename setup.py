@@ -97,4 +97,12 @@ setup(
     tests_require=TESTS_REQUIRE,
     include_package_data=True,
     zip_safe=False,
+    python_requires=', '.join([
+        '>=2.7',
+        '!=3.0.*',
+        '!=3.1.*',
+        '!=3.2.*',
+        '!=3.3.*',
+        '!=3.4.*',
+    ]),
 )

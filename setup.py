@@ -44,7 +44,7 @@ TESTS_REQUIRE = [
 
 setup(
     name='zope.traversing',
-    version='4.3.2.dev0',
+    version='4.4.0.dev0',
     url='https://github.com/zopefoundation/zope.traversing',
     license='ZPL 2.1',
     author='Zope Foundation and Contributors',
@@ -63,6 +63,7 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Natural Language :: English',

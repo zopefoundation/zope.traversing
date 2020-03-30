@@ -68,7 +68,7 @@ import zope.component
 import zope.interface
 from zope.i18n.interfaces import IModifiableUserPreferredLanguages
 from zope.interface.interfaces import ComponentLookupError
-from zope.interface import providedBy, directlyProvides
+from zope.interface import alsoProvides
 from zope.location.interfaces import LocationError
 from zope.publisher.interfaces.browser import IBrowserSkinType
 from zope.publisher.skinnable import applySkin
@@ -86,7 +86,7 @@ class ExcessiveDepth(LocationError):
     "Too many levels of containment. We don't believe them."
 
 
-def namespaceLookup(ns, name, object, request=None):
+def namespaceLookup(ns, name, object, request=None): # pylint:disable=redefined-builtin
     """
     Lookup a value from a namespace.
 
@@ -211,25 +211,25 @@ def nsParse(name):
 
 
 def getResource(context, name, request):
-    resource = queryResource(context, name, request)
-    if resource is None:
+    result = queryResource(context, name, request)
+    if result is None:
         raise LocationError(context, name)
-    return resource
+    return result
 
 
 def queryResource(context, name, request, default=None):
-    resource = zope.component.queryAdapter(request, name=name)
-    if resource is None:
+    result = zope.component.queryAdapter(request, name=name)
+    if result is None:
         return default
 
     # We need to set the __parent__ and __name__.  We need the unproxied
     # resource to do this.  We still return the proxied resource.
-    r = removeSecurityProxy(resource)
+    unproxied = removeSecurityProxy(result)
 
-    r.__parent__ = context
-    r.__name__ = name
+    unproxied.__parent__ = context
+    unproxied.__name__ = name
 
-    return resource
+    return result
 
 
 # ---- namespace processors below ----
@@ -305,14 +305,14 @@ class acquire(SimpleHandler):
                 try:
                     # ??? what do we do if the path gets bigger?
                     path = []
-                    next = traversable.traverse(name, path)
+                    after = traversable.traverse(name, path) # pylint:disable=too-many-function-args,assignment-from-no-return
                     if path:
                         continue
                 except LocationError:
                     pass
 
                 else:
-                    return next
+                    return after
 
             ob = getattr(ob, '__parent__', None)
             if ob is None:
@@ -415,12 +415,12 @@ class view(object):
         self.request = request
 
     def traverse(self, name, ignored):
-        view = zope.component.queryMultiAdapter((self.context, self.request),
-                                                name=name)
-        if view is None:
+        result = zope.component.queryMultiAdapter((self.context, self.request),
+                                                  name=name)
+        if result is None:
             raise LocationError(self.context, name)
 
-        return view
+        return result
 
 
 class resource(view):
@@ -455,7 +455,7 @@ class lang(view):
     def traverse(self, name, ignored):
         self.request.shiftNameToApplication()
         languages = IModifiableUserPreferredLanguages(self.request)
-        languages.setPreferredLanguages([name])
+        languages.setPreferredLanguages([name]) # pylint:disable=too-many-function-args
         return self.context
 
 
@@ -476,10 +476,10 @@ class skin(view):
     def traverse(self, name, ignored):
         self.request.shiftNameToApplication()
         try:
-            skin = zope.component.getUtility(IBrowserSkinType, name)
+            the_skin = zope.component.getUtility(IBrowserSkinType, name)
         except ComponentLookupError:
             raise LocationError("++skin++%s" % name)
-        applySkin(self.request, skin)
+        applySkin(self.request, the_skin)
         return self.context
 
 
@@ -621,7 +621,8 @@ class debug(view):
         ``++debug++errors`` enables tracebacks (by switching to debug skin)
 
             >>> from zope.publisher.interfaces.browser import IBrowserRequest
-
+            >>> from zope.interface import directlyProvides
+            >>> from zope.interface import Interface
             >>> class Debug(IBrowserRequest):
             ...     pass
             >>> directlyProvides(Debug, IBrowserSkinType)
@@ -633,6 +634,21 @@ class debug(view):
             >>> adapter.traverse('errors', ()) is ob
             True
             >>> Debug.providedBy(request)
+            True
+
+        Interfaces already directly provided by the request are still provided by it
+        once the debug skin is applied.
+
+            >>> request = TestRequest()
+            >>> class IFoo(Interface):
+            ...    pass
+            >>> directlyProvides(request, IFoo)
+            >>> adapter = debug(ob, request)
+            >>> adapter.traverse('errors', ()) is ob
+            True
+            >>> Debug.providedBy(request)
+            True
+            >>> IFoo.providedBy(request)
             True
 
         You can specify several flags separated by commas
@@ -672,8 +688,10 @@ class debug(view):
                 # TODO: I am not sure this is the best solution.  What
                 # if we want to enable tracebacks when also trying to
                 # debug a different skin?
-                skin = zope.component.getUtility(IBrowserSkinType, 'Debug')
-                directlyProvides(request, skin)
+                # Note that we don't use applySkin(), because it removes all existing
+                # skins.
+                debug_skin = zope.component.getUtility(IBrowserSkinType, 'Debug')
+                alsoProvides(request, debug_skin)
             else:
                 raise ValueError("Unknown debug flag: %s" % flag)
         return self.context

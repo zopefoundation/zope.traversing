@@ -685,11 +685,9 @@ class debug(view):
             elif flag == 'tal':
                 request.debug.showTAL = True
             elif flag == 'errors':
-                # TODO: I am not sure this is the best solution.  What
-                # if we want to enable tracebacks when also trying to
-                # debug a different skin?
                 # Note that we don't use applySkin(), because it removes all existing
-                # skins.
+                # skins. We may want to get tracebacks while trying to debug a
+                # different skin.
                 debug_skin = zope.component.getUtility(IBrowserSkinType, 'Debug')
                 alsoProvides(request, debug_skin)
             else:

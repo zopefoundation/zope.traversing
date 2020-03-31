@@ -5,7 +5,9 @@
 4.4.1 (unreleased)
 ==================
 
-- Nothing changed yet.
+- Ensure all objects have consistent resolution orders. Previously,
+  the "debug" namespace's "errors" flag completely changed the
+  resolution order of the request instead of simply adding the "Debug" skin.
 
 
 4.4.0 (2020-03-30)

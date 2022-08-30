@@ -17,14 +17,15 @@ import re
 import unittest
 from doctest import DocTestSuite
 
-from zope import interface
-from zope import component
-from zope.location.interfaces import LocationError
-from zope.traversing import namespace
-
 from zope.component.testing import PlacelessSetup
-from zope.component.testing import setUp, tearDown
+from zope.component.testing import setUp
+from zope.component.testing import tearDown
+from zope.location.interfaces import LocationError
 from zope.testing.renormalizing import RENormalizing
+
+from zope import component
+from zope import interface
+from zope.traversing import namespace
 
 
 class TestSimpleHandler(unittest.TestCase):

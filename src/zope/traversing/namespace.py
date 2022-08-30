@@ -64,15 +64,17 @@ __docformat__ = 'restructuredtext'
 import re
 
 import six
+
 import zope.component
 import zope.interface
 from zope.i18n.interfaces import IModifiableUserPreferredLanguages
-from zope.interface.interfaces import ComponentLookupError
 from zope.interface import alsoProvides
+from zope.interface.interfaces import ComponentLookupError
 from zope.location.interfaces import LocationError
 from zope.publisher.interfaces.browser import IBrowserSkinType
 from zope.publisher.skinnable import applySkin
 from zope.security.proxy import removeSecurityProxy
+
 from zope.traversing.interfaces import IEtcNamespace
 from zope.traversing.interfaces import IPathAdapter
 from zope.traversing.interfaces import ITraversable

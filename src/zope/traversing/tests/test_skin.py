@@ -16,9 +16,11 @@
 import unittest
 
 import zope.component
-from zope.testing.cleanup import CleanUp
-from zope.interface import Interface, directlyProvides
+from zope.interface import Interface
+from zope.interface import directlyProvides
 from zope.publisher.interfaces.browser import IBrowserSkinType
+from zope.testing.cleanup import CleanUp
+
 
 class FauxRequest(object):
     def shiftNameToApplication(self):
@@ -46,8 +48,9 @@ class Test(CleanUp, unittest.TestCase):
         self.assertEqual(request.shifted, 1)
 
     def test_missing_skin(self):
-        from zope.traversing.namespace import skin
         from zope.location.interfaces import LocationError
+
+        from zope.traversing.namespace import skin
         request = FauxRequest()
         ob = object()
         traverser = skin(ob, request)

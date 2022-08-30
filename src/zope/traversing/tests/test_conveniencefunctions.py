@@ -15,16 +15,21 @@
 """
 import unittest
 
-from zope import interface
 import zope.component
 from zope.component.testing import PlacelessSetup
-from zope.location.traversing \
-    import LocationPhysicallyLocatable, RootPhysicallyLocatable
-from zope.location.interfaces import ILocationInfo, IRoot, LocationError
+from zope.location.interfaces import ILocationInfo
+from zope.location.interfaces import IRoot
+from zope.location.interfaces import LocationError
+from zope.location.traversing import LocationPhysicallyLocatable
+from zope.location.traversing import RootPhysicallyLocatable
 
-from zope.traversing.adapters import Traverser, DefaultTraversable
-from zope.traversing.interfaces import ITraversable, ITraverser
+from zope import interface
+from zope.traversing.adapters import DefaultTraversable
+from zope.traversing.adapters import Traverser
+from zope.traversing.interfaces import ITraversable
+from zope.traversing.interfaces import ITraverser
 from zope.traversing.testing import contained
+
 
 class C(object):
     __parent__ = None
@@ -131,8 +136,9 @@ class TestFunctional(PlacelessSetup, unittest.TestCase):
             )
 
     def testTraverseNameUnicode(self):
-        from zope.traversing.api import traverseName
         from zope.interface import implementer
+
+        from zope.traversing.api import traverseName
 
         @implementer(ITraversable)
         class BrokenTraversable(object):

@@ -16,15 +16,17 @@
 import unittest
 
 import zope.component
-from zope.annotation import IAttributeAnnotatable, IAnnotations
+from zope.annotation import IAnnotations
+from zope.annotation import IAttributeAnnotatable
 from zope.annotation.attribute import AttributeAnnotations
+from zope.i18n.interfaces import IModifiableUserPreferredLanguages
 from zope.interface import directlyProvides
 from zope.publisher.browser import ModifiableBrowserLanguages
 from zope.publisher.interfaces.http import IHTTPRequest
 from zope.publisher.tests import test_browserlanguages
-from zope.i18n.interfaces import IModifiableUserPreferredLanguages
-from zope.traversing.namespace import lang
 from zope.testing.cleanup import CleanUp
+
+from zope.traversing.namespace import lang
 
 
 class TestRequest(test_browserlanguages.TestRequest):

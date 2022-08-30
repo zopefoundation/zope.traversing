@@ -17,9 +17,14 @@ Convenience functions for traversing the object tree.
 This module provides :class:`zope.traversing.interfaces.ITraversalAPI`
 """
 import six
+
 from zope.interface import moduleProvides
-from zope.location.interfaces import ILocationInfo, IRoot
-from zope.traversing.interfaces import ITraversalAPI, ITraverser
+from zope.location.interfaces import ILocationInfo
+from zope.location.interfaces import IRoot
+
+from zope.traversing.interfaces import ITraversalAPI
+from zope.traversing.interfaces import ITraverser
+
 
 # The authoritative documentation for these functions
 # is in this interface. Later, we replace all our docstrings
@@ -203,6 +208,7 @@ def canonicalPath(path_or_object):
 
 # import this down here to avoid circular imports
 from zope.traversing.adapters import traversePathElement
+
 
 # Synchronize the documentation.
 for name in ITraversalAPI.names():

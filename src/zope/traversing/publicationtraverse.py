@@ -16,14 +16,16 @@
 __docformat__ = 'restructuredtext'
 
 import six
+
 from zope.component import queryMultiAdapter
+from zope.publisher.interfaces import IPublishTraverse
 from zope.publisher.interfaces import NotFound
+from zope.publisher.interfaces.browser import IBrowserPublisher
 from zope.security.checker import ProxyFactory
+
+from zope.traversing.interfaces import TraversalError
 from zope.traversing.namespace import namespaceLookup
 from zope.traversing.namespace import nsParse
-from zope.traversing.interfaces import TraversalError
-from zope.publisher.interfaces import IPublishTraverse
-from zope.publisher.interfaces.browser import IBrowserPublisher
 
 
 class PublicationTraverser(object):

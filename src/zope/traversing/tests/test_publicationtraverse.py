@@ -15,16 +15,19 @@
 """
 import unittest
 
-from zope.testing.cleanup import CleanUp
 from zope.component import provideAdapter
-from zope.interface import Interface, implementer
+from zope.interface import Interface
+from zope.interface import implementer
 from zope.publisher.browser import TestRequest
 from zope.publisher.interfaces import IPublishTraverse
 from zope.publisher.interfaces import NotFound
 from zope.publisher.interfaces.browser import IBrowserPublisher
 from zope.security.proxy import removeSecurityProxy
+from zope.testing.cleanup import CleanUp
+
 from zope.traversing.interfaces import ITraversable
 from zope.traversing.publicationtraverse import PublicationTraverser
+
 
 class TestPublicationTraverser(CleanUp, unittest.TestCase):
 
@@ -193,9 +196,10 @@ class TestPublicationTraverser(CleanUp, unittest.TestCase):
 class TestBeforeTraverseEvent(unittest.TestCase):
 
     def test_interfaces(self):
-        from zope.traversing.interfaces import IBeforeTraverseEvent
-        from zope.traversing.interfaces import BeforeTraverseEvent
         from zope.interface.verify import verifyObject
+
+        from zope.traversing.interfaces import BeforeTraverseEvent
+        from zope.traversing.interfaces import IBeforeTraverseEvent
 
         request = object()
         target = object()

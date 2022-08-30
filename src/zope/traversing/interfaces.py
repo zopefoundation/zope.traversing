@@ -19,11 +19,10 @@ from zope.interface import Interface
 from zope.interface import implementer
 from zope.interface.interfaces import IObjectEvent
 from zope.interface.interfaces import ObjectEvent
-
 # BBB: Re-import symbols to their old location.
-from zope.location.interfaces import LocationError as TraversalError
-from zope.location.interfaces import IRoot as IContainmentRoot
 from zope.location.interfaces import ILocationInfo as IPhysicallyLocatable
+from zope.location.interfaces import IRoot as IContainmentRoot
+from zope.location.interfaces import LocationError as TraversalError
 
 
 _RAISE_KEYERROR = object()

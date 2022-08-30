@@ -17,21 +17,30 @@ import unittest
 
 import zope.component
 from zope.component.testing import PlacelessSetup
-from zope.interface import directlyProvides, implementedBy
+from zope.interface import directlyProvides
+from zope.interface import implementedBy
 from zope.interface.verify import verifyClass
-from zope.location.traversing \
-    import LocationPhysicallyLocatable, RootPhysicallyLocatable
-from zope.location.interfaces \
-    import ILocationInfo, IRoot, LocationError
+from zope.location.interfaces import ILocationInfo
+from zope.location.interfaces import IRoot
+from zope.location.interfaces import LocationError
+from zope.location.traversing import LocationPhysicallyLocatable
+from zope.location.traversing import RootPhysicallyLocatable
+from zope.security.checker import Checker
+from zope.security.checker import CheckerPublic
+from zope.security.checker import ProxyFactory
+from zope.security.checker import defineChecker
 from zope.security.interfaces import Unauthorized
-from zope.security.checker \
-    import ProxyFactory, defineChecker, CheckerPublic, Checker
-from zope.security.management import newInteraction, endInteraction
+from zope.security.management import endInteraction
+from zope.security.management import newInteraction
 
-from zope.traversing.adapters import Traverser, DefaultTraversable
 from zope.traversing import adapters
-from zope.traversing.interfaces import ITraversable, ITraverser
-from zope.traversing.testing import contained, Contained
+from zope.traversing.adapters import DefaultTraversable
+from zope.traversing.adapters import Traverser
+from zope.traversing.interfaces import ITraversable
+from zope.traversing.interfaces import ITraverser
+from zope.traversing.testing import Contained
+from zope.traversing.testing import contained
+
 
 class ParticipationStub(object):
 

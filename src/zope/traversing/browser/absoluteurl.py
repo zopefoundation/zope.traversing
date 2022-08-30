@@ -28,14 +28,16 @@ try:
 except ImportError:
     from urllib import unquote
 
-
 import zope.component
+from zope.i18nmessageid import MessageFactory
 from zope.interface import implementer
 from zope.location.interfaces import ILocation
 from zope.proxy import sameProxiedObjects
 from zope.publisher.browser import BrowserView
+
 from zope.traversing.browser.interfaces import IAbsoluteURL
-from zope.i18nmessageid import MessageFactory
+
+
 _ = MessageFactory('zope')
 
 _insufficientContext = _("There isn't enough context to get URL information. "

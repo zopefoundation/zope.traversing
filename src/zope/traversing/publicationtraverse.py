@@ -47,6 +47,7 @@ class PublicationTraverser(object):
     - This version has a method, :meth:`traverseRelativeURL`, that
       supports "browserDefault" traversal.
     """
+
     def proxy(self, ob):
         return ProxyFactory(ob)
 

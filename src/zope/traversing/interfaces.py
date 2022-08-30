@@ -107,7 +107,8 @@ class ITraversalAPI(Interface):
         :param str path: a string with path segments separated by '/'.
         :keyword request: Passed in when traversing from
             presentation code.  This allows paths like "@@foo" to work.
-        :raises zope.location.interfaces.LocationError: if *path* cannot be found
+        :raises zope.location.interfaces.LocationError: if *path* cannot be
+            found
 
         .. note:: Calling `traverse` with a path argument taken from an
             untrusted source, such as an HTTP request form variable,
@@ -201,7 +202,6 @@ class BeforeTraverseEvent(ObjectEvent):
 
     Default implementation of `IBeforeTraverseEvent`.
     """
-
 
     def __init__(self, ob, request):
         ObjectEvent.__init__(self, ob)

@@ -34,6 +34,7 @@ class TestRequest(test_browserlanguages.TestRequest):
     def shiftNameToApplication(self):
         self.shifted = True
 
+
 class Test(CleanUp, unittest.TestCase):
 
     def setUp(self):

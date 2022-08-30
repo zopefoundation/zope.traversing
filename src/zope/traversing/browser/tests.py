@@ -77,8 +77,10 @@ class FooLocation(object):
 
 class TestAbsoluteURL(PlacelessSetup, unittest.TestCase):
 
-    assertRaisesRegex = getattr(unittest.TestCase, 'assertRaisesRegex',
-                                getattr(unittest.TestCase, 'assertRaisesRegexp'))
+    assertRaisesRegex = getattr(
+        unittest.TestCase,
+        'assertRaisesRegex',
+        getattr(unittest.TestCase, 'assertRaisesRegexp'))  # PY2
 
     def setUp(self):
         PlacelessSetup.setUp(self)
@@ -132,11 +134,11 @@ class TestAbsoluteURL(PlacelessSetup, unittest.TestCase):
 
         breadcrumbs = view.breadcrumbs()
         self.assertEqual(breadcrumbs,
-                         ({'name':  '', 'url': 'http://127.0.0.1'},
+                         ({'name': '', 'url': 'http://127.0.0.1'},
                           {'name': 'a', 'url': 'http://127.0.0.1/a'},
                           {'name': 'b', 'url': 'http://127.0.0.1/a/b'},
                           {'name': 'c', 'url': 'http://127.0.0.1/a/b/c'},
-                         ))
+                          ))
 
     def testParentButNoLocation(self):
         request = TestRequest()
@@ -169,10 +171,10 @@ class TestAbsoluteURL(PlacelessSetup, unittest.TestCase):
 
         breadcrumbs = view.breadcrumbs()
         self.assertEqual(breadcrumbs,
-                         ({'name':  '', 'url': 'http://127.0.0.1'},
+                         ({'name': '', 'url': 'http://127.0.0.1'},
                           {'name': 'bar', 'url': 'http://127.0.0.1/bar'},
                           {'name': 'foo', 'url': 'http://127.0.0.1/bar/foo'},
-                         ))
+                          ))
 
     def testParentTrumpsAdapter(self):
         # if we have a location adapter for a content object but
@@ -190,7 +192,7 @@ class TestAbsoluteURL(PlacelessSetup, unittest.TestCase):
                          'http://127.0.0.1/foo')
 
     def testBasicContext_unicode(self):
-        #Tests so that AbsoluteURL handle unicode names as well
+        # Tests so that AbsoluteURL handle unicode names as well
         request = TestRequest()
         root = Root()
         root.__name__ = u'\u0439'
@@ -209,17 +211,18 @@ class TestAbsoluteURL(PlacelessSetup, unittest.TestCase):
                          'http://127.0.0.1/%D0%B9/%D1%82/%D0%B5/%D1%81')
 
         breadcrumbs = view.breadcrumbs()
-        self.assertEqual(breadcrumbs,
-                         ({'name':  '', 'url': 'http://127.0.0.1'},
-                          {'name': u'\u0439', 'url': 'http://127.0.0.1/%D0%B9'},
-                          {'name': u'\u0442',
-                           'url': 'http://127.0.0.1/%D0%B9/%D1%82'},
-                          {'name': u'\u0435',
-                           'url': 'http://127.0.0.1/%D0%B9/%D1%82/%D0%B5'},
-                          {'name': u'\u0441',
-                           'url':
-                           'http://127.0.0.1/%D0%B9/%D1%82/%D0%B5/%D1%81'},
-                         ))
+        self.assertEqual(
+            breadcrumbs, (
+                {'name': '',
+                 'url': 'http://127.0.0.1'},
+                {'name': u'\u0439',
+                 'url': 'http://127.0.0.1/%D0%B9'},
+                {'name': u'\u0442',
+                 'url': 'http://127.0.0.1/%D0%B9/%D1%82'},
+                {'name': u'\u0435',
+                 'url': 'http://127.0.0.1/%D0%B9/%D1%82/%D0%B5'},
+                {'name': u'\u0441',
+                 'url': 'http://127.0.0.1/%D0%B9/%D1%82/%D0%B5/%D1%81'}))
 
     def testRetainSkin(self):
         request = TestRequest()
@@ -235,11 +238,11 @@ class TestAbsoluteURL(PlacelessSetup, unittest.TestCase):
 
         breadcrumbs = view.breadcrumbs()
         self.assertEqual(breadcrumbs,
-                         ({'name':  '', 'url': base + ''},
+                         ({'name': '', 'url': base + ''},
                           {'name': 'a', 'url': base + '/a'},
                           {'name': 'b', 'url': base + '/a/b'},
                           {'name': 'c', 'url': base + '/a/b/c'},
-                         ))
+                          ))
 
     def testVirtualHosting(self):
         request = TestRequest()
@@ -254,10 +257,10 @@ class TestAbsoluteURL(PlacelessSetup, unittest.TestCase):
 
         breadcrumbs = view.breadcrumbs()
         self.assertEqual(breadcrumbs,
-                         ({'name':  '', 'url': 'http://127.0.0.1'},
+                         ({'name': '', 'url': 'http://127.0.0.1'},
                           {'name': 'b', 'url': 'http://127.0.0.1/b'},
                           {'name': 'c', 'url': 'http://127.0.0.1/b/c'},
-                         ))
+                          ))
 
     def testVirtualHostingWithVHElements(self):
         request = TestRequest()
@@ -272,10 +275,10 @@ class TestAbsoluteURL(PlacelessSetup, unittest.TestCase):
 
         breadcrumbs = view.breadcrumbs()
         self.assertEqual(breadcrumbs,
-                         ({'name':  '', 'url': 'http://127.0.0.1'},
+                         ({'name': '', 'url': 'http://127.0.0.1'},
                           {'name': 'b', 'url': 'http://127.0.0.1/b'},
                           {'name': 'c', 'url': 'http://127.0.0.1/b/c'},
-                         ))
+                          ))
 
     def testVirtualHostingInFront(self):
         request = TestRequest()
@@ -291,11 +294,11 @@ class TestAbsoluteURL(PlacelessSetup, unittest.TestCase):
 
         breadcrumbs = view.breadcrumbs()
         self.assertEqual(breadcrumbs,
-                         ({'name':  '', 'url': 'http://127.0.0.1'},
+                         ({'name': '', 'url': 'http://127.0.0.1'},
                           {'name': 'a', 'url': 'http://127.0.0.1/a'},
                           {'name': 'b', 'url': 'http://127.0.0.1/a/b'},
                           {'name': 'c', 'url': 'http://127.0.0.1/a/b/c'},
-                         ))
+                          ))
 
     def testNoContextInformation(self):
         request = TestRequest()
@@ -309,7 +312,6 @@ class TestAbsoluteURL(PlacelessSetup, unittest.TestCase):
         view = getMultiAdapter((None, request), name='absolute_url')
         self.assertEqual(str(view), 'http://127.0.0.1')
         self.assertEqual(absoluteURL(None, request), 'http://127.0.0.1')
-
 
     def test_breadcrumbs_no_parent(self):
 
@@ -345,8 +347,8 @@ class TestAbsoluteURL(PlacelessSetup, unittest.TestCase):
         browserView(type(self), '', DummyAbsoluteURL, IAbsoluteURL)
 
         request = TestRequest()
-        self.assertIsInstance(zope.component.getMultiAdapter((self, request), IAbsoluteURL),
-                              DummyAbsoluteURL)
+        self.assertIsInstance(zope.component.getMultiAdapter(
+            (self, request), IAbsoluteURL), DummyAbsoluteURL)
         context = Context()
 
         # First the view

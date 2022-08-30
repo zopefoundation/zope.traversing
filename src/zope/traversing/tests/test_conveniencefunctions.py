@@ -34,9 +34,9 @@ from zope.traversing.testing import contained
 class C(object):
     __parent__ = None
     __name__ = None
+
     def __init__(self, name):
         self.name = name
-
 
 
 class TestFunctional(PlacelessSetup, unittest.TestCase):
@@ -64,7 +64,8 @@ class TestFunctional(PlacelessSetup, unittest.TestCase):
 
         self.tr = Traverser(root)
         zope.component.provideAdapter(Traverser, (None,), ITraverser)
-        zope.component.provideAdapter(DefaultTraversable, (None,), ITraversable)
+        zope.component.provideAdapter(
+            DefaultTraversable, (None,), ITraversable)
         zope.component.provideAdapter(LocationPhysicallyLocatable, (None,),
                                       ILocationInfo)
         zope.component.provideAdapter(RootPhysicallyLocatable,
@@ -75,7 +76,7 @@ class TestFunctional(PlacelessSetup, unittest.TestCase):
         self.assertEqual(
             traverse(self.item, '/folder/item'),
             self.tr.traverse('/folder/item')
-            )
+        )
 
     def test_traverse_with_default(self):
         from zope.traversing.api import traverse
@@ -90,7 +91,7 @@ class TestFunctional(PlacelessSetup, unittest.TestCase):
             TypeError,
             traverse,
             self.unwrapped_item, '/folder/item'
-            )
+        )
 
     def testTraverseName(self):
         from zope.traversing.api import traverseName
@@ -123,17 +124,17 @@ class TestFunctional(PlacelessSetup, unittest.TestCase):
             LocationError,
             traverseName,
             self.folder, '../root'
-            )
+        )
         self.assertRaises(
             LocationError,
             traverseName,
             self.folder, '/root'
-            )
+        )
         self.assertRaises(
             LocationError,
             traverseName,
             self.folder, './item'
-            )
+        )
 
     def testTraverseNameUnicode(self):
         from zope.interface import implementer
@@ -152,27 +153,26 @@ class TestFunctional(PlacelessSetup, unittest.TestCase):
             traverseName,
             BrokenTraversable(), '')
 
-
     def testGetName(self):
         from zope.traversing.api import getName
         self.assertEqual(
             getName(self.item),
             'item'
-            )
+        )
 
     def testGetParent(self):
         from zope.traversing.api import getParent
         self.assertEqual(
             getParent(self.item),
             self.folder
-            )
+        )
 
     def testGetParentFromRoot(self):
         from zope.traversing.api import getParent
         self.assertEqual(
             getParent(self.root),
             None
-            )
+        )
 
     def testGetParentBrokenChain(self):
         from zope.traversing.api import getParent
@@ -180,7 +180,7 @@ class TestFunctional(PlacelessSetup, unittest.TestCase):
             TypeError,
             getParent,
             self.broken_chain_folder
-            )
+        )
 
     def testGetParentFromUnwrapped(self):
         from zope.traversing.api import getParent
@@ -188,14 +188,14 @@ class TestFunctional(PlacelessSetup, unittest.TestCase):
             TypeError,
             getParent,
             self.unwrapped_item
-            )
+        )
 
     def testGetParents(self):
         from zope.traversing.api import getParents
         self.assertEqual(
             getParents(self.item),
             [self.folder, self.root]
-            )
+        )
 
     def testGetParentsBrokenChain(self):
         from zope.traversing.api import getParents
@@ -203,35 +203,35 @@ class TestFunctional(PlacelessSetup, unittest.TestCase):
             TypeError,
             getParents,
             self.broken_chain_item
-            )
+        )
 
     def testGetPath(self):
         from zope.traversing.api import getPath
         self.assertEqual(
             getPath(self.item),
             u'/folder/item'
-            )
+        )
 
     def testGetPathOfRoot(self):
         from zope.traversing.api import getPath
         self.assertEqual(
             getPath(self.root),
             u'/',
-            )
+        )
 
     def testGetNameOfRoot(self):
         from zope.traversing.api import getName
         self.assertEqual(
             getName(self.root),
             u'',
-            )
+        )
 
     def testGetRoot(self):
         from zope.traversing.api import getRoot
         self.assertEqual(
             getRoot(self.item),
             self.root
-            )
+        )
 
     def testCanonicalPath(self):
 
@@ -250,7 +250,7 @@ class TestFunctional(PlacelessSetup, unittest.TestCase):
 
             (IndexError, '/a/../..'),
             (ValueError, '/a//v'),
-            )
+        )
 
         # sequence of N-tuples:
         #   (loc_returned_as_string, input, input, ...)
@@ -263,17 +263,17 @@ class TestFunctional(PlacelessSetup, unittest.TestCase):
              # arguments to try in addition to the above
              '/xx/yy/zz',
              '/xx/./yy/ww/../zz',
-            ),
+             ),
             (u'/xx/yy/zz',
              '/xx/yy/zz',
-            ),
+             ),
             (u'/xx',
              '/xx',
-            ),
+             ),
             (u'/',
              '/',
              self.root,
-            ),
+             ),
         )
 
         from zope.traversing.api import canonicalPath
@@ -287,7 +287,6 @@ class TestFunctional(PlacelessSetup, unittest.TestCase):
                 self.assertEqual(canonicalPath(argument), correct_answer,
                                  "failure on %s" % argument)
 
-
     def test_normalizePath(self):
 
         _bad_locations = (
@@ -295,7 +294,7 @@ class TestFunctional(PlacelessSetup, unittest.TestCase):
             (ValueError, '/foo//bar'),
             (IndexError, '/a/../..'),
             (IndexError, '/a/./../..'),
-            )
+        )
 
         # sequence of N-tuples:
         #   (loc_returned_as_string, input, input, ...)
@@ -309,24 +308,23 @@ class TestFunctional(PlacelessSetup, unittest.TestCase):
              '/xx/yy/zz',
              '/xx/./yy/ww/../zz',
              '/xx/./yy/ww/./../zz',
-            ),
+             ),
             ('xx/yy/zz',
              # arguments to try in addition to the above
              'xx/yy/zz',
              'xx/./yy/ww/../zz',
              'xx/./yy/ww/./../zz',
-            ),
+             ),
             ('/xx/yy/zz',
              '/xx/yy/zz',
-            ),
+             ),
             ('/xx',
              '/xx',
-            ),
+             ),
             ('/',
              '/',
-            ),
+             ),
         )
-
 
         from zope.traversing.api import _normalizePath
 
@@ -390,14 +388,18 @@ class TestStandalone(unittest.TestCase):
     # Unlike TestFunctional, we don't register gobs of
     # adapters, making these tests more self-contained
 
-    assertRaisesRegex = getattr(unittest.TestCase, 'assertRaisesRegex',
-                                getattr(unittest.TestCase, 'assertRaisesRegexp'))
+    assertRaisesRegex = getattr(
+        unittest.TestCase,
+        'assertRaisesRegex',
+        getattr(unittest.TestCase, 'assertRaisesRegexp'))  # PY2
 
     def test_getParent_no_location_info(self):
         from zope.traversing.api import getParent
         test = self
+
         class Context(object):
             called = False
+
             def __conform__(self, iface):
                 self.called = True
                 test.assertEqual(iface, ILocationInfo)

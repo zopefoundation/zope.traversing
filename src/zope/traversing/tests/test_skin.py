@@ -26,8 +26,11 @@ class FauxRequest(object):
     def shiftNameToApplication(self):
         self.shifted = 1
 
+
 class IFoo(Interface):
     pass
+
+
 directlyProvides(IFoo, IBrowserSkinType)
 
 

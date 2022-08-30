@@ -40,6 +40,7 @@ class TestRequest(object):
         del self._traversed_names[:]
         self._app_names = names or []
 
+
 class TestVHNamespace(unittest.TestCase):
 
     def test_vh(self):
@@ -66,16 +67,14 @@ class TestVHNamespace(unittest.TestCase):
         handler = vh(ob, request)
         self.assertRaises(ValueError, handler.traverse, 'http:host:80', ())
 
-
     def test_vh_host(self):
         from zope.traversing.namespace import vh
 
         request = TestRequest(['folder1'], ['folder1_1', '++'])
         ob = object()
-        result = vh(ob, request).traverse('http:www.fubarco.com:80', ())
+        vh(ob, request).traverse('http:www.fubarco.com:80', ())
 
         self.assertEqual(request._app_server, 'http://www.fubarco.com:80')
-
 
     def test_unicode_vh_host(self):
         from zope.traversing.namespace import vh
@@ -83,15 +82,7 @@ class TestVHNamespace(unittest.TestCase):
         request = TestRequest(['folder1'], ['folder1_1', '++'])
         ob = object()
 
-        result = vh(ob, request).traverse(u'http:www.fubarco.com:80', ())
-        self.assertTrue(isinstance(request._app_server, str), repr(request._app_server))
-
-
-def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestVHNamespace))
-    return suite
-
-
-if __name__ == '__main__':
-    unittest.main()
+        vh(ob, request).traverse(u'http:www.fubarco.com:80', ())
+        self.assertTrue(
+            isinstance(request._app_server, str),
+            repr(request._app_server))

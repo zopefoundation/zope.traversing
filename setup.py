@@ -27,6 +27,7 @@ def read(filename):
     with open(filename) as f:
         return f.read()
 
+
 long_description = (read('README.rst') +
                     '\n\n' +
                     read('CHANGES.rst'))

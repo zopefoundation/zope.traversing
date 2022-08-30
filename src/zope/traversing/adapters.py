@@ -157,10 +157,10 @@ def traversePathElement(obj, name, further_path, default=_marker,
     try:
         return traversable.traverse(nm, further_path)
     except UnicodeEncodeError:
-        # If we're on Python 2, and nm was a unicode string, and the traversable
-        # tried to do an attribute lookup, the nm would have been encoded using the
-        # system encoding (usually ascii). Failure to encode means invalid attribute
-        # name.
+        # If we're on Python 2, and nm was a unicode string, and the
+        # traversable tried to do an attribute lookup, the nm would have been
+        # encoded using the system encoding (usually ascii). Failure to encode
+        # means invalid attribute name.
         if default is not _marker:
             return default
         raise LocationError(obj, name)

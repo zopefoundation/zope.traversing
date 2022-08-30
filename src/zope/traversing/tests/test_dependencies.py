@@ -1,6 +1,5 @@
 import unittest
 
-import zope.component
 from zope.configuration.xmlconfig import XMLConfig
 from zope.publisher.browser import TestRequest
 
@@ -19,9 +18,3 @@ class ZCMLDependencies(unittest.TestCase):
         import zope.traversing.namespace
         self.assertTrue(isinstance(res, zope.traversing.namespace.lang))
         self.assertTrue(res.context is self)
-
-
-def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(ZCMLDependencies))
-    return suite

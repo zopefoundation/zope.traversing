@@ -48,9 +48,11 @@ class ParticipationStub(object):
         self.principal = principal
         self.interaction = None
 
+
 class C(Contained):
     def __init__(self, name):
         self.name = name
+
 
 class TraverserTests(PlacelessSetup, unittest.TestCase):
 
@@ -72,6 +74,7 @@ class TraverserTests(PlacelessSetup, unittest.TestCase):
     def test_traverse_empty_path_is_context(self):
         self.assertIs(self.item, self.tr.traverse(''))
 
+
 class UnrestrictedNoTraverseTests(unittest.TestCase):
     def setUp(self):
         self.root = root = C('root')
@@ -88,11 +91,13 @@ class UnrestrictedNoTraverseTests(unittest.TestCase):
         self.assertRaises(LocationError, self.tr.traverse,
                           'folder')
 
+
 class UnrestrictedTraverseTests(PlacelessSetup, unittest.TestCase):
     def setUp(self):
         PlacelessSetup.setUp(self)
 
-        zope.component.provideAdapter(DefaultTraversable, (None,), ITraversable)
+        zope.component.provideAdapter(
+            DefaultTraversable, (None,), ITraversable)
         zope.component.provideAdapter(LocationPhysicallyLocatable, (None,),
                                       ILocationInfo)
         zope.component.provideAdapter(RootPhysicallyLocatable,
@@ -158,7 +163,7 @@ class UnrestrictedTraverseTests(PlacelessSetup, unittest.TestCase):
             'foo': 'bar',
             'anotherdict': {'bar': 'foo'},
             'items': '123',
-            }
+        }
         tr = Traverser(adict)
         self.assertEqual(tr.traverse('items'), adict.items)
         self.assertEqual(tr.traverse('anotherdict/bar'), 'foo')
@@ -189,7 +194,8 @@ class RestrictedTraverseTests(PlacelessSetup, unittest.TestCase):
     def setUp(self):
         PlacelessSetup.setUp(self)
 
-        zope.component.provideAdapter(DefaultTraversable, (None,), ITraversable)
+        zope.component.provideAdapter(
+            DefaultTraversable, (None,), ITraversable)
         zope.component.provideAdapter(LocationPhysicallyLocatable, (None,),
                                       ILocationInfo)
         zope.component.provideAdapter(RootPhysicallyLocatable,
@@ -295,9 +301,11 @@ class TestFunctions(unittest.TestCase):
 
     def test_traversePathElement_UnicodeEncodeError_with_default(self):
         test = self
+
         class Traversable(object):
             called = False
             fail = test.fail
+
             def traverse(self, nm, further_path):
                 self.called = True
                 u'\xff'.encode("ascii")
@@ -310,10 +318,10 @@ class TestFunctions(unittest.TestCase):
                                                    traversable=t))
         self.assertTrue(t.called)
 
-
     def test_traversePathElement_LocationError_with_default(self):
         class Traversable(object):
             called = False
+
             def traverse(self, nm, further_path):
                 self.called = True
                 raise LocationError()

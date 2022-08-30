@@ -29,14 +29,17 @@ from zope.traversing.testing import browserView
 class IContent(Interface):
     pass
 
+
 @implementer(IContent)
 class Content(object):
     pass
+
 
 class Resource(object):
 
     def __init__(self, request):
         pass
+
 
 class View(object):
 

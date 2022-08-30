@@ -17,3 +17,14 @@ use-flake8 = true
 
 [coverage]
 fail-under = 99
+
+[flake8]
+additional-config = [
+    "# F401 imported but unused",
+    "# E402 module level import not at top of file",
+    "per-file-ignores =",
+    "    src/zope/traversing/adapters.py: F401",
+    "    src/zope/traversing/api.py: E402",
+    "    src/zope/traversing/browser/__init__.py: F401",
+    "    src/zope/traversing/interfaces.py: F401",
+    ]

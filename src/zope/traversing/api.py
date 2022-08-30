@@ -206,6 +206,7 @@ def canonicalPath(path_or_object):
     # Break path into segments. Process '.' and '..' segments.
     return _normalizePath(path)
 
+
 # import this down here to avoid circular imports
 from zope.traversing.adapters import traversePathElement
 

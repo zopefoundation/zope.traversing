@@ -48,8 +48,10 @@ class MyObj(Contained):
     def __getitem__(self, key):
         return traverse(self, '/foo/bar/' + key)
 
+
 class IFolder(zope.interface.Interface):
     pass
+
 
 @zope.interface.implementer(IFolder, IBrowserPublisher)
 class Folder(Contained, dict):
@@ -64,7 +66,7 @@ class Folder(Contained, dict):
     def publishTraverse(self, request, name):
         subob = self.get(name, None)
         if subob is None:
-            raise NotFound(self.context, name, request) # pragma: no cover
+            raise NotFound(self.context, name, request)  # pragma: no cover
         return subob
 
 
@@ -87,12 +89,16 @@ class ZopeTraverser(object):
             object = traversePathElement(object, name, path_items,
                                          request=request)
         return object
+
+
 zopeTraverser = ZopeTraverser()
+
 
 class PathExpr(expressions.PathExpr):
 
     def __init__(self, name, expr, engine):
         super(PathExpr, self).__init__(name, expr, engine, zopeTraverser)
+
 
 def Engine():
     e = ExpressionEngine()
@@ -100,7 +106,9 @@ def Engine():
         e.registerType(pt, PathExpr)
     return e
 
+
 Engine = Engine()
+
 
 class MyTalesPage(object):
 
@@ -130,6 +138,7 @@ class MyPageEval(BrowserView):
         return template.render(template.__parent__, request, **kw)
 
     index = __call__
+
 
 class MyFolderPage(BrowserView):
 
@@ -242,7 +251,7 @@ class TestVirtualHosting(unittest.TestCase):
         """addFolders('/a/b/c/d') would traverse and/or create three nested
         folders (a, b, c) and return a tuple (c, 'd') where c is a Folder
         instance at /a/b/c."""
-        folder = self.app  #self.connection.root()['Application']
+        folder = self.app  # self.connection.root()['Application']
         if path[0] == '/':
             path = path[1:]
         path = path.split('/')
@@ -331,7 +340,8 @@ class DummyPublication(object):
         """Post-callObject hook (if it was successful).
         """
 
-    def handleException(self, ob, request, exc_info, retry_allowed=1): # pragma: no cover
+    def handleException(
+            self, ob, request, exc_info, retry_allowed=1):  # pragma: no cover
         """Handle an exception
 
         Either:

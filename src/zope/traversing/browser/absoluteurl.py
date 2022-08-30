@@ -40,15 +40,17 @@ from zope.traversing.browser.interfaces import IAbsoluteURL
 
 _ = MessageFactory('zope')
 
-_insufficientContext = _("There isn't enough context to get URL information. "
-                         "This is probably due to a bug in setting up location "
-                         "information.")
+_insufficientContext = _(
+    "There isn't enough context to get URL information. "
+    "This is probably due to a bug in setting up location "
+    "information.")
 
 _safe = '@+'  # Characters that we don't want to have quoted
 
 
 def absoluteURL(ob, request):
     return zope.component.getMultiAdapter((ob, request), IAbsoluteURL)()
+
 
 class _EncodedUnicode(object):
 
@@ -72,7 +74,7 @@ class AbsoluteURL(_EncodedUnicode,
         # beginning of the URL, such as skins, virtual host specifications and
         # so on.
         if (context is None
-            or sameProxiedObjects(context, request.getVirtualHostRoot())):
+                or sameProxiedObjects(context, request.getVirtualHostRoot())):
             return request.getApplicationURL()
 
         # first try to get the __parent__ of the object, no matter whether
@@ -117,7 +119,7 @@ class AbsoluteURL(_EncodedUnicode,
             raise TypeError(_insufficientContext)
 
         if sameProxiedObjects(context, request.getVirtualHostRoot()) or \
-               isinstance(context, Exception):
+                isinstance(context, Exception):
             return ({'name': '', 'url': self.request.getApplicationURL()}, )
 
         base = tuple(zope.component.getMultiAdapter(

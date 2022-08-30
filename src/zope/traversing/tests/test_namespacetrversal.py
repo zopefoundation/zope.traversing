@@ -37,6 +37,7 @@ class TestSimpleHandler(unittest.TestCase):
         h = namespace.SimpleHandler(42, 43)
         self.assertEqual(h.context, 42)
 
+
 class TestFunctions(unittest.TestCase):
 
     def test_getResource_not_found(self):
@@ -76,6 +77,7 @@ class TestEtc(PlacelessSetup, unittest.TestCase):
 
     def test_traverse_site_no_manager(self):
         test = self
+
         class Context(object):
             def __getattribute__(self, name):
                 test.assertEqual(name, 'getSiteManager')
@@ -91,6 +93,7 @@ class TestEtc(PlacelessSetup, unittest.TestCase):
     def test_traverse_site_lookup_error(self):
         class Context(object):
             called = False
+
             def getSiteManager(self):
                 self.called = True
                 from zope.component import ComponentLookupError
@@ -106,7 +109,8 @@ class TestEtc(PlacelessSetup, unittest.TestCase):
 
     def test_traverse_utility(self):
         from zope.traversing.interfaces import IEtcNamespace
-        component.provideUtility(self, provides=IEtcNamespace, name='my etc name')
+        component.provideUtility(
+            self, provides=IEtcNamespace, name='my etc name')
 
         result = namespace.etc(None, None).traverse('my etc name', ())
         self.assertIs(result, self)
@@ -124,13 +128,16 @@ class TestView(unittest.TestCase):
 
 class TestVh(unittest.TestCase):
 
-    assertRaisesRegex = getattr(unittest.TestCase, 'assertRaisesRegex',
-                                getattr(unittest.TestCase, 'assertRaisesRegexp'))
+    assertRaisesRegex = getattr(
+        unittest.TestCase,
+        'assertRaisesRegex',
+        getattr(unittest.TestCase, 'assertRaisesRegexp'))  # PY2
 
     def test_invalid_vh(self):
         with self.assertRaisesRegex(ValueError,
                                     'Vhost directive should have the form'):
             namespace.vh(None, None).traverse(u'invalid name', ())
+
 
 def test_suite():
     checker = RENormalizing([

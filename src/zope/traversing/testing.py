@@ -39,6 +39,7 @@ class Contained(object):
     __parent__ = None
     __name__ = None
 
+
 @zope.interface.implementer(IContained)
 class ContainedProxy(object):
     __parent__ = None
@@ -55,7 +56,7 @@ class ContainedProxy(object):
         if name in ['__parent__', '__name__', '__obj__']:
             self.__dict__[name] = value
             return
-        setattr(self.__obj__, name, value) # pragma: no cover
+        setattr(self.__obj__, name, value)  # pragma: no cover
 
     def __eq__(self, value):
         return self.__obj__ == value
@@ -69,7 +70,9 @@ def contained(obj, root, name=None):
     return obj
 
 # BBB: Kept for backward-compatibility, in case some package depends on it.
-def setUp(): # pragma: no cover
+
+
+def setUp():  # pragma: no cover
     zope.component.provideAdapter(Traverser, (None,), ITraverser)
     zope.component.provideAdapter(DefaultTraversable, (None,), ITraversable)
     zope.component.provideAdapter(LocationPhysicallyLocatable,

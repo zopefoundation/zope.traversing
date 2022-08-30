@@ -88,9 +88,8 @@ class ExcessiveDepth(LocationError):
     "Too many levels of containment. We don't believe them."
 
 
-def namespaceLookup(ns, name, object, request=None): # pylint:disable=redefined-builtin
-    """
-    Lookup a value from a namespace.
+def namespaceLookup(ns, name, object, request=None):
+    """Lookup a value from a namespace.
 
     We look up a value by getting an adapter from the *object* to
     :class:`~zope.traversing.interfaces.ITraversable` named *ns*.  If
@@ -154,7 +153,7 @@ def namespaceLookup(ns, name, object, request=None): # pylint:disable=redefined-
 
         >>> from zope.testing.cleanup import cleanUp
         >>> cleanUp()
-    """
+    """  # noqa: E501 line too long
     if request is not None:
         traverser = zope.component.queryMultiAdapter((object, request),
                                                      ITraversable, ns)
@@ -307,7 +306,7 @@ class acquire(SimpleHandler):
                 try:
                     # ??? what do we do if the path gets bigger?
                     path = []
-                    after = traversable.traverse(name, path) # pylint:disable=too-many-function-args,assignment-from-no-return
+                    after = traversable.traverse(name, path)
                     if path:
                         continue
                 except LocationError:
@@ -457,7 +456,7 @@ class lang(view):
     def traverse(self, name, ignored):
         self.request.shiftNameToApplication()
         languages = IModifiableUserPreferredLanguages(self.request)
-        languages.setPreferredLanguages([name]) # pylint:disable=too-many-function-args
+        languages.setPreferredLanguages([name])
         return self.context
 
 
@@ -542,7 +541,6 @@ class adapter(SimpleHandler):
     *context* registered to provide
     `zope.traversing.interfaces.IPathAdapter`.
     """""
-
 
     def traverse(self, name, ignored):
         """
@@ -638,8 +636,8 @@ class debug(view):
             >>> Debug.providedBy(request)
             True
 
-        Interfaces already directly provided by the request are still provided by it
-        once the debug skin is applied.
+        Interfaces already directly provided by the request are still provided
+        by it once the debug skin is applied.
 
             >>> request = TestRequest()
             >>> class IFoo(Interface):
@@ -666,9 +664,9 @@ class debug(view):
             ...     print('unknown debugging flag')
             unknown debugging flag
 
-        Of course, if Python was started with the ``-O`` flag to
-        disable debugging, none of this is allowed (we simulate this
-        with a private setting on the instance):
+        Of course, if Python was started with the ``-O`` flag to disable
+        debugging, none of this is allowed (we simulate this with a private
+        setting on the instance):
 
             >>> adapter.enable_debug = False
             >>> adapter.traverse('source', ())
@@ -687,16 +685,17 @@ class debug(view):
             elif flag == 'tal':
                 request.debug.showTAL = True
             elif flag == 'errors':
-                # Note that we don't use applySkin(), because it removes all existing
-                # skins. We may want to get tracebacks while trying to debug a
-                # different skin.
-                debug_skin = zope.component.getUtility(IBrowserSkinType, 'Debug')
+                # Note that we don't use applySkin(), because it removes all
+                # existing skins. We may want to get tracebacks while trying to
+                # debug a different skin.
+                debug_skin = zope.component.getUtility(
+                    IBrowserSkinType, 'Debug')
                 alsoProvides(request, debug_skin)
             else:
                 raise ValueError("Unknown debug flag: %s" % flag)
         return self.context
 
-    if not __debug__: # pragma: no cover
+    if not __debug__:  # pragma: no cover
         # If not in debug mode, we should get an error:
         traverse.__doc__ = """Disabled debug traversal adapter
 

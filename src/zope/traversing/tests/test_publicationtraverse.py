@@ -135,7 +135,6 @@ class TestPublicationTraverser(CleanUp, unittest.TestCase):
         self.assertRaises(
             NotFound, t.traversePath, request, ob, '/++skin++missingskin')
 
-
     def test_traversePath_trailing_slash(self):
         class Traverser(PublicationTraverser):
             def __init__(self):
@@ -143,7 +142,6 @@ class TestPublicationTraverser(CleanUp, unittest.TestCase):
 
             def traverseName(self, request, ob, name):
                 self.names.append(name)
-
 
         t = Traverser()
         t.traversePath(None, None, 'abc/def/')
@@ -158,7 +156,6 @@ class TestPublicationTraverser(CleanUp, unittest.TestCase):
         # complained yet.
         self.assertEqual(t.names, ['abc', 'def', '', ''])
 
-
     def test_traversePath_double_dots_cannot_remove(self):
         class Traverser(PublicationTraverser):
             def __init__(self):
@@ -167,20 +164,20 @@ class TestPublicationTraverser(CleanUp, unittest.TestCase):
             def traverseName(self, request, ob, name):
                 self.names.append(name)
 
-
         t = Traverser()
         t.traversePath(None, None, '..')
         self.assertEqual(t.names, ['..'])
 
     def test_traverseRelativeURL_to_no_browser_publisher(self):
         test = self
+
         class Traverser(PublicationTraverser):
             def traversePath(self, request, ob, path):
                 return ob
 
-
         class Context(object):
             called = False
+
             def __conform__(self, iface):
                 self.called = True
                 test.assertEqual(iface, IBrowserPublisher)
@@ -192,6 +189,7 @@ class TestPublicationTraverser(CleanUp, unittest.TestCase):
         self.assertIs(ob, context)
 
         self.assertTrue(context.called)
+
 
 class TestBeforeTraverseEvent(unittest.TestCase):
 
@@ -208,16 +206,20 @@ class TestBeforeTraverseEvent(unittest.TestCase):
         self.assertIs(target, ob.object)
         verifyObject(IBeforeTraverseEvent, ob)
 
+
 class IContent(Interface):
     pass
+
 
 @implementer(IContent)
 class Content(object):
     pass
 
+
 class View(object):
     def __init__(self, name):
         self.name = name
+
 
 @implementer(ITraversable)
 class DummyViewTraverser(object):
@@ -228,6 +230,7 @@ class DummyViewTraverser(object):
     def traverse(self, name, furtherPath):
         return View(name)
 
+
 @implementer(IPublishTraverse)
 class DummyPublishTraverse(object):
 
@@ -236,6 +239,7 @@ class DummyPublishTraverse(object):
 
     def publishTraverse(self, request, name):
         return View(name)
+
 
 @implementer(IBrowserPublisher)
 class DummyBrowserPublisher(object):

@@ -16,14 +16,16 @@ Adapters for the traversing mechanism.
 """
 
 import six
-import zope.interface
 
-from zope.location.interfaces import ILocationInfo, LocationError
-from zope.traversing.interfaces import ITraversable, ITraverser
+import zope.interface
+from zope.location.interfaces import ILocationInfo
+from zope.location.interfaces import LocationError
+from zope.location.traversing import RootPhysicallyLocatable  # BBB
+
+from zope.traversing.interfaces import ITraversable
+from zope.traversing.interfaces import ITraverser
 from zope.traversing.namespace import namespaceLookup
 from zope.traversing.namespace import nsParse
-
-from zope.location.traversing import RootPhysicallyLocatable  # BBB
 
 
 _marker = object()  # opaque marker that doesn't get security proxied

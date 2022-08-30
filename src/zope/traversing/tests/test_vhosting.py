@@ -18,26 +18,30 @@ import unittest
 from io import StringIO
 
 import transaction
-
 import zope.component
 import zope.interface
 from zope.browserresource.resource import Resource
 from zope.configuration import xmlconfig
 from zope.location.interfaces import IRoot
-from zope.publisher.browser import BrowserRequest, BrowserView
+from zope.publisher.browser import BrowserRequest
+from zope.publisher.browser import BrowserView
 from zope.publisher.interfaces import NotFound
 from zope.publisher.interfaces.browser import IBrowserPublisher
 from zope.publisher.publish import publish
 from zope.publisher.skinnable import setDefaultSkin
-from zope.security.checker import defineChecker, NamesChecker, NoProxy
-from zope.security.checker import _checkers, undefineChecker
+from zope.security.checker import NamesChecker
+from zope.security.checker import NoProxy
+from zope.security.checker import _checkers
+from zope.security.checker import defineChecker
+from zope.security.checker import undefineChecker
 from zope.tales import expressions
 from zope.tales.tales import ExpressionEngine
 from zope.testing.cleanup import cleanUp
 
 from zope.traversing.adapters import traversePathElement
 from zope.traversing.api import traverse
-from zope.traversing.testing import browserResource, Contained
+from zope.traversing.testing import Contained
+from zope.traversing.testing import browserResource
 
 
 class MyObj(Contained):
@@ -302,7 +306,8 @@ class DummyPublication(object):
             view = getMultiAdapter((ob, request), name=name)
             return view
 
-        from zope.traversing.publicationtraverse import PublicationTraverserWithoutProxy
+        from zope.traversing.publicationtraverse import \
+            PublicationTraverserWithoutProxy
         t = PublicationTraverserWithoutProxy()
         return t.traverseName(request, ob, name)
 

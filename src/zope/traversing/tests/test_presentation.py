@@ -14,11 +14,17 @@
 """Presentation Traverser Tests
 """
 import unittest
-from zope.testing.cleanup import CleanUp
-from zope.interface import Interface, implementer
+
+from zope.interface import Interface
+from zope.interface import implementer
 from zope.publisher.browser import TestRequest
-from zope.traversing.namespace import view, resource
-from zope.traversing.testing import browserView, browserResource
+from zope.testing.cleanup import CleanUp
+
+from zope.traversing.namespace import resource
+from zope.traversing.namespace import view
+from zope.traversing.testing import browserResource
+from zope.traversing.testing import browserView
+
 
 class IContent(Interface):
     pass

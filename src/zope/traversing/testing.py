@@ -17,16 +17,22 @@ __docformat__ = "reStructuredText"
 
 import zope.component
 import zope.interface
+from zope.location.interfaces import IContained
+from zope.location.interfaces import ILocationInfo
+from zope.location.interfaces import IRoot
+from zope.location.traversing import LocationPhysicallyLocatable
+from zope.location.traversing import RootPhysicallyLocatable
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
-from zope.location.traversing \
-    import LocationPhysicallyLocatable, RootPhysicallyLocatable
-from zope.location.interfaces import IContained, ILocationInfo, IRoot
-from zope.traversing.interfaces import ITraversable, ITraverser
+
 from zope.traversing.adapters import DefaultTraversable
 from zope.traversing.adapters import Traverser
-from zope.traversing.browser import SiteAbsoluteURL, AbsoluteURL
+from zope.traversing.browser import AbsoluteURL
+from zope.traversing.browser import SiteAbsoluteURL
 from zope.traversing.browser.interfaces import IAbsoluteURL
+from zope.traversing.interfaces import ITraversable
+from zope.traversing.interfaces import ITraverser
 from zope.traversing.namespace import etc
+
 
 @zope.interface.implementer(IContained)
 class Contained(object):

@@ -16,21 +16,25 @@
 import unittest
 
 import zope.component
-from zope.component import getMultiAdapter, adapter
+from zope.component import adapter
+from zope.component import getMultiAdapter
 from zope.component.testing import PlacelessSetup
-from zope.traversing.browser.absoluteurl import absoluteURL
-from zope.traversing.browser.absoluteurl import AbsoluteURL
-from zope.traversing.browser.interfaces import IAbsoluteURL
-from zope.traversing.testing import browserView
 from zope.i18n.interfaces import IUserPreferredCharsets
-from zope.interface import Interface, implementer
+from zope.interface import Interface
+from zope.interface import implementer
 from zope.interface.verify import verifyObject
-from zope.publisher.browser import TestRequest
-from zope.publisher.http import IHTTPRequest, HTTPCharsets
 from zope.location.interfaces import ILocation
 from zope.location.location import LocationProxy
+from zope.publisher.browser import TestRequest
+from zope.publisher.http import HTTPCharsets
+from zope.publisher.http import IHTTPRequest
 
-from zope.traversing.testing import contained, Contained
+from zope.traversing.browser.absoluteurl import AbsoluteURL
+from zope.traversing.browser.absoluteurl import absoluteURL
+from zope.traversing.browser.interfaces import IAbsoluteURL
+from zope.traversing.testing import Contained
+from zope.traversing.testing import browserView
+from zope.traversing.testing import contained
 
 
 class IRoot(Interface):
@@ -78,7 +82,8 @@ class TestAbsoluteURL(PlacelessSetup, unittest.TestCase):
 
     def setUp(self):
         PlacelessSetup.setUp(self)
-        from zope.traversing.browser import AbsoluteURL, SiteAbsoluteURL
+        from zope.traversing.browser import AbsoluteURL
+        from zope.traversing.browser import SiteAbsoluteURL
         browserView(None, 'absolute_url', AbsoluteURL)
         browserView(IRoot, 'absolute_url', SiteAbsoluteURL)
         browserView(None, '', AbsoluteURL, providing=IAbsoluteURL)

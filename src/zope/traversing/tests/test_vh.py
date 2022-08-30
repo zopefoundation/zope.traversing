@@ -15,6 +15,7 @@
 """
 import unittest
 
+
 class TestRequest(object):
 
     def __init__(self, names=None, stack=None):

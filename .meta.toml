@@ -28,3 +28,13 @@ additional-config = [
     "    src/zope/traversing/browser/__init__.py: F401",
     "    src/zope/traversing/interfaces.py: F401",
     ]
+
+[manifest]
+additional-rules = [
+    "recursive-include src *.zcml",
+    ]
+
+[check-manifest]
+additional-ignores = [
+    "docs/_build/html/_sources/browser/*",
+    ]

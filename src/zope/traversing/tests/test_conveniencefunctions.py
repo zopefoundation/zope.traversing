@@ -31,7 +31,7 @@ from zope.traversing.interfaces import ITraverser
 from zope.traversing.testing import contained
 
 
-class C(object):
+class C:
     __parent__ = None
     __name__ = None
 
@@ -136,23 +136,6 @@ class TestFunctional(PlacelessSetup, unittest.TestCase):
             self.folder, './item'
         )
 
-    def testTraverseNameUnicode(self):
-        from zope.interface import implementer
-
-        from zope.traversing.api import traverseName
-
-        @implementer(ITraversable)
-        class BrokenTraversable(object):
-            def traverse(self, name, furtherPath):
-                getattr(self, u'\u2019', None)
-                # The above actually works on Python 3
-                raise unittest.SkipTest("Unicode attrs legal on Py3")
-
-        self.assertRaises(
-            LocationError,
-            traverseName,
-            BrokenTraversable(), '')
-
     def testGetName(self):
         from zope.traversing.api import getName
         self.assertEqual(
@@ -209,21 +192,21 @@ class TestFunctional(PlacelessSetup, unittest.TestCase):
         from zope.traversing.api import getPath
         self.assertEqual(
             getPath(self.item),
-            u'/folder/item'
+            '/folder/item'
         )
 
     def testGetPathOfRoot(self):
         from zope.traversing.api import getPath
         self.assertEqual(
             getPath(self.root),
-            u'/',
+            '/',
         )
 
     def testGetNameOfRoot(self):
         from zope.traversing.api import getName
         self.assertEqual(
             getName(self.root),
-            u'',
+            '',
         )
 
     def testGetRoot(self):
@@ -259,18 +242,18 @@ class TestFunctional(PlacelessSetup, unittest.TestCase):
 
         _good_locations = (
             # location returned as string
-            (u'/xx/yy/zz',
+            ('/xx/yy/zz',
              # arguments to try in addition to the above
              '/xx/yy/zz',
              '/xx/./yy/ww/../zz',
              ),
-            (u'/xx/yy/zz',
+            ('/xx/yy/zz',
              '/xx/yy/zz',
              ),
-            (u'/xx',
+            ('/xx',
              '/xx',
              ),
-            (u'/',
+            ('/',
              '/',
              self.root,
              ),
@@ -339,7 +322,7 @@ class TestFunctional(PlacelessSetup, unittest.TestCase):
 
     def test_joinPath_slashes(self):
         from zope.traversing.api import joinPath
-        path = u'/'
+        path = '/'
         args = ('/test', 'bla', '/foo', 'bar')
         self.assertRaises(ValueError, joinPath, path, *args)
 
@@ -348,56 +331,51 @@ class TestFunctional(PlacelessSetup, unittest.TestCase):
 
     def test_joinPath(self):
         from zope.traversing.api import joinPath
-        path = u'/bla'
+        path = '/bla'
         args = ('foo', 'bar', 'baz', 'bone')
-        self.assertEqual(joinPath(path, *args), u'/bla/foo/bar/baz/bone')
+        self.assertEqual(joinPath(path, *args), '/bla/foo/bar/baz/bone')
 
-        path = u'bla'
+        path = 'bla'
         args = ('foo', 'bar', 'baz', 'bone')
-        self.assertEqual(joinPath(path, *args), u'bla/foo/bar/baz/bone')
+        self.assertEqual(joinPath(path, *args), 'bla/foo/bar/baz/bone')
 
-        path = u'bla'
+        path = 'bla'
         args = ('foo', 'bar/baz', 'bone')
-        self.assertEqual(joinPath(path, *args), u'bla/foo/bar/baz/bone')
+        self.assertEqual(joinPath(path, *args), 'bla/foo/bar/baz/bone')
 
-        path = u'bla/'
+        path = 'bla/'
         args = ('foo', 'bar', 'baz', 'bone')
         self.assertRaises(ValueError, joinPath, path, *args)
 
     def test_joinPath_normalize(self):
         from zope.traversing.api import joinPath
-        path = u'/bla'
+        path = '/bla'
         args = ('foo', 'bar', '..', 'baz', 'bone')
-        self.assertEqual(joinPath(path, *args), u'/bla/foo/baz/bone')
+        self.assertEqual(joinPath(path, *args), '/bla/foo/baz/bone')
 
-        path = u'bla'
+        path = 'bla'
         args = ('foo', 'bar', '.', 'baz', 'bone')
-        self.assertEqual(joinPath(path, *args), u'bla/foo/bar/baz/bone')
+        self.assertEqual(joinPath(path, *args), 'bla/foo/bar/baz/bone')
 
-        path = u'/'
+        path = '/'
         args = ('foo', 'bar', '.', 'baz', 'bone')
-        self.assertEqual(joinPath(path, *args), u'/foo/bar/baz/bone')
+        self.assertEqual(joinPath(path, *args), '/foo/bar/baz/bone')
 
     def test_joinPath_empty_args(self):
         from zope.traversing.api import joinPath
         path = 'abc'
-        self.assertEqual(joinPath(path), u'abc')
+        self.assertEqual(joinPath(path), 'abc')
 
 
 class TestStandalone(unittest.TestCase):
     # Unlike TestFunctional, we don't register gobs of
     # adapters, making these tests more self-contained
 
-    assertRaisesRegex = getattr(
-        unittest.TestCase,
-        'assertRaisesRegex',
-        getattr(unittest.TestCase, 'assertRaisesRegexp'))  # PY2
-
     def test_getParent_no_location_info(self):
         from zope.traversing.api import getParent
         test = self
 
-        class Context(object):
+        class Context:
             called = False
 
             def __conform__(self, iface):

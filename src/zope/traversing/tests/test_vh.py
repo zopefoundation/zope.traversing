@@ -16,7 +16,7 @@
 import unittest
 
 
-class TestRequest(object):
+class TestRequest:
 
     def __init__(self, names=None, stack=None):
         self._traversal_stack = stack
@@ -31,9 +31,9 @@ class TestRequest(object):
         self._traversal_stack[:] = list(stack)
 
     def setApplicationServer(self, host, proto='http', port=None):
-        host = "%s://%s" % (proto, host)
+        host = "{}://{}".format(proto, host)
         if port:
-            host = "%s:%s" % (host, port)
+            host = "{}:{}".format(host, port)
         self._app_server = host
 
     def setVirtualHostRoot(self, names=None):
@@ -82,7 +82,7 @@ class TestVHNamespace(unittest.TestCase):
         request = TestRequest(['folder1'], ['folder1_1', '++'])
         ob = object()
 
-        vh(ob, request).traverse(u'http:www.fubarco.com:80', ())
+        vh(ob, request).traverse('http:www.fubarco.com:80', ())
         self.assertTrue(
             isinstance(request._app_server, str),
             repr(request._app_server))

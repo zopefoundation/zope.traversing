@@ -15,8 +15,6 @@
 """
 __docformat__ = 'restructuredtext'
 
-import six
-
 from zope.component import queryMultiAdapter
 from zope.publisher.interfaces import IPublishTraverse
 from zope.publisher.interfaces import NotFound
@@ -28,7 +26,7 @@ from zope.traversing.namespace import namespaceLookup
 from zope.traversing.namespace import nsParse
 
 
-class PublicationTraverser(object):
+class PublicationTraverser:
     """Traversal used for publication.
 
     The significant differences from
@@ -83,7 +81,7 @@ class PublicationTraverser(object):
 
     def traversePath(self, request, ob, path):
 
-        if isinstance(path, six.string_types):
+        if isinstance(path, str):
             path = path.split('/')
             if len(path) > 1 and not path[-1]:
                 # Remove trailing slash

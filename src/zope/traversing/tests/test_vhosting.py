@@ -76,7 +76,7 @@ class RootFolder(Folder):
 
 
 # Copy some code from zope.pagetemplate to avoid the depedency (break circle)
-class ZopeTraverser(object):
+class ZopeTraverser:
 
     def __call__(self, object, path_items, econtext):
         request = econtext._vars_stack[0].get('request', None)
@@ -97,7 +97,7 @@ zopeTraverser = ZopeTraverser()
 class PathExpr(expressions.PathExpr):
 
     def __init__(self, name, expr, engine):
-        super(PathExpr, self).__init__(name, expr, engine, zopeTraverser)
+        super().__init__(name, expr, engine, zopeTraverser)
 
 
 def Engine():
@@ -110,7 +110,7 @@ def Engine():
 Engine = Engine()
 
 
-class MyTalesPage(object):
+class MyTalesPage:
 
     def __init__(self, source):
         self.source = source
@@ -173,7 +173,7 @@ class TestVirtualHosting(unittest.TestCase):
         if len(p) == 1:
             env['PATH_INFO'] = p[0]
 
-        request = BrowserRequest(StringIO(u''), env)
+        request = BrowserRequest(StringIO(''), env)
         request.setPublication(DummyPublication(self.app))
         setDefaultSkin(request)
         return request
@@ -182,7 +182,7 @@ class TestVirtualHosting(unittest.TestCase):
         return publish(self.makeRequest(path)).response
 
     def test_request_url(self):
-        self.addPage('/pt', u'request/URL')
+        self.addPage('/pt', 'request/URL')
         self.verify('/pt', 'http://localhost/pt/index.html')
         self.verify('/++vh++/++/pt',
                     'http://localhost/pt/index.html')
@@ -191,7 +191,7 @@ class TestVirtualHosting(unittest.TestCase):
         self.verify('/++vh++https:localhost:443/fake/folders/++/pt',
                     'https://localhost/fake/folders/pt/index.html')
 
-        self.addPage('/foo/bar/pt', u'request/URL')
+        self.addPage('/foo/bar/pt', 'request/URL')
         self.verify('/foo/bar/pt', 'http://localhost/foo/bar/pt/index.html')
         self.verify('/foo/bar/++vh++/++/pt',
                     'http://localhost/pt/index.html')
@@ -201,7 +201,7 @@ class TestVirtualHosting(unittest.TestCase):
                     'https://localhost/fake/folders/bar/pt/index.html')
 
     def test_request_redirect(self):
-        self.addPage('/foo/index.html', u'Spam')
+        self.addPage('/foo/index.html', 'Spam')
         self.verifyRedirect('/foo', 'http://localhost/foo/index.html')
         self.verifyRedirect('/++vh++https:localhost:443/++/foo',
                             'https://localhost/foo/index.html')
@@ -209,7 +209,7 @@ class TestVirtualHosting(unittest.TestCase):
                             'https://localhost/bar/index.html')
 
     def test_absolute_url(self):
-        self.addPage('/pt', u'context/@@absolute_url')
+        self.addPage('/pt', 'context/@@absolute_url')
         self.verify('/pt', 'http://localhost')
         self.verify('/++vh++/++/pt',
                     'http://localhost')
@@ -219,7 +219,7 @@ class TestVirtualHosting(unittest.TestCase):
                     'https://localhost/fake/folders')
 
         self.addPage('/foo/bar/pt',
-                     u'context/@@absolute_url')
+                     'context/@@absolute_url')
         self.verify('/foo/bar/pt', 'http://localhost/foo/bar')
         self.verify('/foo/bar/++vh++/++/pt',
                     'http://localhost')
@@ -231,7 +231,7 @@ class TestVirtualHosting(unittest.TestCase):
     def test_absolute_url_absolute_traverse(self):
         self.createObject('/foo/bar/obj', MyObj())
         self.addPage('/foo/bar/pt',
-                     u'container/obj/pt/@@absolute_url')
+                     'container/obj/pt/@@absolute_url')
         self.verify('/foo/bar/pt', 'http://localhost/foo/bar/pt')
         self.verify('/foo/++vh++https:localhost:443/++/bar/pt',
                     'https://localhost/bar/pt')
@@ -241,11 +241,11 @@ class TestVirtualHosting(unittest.TestCase):
         # Only register the checker once, so that multiple test runs pass.
         if Resource not in _checkers:
             defineChecker(Resource, NamesChecker(['__call__']))
-        self.addPage(u'/foo/bar/pt',
-                     u'context/++resource++quux')
-        self.verify(u'/foo/bar/pt', u'http://localhost/@@/quux')
-        self.verify(u'/foo/++vh++https:localhost:443/fake/folders/++/bar/pt',
-                    u'https://localhost/fake/folders/@@/quux')
+        self.addPage('/foo/bar/pt',
+                     'context/++resource++quux')
+        self.verify('/foo/bar/pt', 'http://localhost/@@/quux')
+        self.verify('/foo/++vh++https:localhost:443/fake/folders/++/bar/pt',
+                    'https://localhost/fake/folders/@@/quux')
 
     def createFolders(self, path):
         """addFolders('/a/b/c/d') would traverse and/or create three nested
@@ -283,7 +283,7 @@ class TestVirtualHosting(unittest.TestCase):
         self.assertEqual(result.getHeader('Location'), location)
 
 
-class DummyPublication(object):
+class DummyPublication:
 
     def __init__(self, app):
         self.app = app

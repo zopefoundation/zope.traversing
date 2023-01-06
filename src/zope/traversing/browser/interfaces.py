@@ -25,16 +25,16 @@ class IAbsoluteURL(Interface):
     """
 
     def __unicode__():
-        """Returns the URL as a unicode string."""
+        """Return the URL as unquoted str."""
 
     def __str__():
-        """Returns an ASCII string with all unicode characters url quoted."""
+        """Return a ASCII string with all non-ASCII characters url quoted."""
 
     def __repr__():
-        """Get a string representation """
+        """Get a string representation."""
 
     def __call__():
-        """Returns an ASCII string with all unicode characters url quoted."""
+        """Return an ASCII string with all non-ASCII characters url quoted."""
 
     def breadcrumbs():
         """Returns a tuple like ({'name':name, 'url':url}, ...)

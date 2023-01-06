@@ -84,7 +84,6 @@ setup(
     },
     install_requires=[
         'setuptools',
-        'six',
         'transaction',
         'zope.component',
         'zope.i18n',
@@ -98,7 +97,5 @@ setup(
     tests_require=TESTS_REQUIRE,
     include_package_data=True,
     zip_safe=False,
-    python_requires=','.join([
-        '>=3.7',
-    ]),
+    python_requires='>=3.7',
 )

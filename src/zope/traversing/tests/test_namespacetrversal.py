@@ -13,7 +13,6 @@
 ##############################################################################
 """Traversal Namespace Tests
 """
-import re
 import unittest
 from doctest import DocTestSuite
 
@@ -21,7 +20,6 @@ from zope.component.testing import PlacelessSetup
 from zope.component.testing import setUp
 from zope.component.testing import tearDown
 from zope.location.interfaces import LocationError
-from zope.testing.renormalizing import RENormalizing
 
 from zope import component
 from zope import interface
@@ -52,7 +50,7 @@ class TestAcquire(unittest.TestCase):
         from zope.traversing.namespace import ExcessiveDepth
 
         @interface.implementer(ITraversable)
-        class Context(object):
+        class Context:
 
             max_call_count = 200
 
@@ -78,7 +76,7 @@ class TestEtc(PlacelessSetup, unittest.TestCase):
     def test_traverse_site_no_manager(self):
         test = self
 
-        class Context(object):
+        class Context:
             def __getattribute__(self, name):
                 test.assertEqual(name, 'getSiteManager')
                 return None
@@ -91,7 +89,7 @@ class TestEtc(PlacelessSetup, unittest.TestCase):
         self.assertEqual((context, 'site'), ex.args)
 
     def test_traverse_site_lookup_error(self):
-        class Context(object):
+        class Context:
             called = False
 
             def getSiteManager(self):
@@ -128,27 +126,15 @@ class TestView(unittest.TestCase):
 
 class TestVh(unittest.TestCase):
 
-    assertRaisesRegex = getattr(
-        unittest.TestCase,
-        'assertRaisesRegex',
-        getattr(unittest.TestCase, 'assertRaisesRegexp'))  # PY2
-
     def test_invalid_vh(self):
         with self.assertRaisesRegex(ValueError,
                                     'Vhost directive should have the form'):
-            namespace.vh(None, None).traverse(u'invalid name', ())
+            namespace.vh(None, None).traverse('invalid name', ())
 
 
 def test_suite():
-    checker = RENormalizing([
-        # Python 3 includes module name in exceptions
-        (re.compile(r"zope.location.interfaces.LocationError"),
-         "LocationError"),
-    ])
-
     suite = unittest.defaultTestLoader.loadTestsFromName(__name__)
     suite.addTest(DocTestSuite(
         'zope.traversing.namespace',
-        setUp=setUp, tearDown=tearDown,
-        checker=checker))
+        setUp=setUp, tearDown=tearDown))
     return suite

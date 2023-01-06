@@ -18,15 +18,8 @@ These are registered as views and named views (``absolute_url``) if
 you load this package's ``configure.zcml`` with
 :mod:`zope.configuration.xmlconfig`.
 """
-try:
-    from urllib.parse import quote_from_bytes as quote
-except ImportError:
-    from urllib import quote
-
-try:
-    from urllib.parse import unquote_to_bytes as unquote
-except ImportError:
-    from urllib import unquote
+from urllib.parse import quote_from_bytes as quote
+from urllib.parse import unquote_to_bytes as unquote
 
 import zope.component
 from zope.i18nmessageid import MessageFactory
@@ -133,8 +126,8 @@ class AbsoluteURL(_EncodedUnicode,
             base += (
                 {
                     'name': name,
-                    'url': ("%s/%s" % (base[-1]['url'],
-                                       quote(name.encode('utf-8'), _safe)))
+                    'url': ("{}/{}".format(base[-1]['url'],
+                                           quote(name.encode('utf-8'), _safe)))
                 },
             )
 
@@ -181,8 +174,8 @@ class SiteAbsoluteURL(_EncodedUnicode,
             base += (
                 {
                     'name': name,
-                    'url': ("%s/%s" % (base[-1]['url'],
-                                       quote(name.encode('utf-8'), _safe)))
+                    'url': ("{}/{}".format(base[-1]['url'],
+                                           quote(name.encode('utf-8'), _safe)))
                 },
             )
 

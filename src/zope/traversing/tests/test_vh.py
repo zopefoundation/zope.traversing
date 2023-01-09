@@ -31,9 +31,9 @@ class TestRequest:
         self._traversal_stack[:] = list(stack)
 
     def setApplicationServer(self, host, proto='http', port=None):
-        host = "{}://{}".format(proto, host)
+        host = f"{proto}://{host}"
         if port:
-            host = "{}:{}".format(host, port)
+            host = f"{host}:{port}"
         self._app_server = host
 
     def setVirtualHostRoot(self, names=None):

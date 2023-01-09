@@ -205,9 +205,6 @@ def canonicalPath(path_or_object):
     return _normalizePath(path)
 
 
-# import this down here to avoid circular imports
-
-
 # Synchronize the documentation.
 for name in ITraversalAPI.names():
     if name in globals():

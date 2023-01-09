@@ -46,21 +46,21 @@ class Root(Contained):
     pass
 
 
-class TrivialContent(object):
+class TrivialContent:
     """Trivial content object, used because instances of object are rocks."""
 
 
-class AdaptedContent(object):
+class AdaptedContent:
     """A simple content object that has an ILocation adapter for it."""
 
 
-class FooContent(object):
+class FooContent:
     """Class whose location will be provided by an adapter."""
 
 
 @implementer(ILocation)
 @adapter(FooContent)
-class FooLocation(object):
+class FooLocation:
     """Adapts FooAdapter to the ILocation protocol."""
 
     def __init__(self, context):
@@ -76,11 +76,6 @@ class FooLocation(object):
 
 
 class TestAbsoluteURL(PlacelessSetup, unittest.TestCase):
-
-    assertRaisesRegex = getattr(
-        unittest.TestCase,
-        'assertRaisesRegex',
-        getattr(unittest.TestCase, 'assertRaisesRegexp'))  # PY2
 
     def setUp(self):
         PlacelessSetup.setUp(self)
@@ -195,11 +190,11 @@ class TestAbsoluteURL(PlacelessSetup, unittest.TestCase):
         # Tests so that AbsoluteURL handle unicode names as well
         request = TestRequest()
         root = Root()
-        root.__name__ = u'\u0439'
+        root.__name__ = '\u0439'
 
-        content = contained(TrivialContent(), root, name=u'\u0442')
-        content = contained(TrivialContent(), content, name=u'\u0435')
-        content = contained(TrivialContent(), content, name=u'\u0441')
+        content = contained(TrivialContent(), root, name='\u0442')
+        content = contained(TrivialContent(), content, name='\u0435')
+        content = contained(TrivialContent(), content, name='\u0441')
         view = getMultiAdapter((content, request), name='absolute_url')
         self.assertEqual(str(view),
                          'http://127.0.0.1/%D0%B9/%D1%82/%D0%B5/%D1%81')
@@ -215,13 +210,13 @@ class TestAbsoluteURL(PlacelessSetup, unittest.TestCase):
             breadcrumbs, (
                 {'name': '',
                  'url': 'http://127.0.0.1'},
-                {'name': u'\u0439',
+                {'name': '\u0439',
                  'url': 'http://127.0.0.1/%D0%B9'},
-                {'name': u'\u0442',
+                {'name': '\u0442',
                  'url': 'http://127.0.0.1/%D0%B9/%D1%82'},
-                {'name': u'\u0435',
+                {'name': '\u0435',
                  'url': 'http://127.0.0.1/%D0%B9/%D1%82/%D0%B5'},
-                {'name': u'\u0441',
+                {'name': '\u0441',
                  'url': 'http://127.0.0.1/%D0%B9/%D1%82/%D0%B5/%D1%81'}))
 
     def testRetainSkin(self):
@@ -323,11 +318,11 @@ class TestAbsoluteURL(PlacelessSetup, unittest.TestCase):
     def test_nameless_context(self):
 
         @implementer(ILocation)
-        class Context(object):
+        class Context:
             __parent__ = self
             __name__ = None
 
-        class DummyAbsoluteURL(object):
+        class DummyAbsoluteURL:
             # Our implementation of IAbsoluteURL
             # for our parent
 

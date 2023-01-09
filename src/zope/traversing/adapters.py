@@ -15,8 +15,6 @@
 Adapters for the traversing mechanism.
 """
 
-import six
-
 import zope.interface
 from zope.location.interfaces import ILocationInfo
 from zope.location.interfaces import LocationError
@@ -32,7 +30,7 @@ _marker = object()  # opaque marker that doesn't get security proxied
 
 
 @zope.interface.implementer(ITraversable)
-class DefaultTraversable(object):
+class DefaultTraversable:
     """
     Traverses objects via attribute and item lookup.
 
@@ -45,14 +43,7 @@ class DefaultTraversable(object):
     def traverse(self, name, furtherPath):
         subject = self._subject
         __traceback_info__ = (subject, name, furtherPath)
-        try:
-            attr = getattr(subject, name, _marker)
-        except UnicodeEncodeError:
-            # If we're on Python 2, and name was a unicode string the
-            # name would have been encoded using the system encoding
-            # (usually ascii). Failure to encode means invalid
-            # attribute name.
-            attr = _marker
+        attr = getattr(subject, name, _marker)
         if attr is not _marker:
             return attr
         if hasattr(subject, '__getitem__'):
@@ -64,7 +55,7 @@ class DefaultTraversable(object):
 
 
 @zope.interface.implementer(ITraverser)
-class Traverser(object):
+class Traverser:
     """
     Provide traverse features.
 
@@ -80,7 +71,7 @@ class Traverser(object):
         if not path:
             return self.context
 
-        if isinstance(path, six.string_types):
+        if isinstance(path, str):
             path = path.split('/')
             if len(path) > 1 and not path[-1]:
                 # Remove trailing slash
@@ -156,14 +147,6 @@ def traversePathElement(obj, name, further_path, default=_marker,
 
     try:
         return traversable.traverse(nm, further_path)
-    except UnicodeEncodeError:
-        # If we're on Python 2, and nm was a unicode string, and the
-        # traversable tried to do an attribute lookup, the nm would have been
-        # encoded using the system encoding (usually ascii). Failure to encode
-        # means invalid attribute name.
-        if default is not _marker:
-            return default
-        raise LocationError(obj, name)
     except LocationError:
         if default is not _marker:
             return default

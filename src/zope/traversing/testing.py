@@ -35,13 +35,13 @@ from zope.traversing.namespace import etc
 
 
 @zope.interface.implementer(IContained)
-class Contained(object):
+class Contained:
     __parent__ = None
     __name__ = None
 
 
 @zope.interface.implementer(IContained)
-class ContainedProxy(object):
+class ContainedProxy:
     __parent__ = None
     __name__ = None
     __obj__ = None

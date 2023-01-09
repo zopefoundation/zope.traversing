@@ -38,7 +38,7 @@ class TestRequest(test_browserlanguages.TestRequest):
 class Test(CleanUp, unittest.TestCase):
 
     def setUp(self):
-        super(Test, self).setUp()
+        super().setUp()
 
         self.request = TestRequest("en")
         directlyProvides(self.request, IHTTPRequest, IAttributeAnnotatable)

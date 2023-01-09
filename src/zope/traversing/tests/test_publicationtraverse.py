@@ -175,7 +175,7 @@ class TestPublicationTraverser(CleanUp, unittest.TestCase):
             def traversePath(self, request, ob, path):
                 return ob
 
-        class Context(object):
+        class Context:
             called = False
 
             def __conform__(self, iface):
@@ -212,17 +212,17 @@ class IContent(Interface):
 
 
 @implementer(IContent)
-class Content(object):
+class Content:
     pass
 
 
-class View(object):
+class View:
     def __init__(self, name):
         self.name = name
 
 
 @implementer(ITraversable)
-class DummyViewTraverser(object):
+class DummyViewTraverser:
 
     def __init__(self, content, request):
         self.content = content
@@ -232,7 +232,7 @@ class DummyViewTraverser(object):
 
 
 @implementer(IPublishTraverse)
-class DummyPublishTraverse(object):
+class DummyPublishTraverse:
 
     def __init__(self, context, request):
         pass
@@ -242,7 +242,7 @@ class DummyPublishTraverse(object):
 
 
 @implementer(IBrowserPublisher)
-class DummyBrowserPublisher(object):
+class DummyBrowserPublisher:
 
     def __init__(self, context):
         self.context = removeSecurityProxy(context)

@@ -22,7 +22,7 @@ from zope.publisher.interfaces.browser import IBrowserSkinType
 from zope.testing.cleanup import CleanUp
 
 
-class FauxRequest(object):
+class FauxRequest:
     def shiftNameToApplication(self):
         self.shifted = 1
 
@@ -37,7 +37,7 @@ directlyProvides(IFoo, IBrowserSkinType)
 class Test(CleanUp, unittest.TestCase):
 
     def setUp(self):
-        super(Test, self).setUp()
+        super().setUp()
         zope.component.provideUtility(IFoo, IBrowserSkinType, name='foo')
 
     def test(self):

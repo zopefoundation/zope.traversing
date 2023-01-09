@@ -42,7 +42,7 @@ from zope.traversing.testing import Contained
 from zope.traversing.testing import contained
 
 
-class ParticipationStub(object):
+class ParticipationStub:
 
     def __init__(self, principal):
         self.principal = principal
@@ -126,9 +126,9 @@ class UnrestrictedTraverseTests(PlacelessSetup, unittest.TestCase):
         tr = self.tr
         item = self.item
 
-        self.assertEqual(tr.traverse(u'/folder/item'), item)
-        self.assertEqual(tr.traverse(u'folder/item'), item)
-        self.assertEqual(tr.traverse(u'/folder/item/'), item)
+        self.assertEqual(tr.traverse('/folder/item'), item)
+        self.assertEqual(tr.traverse('folder/item'), item)
+        self.assertEqual(tr.traverse('/folder/item/'), item)
 
     def testSimplePathTuple(self):
         tr = self.tr
@@ -294,32 +294,13 @@ class DefaultTraversableTests(unittest.TestCase):
 
     def testUnicodeTraversal(self):
         df = DefaultTraversable(object())
-        self.assertRaises(LocationError, df.traverse, u'\u2019', ())
+        self.assertRaises(LocationError, df.traverse, '\u2019', ())
 
 
 class TestFunctions(unittest.TestCase):
 
-    def test_traversePathElement_UnicodeEncodeError_with_default(self):
-        test = self
-
-        class Traversable(object):
-            called = False
-            fail = test.fail
-
-            def traverse(self, nm, further_path):
-                self.called = True
-                u'\xff'.encode("ascii")
-                self.fail("Should not be reached")
-
-        t = Traversable()
-        self.assertIs(self,
-                      adapters.traversePathElement(None, None, (),
-                                                   default=self,
-                                                   traversable=t))
-        self.assertTrue(t.called)
-
     def test_traversePathElement_LocationError_with_default(self):
-        class Traversable(object):
+        class Traversable:
             called = False
 
             def traverse(self, nm, further_path):

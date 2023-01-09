@@ -16,12 +16,11 @@ Convenience functions for traversing the object tree.
 
 This module provides :class:`zope.traversing.interfaces.ITraversalAPI`
 """
-import six
-
 from zope.interface import moduleProvides
 from zope.location.interfaces import ILocationInfo
 from zope.location.interfaces import IRoot
 
+from zope.traversing.adapters import traversePathElement
 from zope.traversing.interfaces import ITraversalAPI
 from zope.traversing.interfaces import ITraverser
 
@@ -43,16 +42,15 @@ def joinPath(path, *args):
     """
 
     if not args:
-        # Concatenating u'' is much quicker than unicode(path)
-        return u'' + path
+        return path
     if path != '/' and path.endswith('/'):
         raise ValueError('path must not end with a "/": %s' % path)
     if path != '/':
-        path += u'/'
+        path += '/'
     for arg in args:
         if arg.startswith('/') or arg.endswith('/'):
             raise ValueError("Leading or trailing slashes in path elements")
-    return _normalizePath(path + u'/'.join(args))
+    return _normalizePath(path + '/'.join(args))
 
 
 def getPath(obj):
@@ -155,19 +153,19 @@ def _normalizePath(path):
     """Normalize a path by resolving '.' and '..' path elements."""
 
     # Special case for the root path.
-    if path == u'/':
+    if path == '/':
         return path
 
     new_segments = []
-    prefix = u''
+    prefix = ''
     if path.startswith('/'):
-        prefix = u'/'
+        prefix = '/'
         path = path[1:]
 
-    for segment in path.split(u'/'):
-        if segment == u'.':
+    for segment in path.split('/'):
+        if segment == '.':
             continue
-        if segment == u'..':
+        if segment == '..':
             new_segments.pop()  # raises IndexError if there is nothing to pop
             continue
         if not segment:
@@ -175,7 +173,7 @@ def _normalizePath(path):
                              % path)
         new_segments.append(segment)
 
-    return prefix + u'/'.join(new_segments)
+    return prefix + '/'.join(new_segments)
 
 
 def canonicalPath(path_or_object):
@@ -185,30 +183,26 @@ def canonicalPath(path_or_object):
 
     See `ITraversalAPI` for details.
     """
-    if isinstance(path_or_object, six.string_types):
+    if isinstance(path_or_object, str):
         path = path_or_object
         if not path:
             raise ValueError("path must be non-empty: %s" % path)
     else:
         path = getPath(path_or_object)
 
-    path = u'' + path
+    path = '' + path
 
     # Special case for the root path.
-    if path == u'/':
+    if path == '/':
         return path
 
-    if path[0] != u'/':
+    if path[0] != '/':
         raise ValueError('canonical path must start with a "/": %s' % path)
-    if path[-1] == u'/':
+    if path[-1] == '/':
         raise ValueError('path must not end with a "/": %s' % path)
 
     # Break path into segments. Process '.' and '..' segments.
     return _normalizePath(path)
-
-
-# import this down here to avoid circular imports
-from zope.traversing.adapters import traversePathElement
 
 
 # Synchronize the documentation.

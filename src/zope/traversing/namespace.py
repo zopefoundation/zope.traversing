@@ -63,8 +63,6 @@ __docformat__ = 'restructuredtext'
 
 import re
 
-import six
-
 import zope.component
 import zope.interface
 from zope.i18n.interfaces import IModifiableUserPreferredLanguages
@@ -125,7 +123,7 @@ def namespaceLookup(ns, name, object, request=None):
         >>> namespaceLookup('fiz', 'bar', C())    # doctest: +ELLIPSIS
         Traceback (most recent call last):
           ...
-        LocationError: (<zope.traversing.namespace.C object at 0x...>, '++fiz++bar')
+        zope.location.interfaces.LocationError: (<zope.traversing.namespace.C object at 0x...>, '++fiz++bar')
 
     We'll get the same thing if we provide a request::
 
@@ -134,7 +132,7 @@ def namespaceLookup(ns, name, object, request=None):
         >>> namespaceLookup('foo', 'bar', C(), request)    # doctest: +ELLIPSIS
         Traceback (most recent call last):
           ...
-        LocationError: (<zope.traversing.namespace.C object at 0x...>, '++foo++bar')
+        zope.location.interfaces.LocationError: (<zope.traversing.namespace.C object at 0x...>, '++foo++bar')
 
     We need to provide a view::
 
@@ -161,7 +159,7 @@ def namespaceLookup(ns, name, object, request=None):
         traverser = zope.component.queryAdapter(object, ITraversable, ns)
 
     if traverser is None:
-        raise LocationError(object, "++%s++%s" % (ns, name))
+        raise LocationError(object, "++{}++{}".format(ns, name))
 
     return traverser.traverse(name, ())
 
@@ -236,7 +234,7 @@ def queryResource(context, name, request, default=None):
 # ---- namespace processors below ----
 
 @zope.interface.implementer(ITraversable)
-class SimpleHandler(object):
+class SimpleHandler:
 
     def __init__(self, context, request=None):
         """
@@ -295,7 +293,7 @@ class acquire(SimpleHandler):
           >>> adapter.traverse('d', ())
           Traceback (most recent call last):
           ...
-          LocationError: (splat, 'd')
+          zope.location.interfaces.LocationError: (splat, 'd')
         """
         i = 0
         ob = self.context
@@ -400,7 +398,7 @@ class etc(SimpleHandler):
 
 
 @zope.interface.implementer(ITraversable)
-class view(object):
+class view:
     """
     Traversal adapter for the ``view`` (``@@``) namespace.
 
@@ -499,11 +497,6 @@ class vh(view):
     def traverse(self, name, ignored):
 
         request = self.request
-
-        if not six.PY3:
-            # `name` comes in as unicode, we need to make it a string
-            # so absolute URLs don't all become unicode.
-            name = name.encode('utf-8')
 
         if name:
             try:

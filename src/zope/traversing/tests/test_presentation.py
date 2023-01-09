@@ -31,17 +31,17 @@ class IContent(Interface):
 
 
 @implementer(IContent)
-class Content(object):
+class Content:
     pass
 
 
-class Resource(object):
+class Resource:
 
     def __init__(self, request):
         pass
 
 
-class View(object):
+class View:
 
     def __init__(self, content, request):
         self.content = content

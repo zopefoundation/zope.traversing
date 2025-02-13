@@ -16,5 +16,5 @@ class ZCMLDependencies(unittest.TestCase):
         res = zope.component.getMultiAdapter(
             (self, request), ITraversable, 'lang')
         import zope.traversing.namespace
-        self.assertTrue(isinstance(res, zope.traversing.namespace.lang))
-        self.assertTrue(res.context is self)
+        self.assertIsInstance(res, zope.traversing.namespace.lang)
+        self.assertIs(res.context, self)

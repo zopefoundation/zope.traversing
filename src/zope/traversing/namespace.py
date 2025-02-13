@@ -159,7 +159,7 @@ def namespaceLookup(ns, name, object, request=None):
         traverser = zope.component.queryAdapter(object, ITraversable, ns)
 
     if traverser is None:
-        raise LocationError(object, "++{}++{}".format(ns, name))
+        raise LocationError(object, f"++{ns}++{name}")
 
     return traverser.traverse(name, ())
 

@@ -45,7 +45,7 @@ class TestPublicationTraverser(CleanUp, unittest.TestCase):
         request = TestRequest()
         proxy = t.traverseName(request, ob, '@@foo')
         view = removeSecurityProxy(proxy)
-        self.assertTrue(proxy is not view)
+        self.assertIsNot(proxy, view)
         self.assertEqual(view.__class__, View)
         self.assertEqual(view.name, 'foo')
 
@@ -69,7 +69,7 @@ class TestPublicationTraverser(CleanUp, unittest.TestCase):
         request = TestRequest()
         proxy = t.traverseName(request, ob, 'foo')
         view = removeSecurityProxy(proxy)
-        self.assertTrue(proxy is not view)
+        self.assertIsNot(proxy, view)
         self.assertEqual(view.__class__, View)
         self.assertEqual(view.name, 'foo')
 
@@ -79,7 +79,7 @@ class TestPublicationTraverser(CleanUp, unittest.TestCase):
         t = PublicationTraverser()
         proxy = t.traverseName(request, ob, 'foo')
         view = removeSecurityProxy(proxy)
-        self.assertTrue(proxy is not view)
+        self.assertIsNot(proxy, view)
         self.assertEqual(view.__class__, View)
         self.assertEqual(view.name, 'foo')
 
@@ -97,7 +97,7 @@ class TestPublicationTraverser(CleanUp, unittest.TestCase):
         request = TestRequest()
         proxy = t.traversePath(request, ob, 'foo/bar')
         view = removeSecurityProxy(proxy)
-        self.assertTrue(proxy is not view)
+        self.assertIsNot(proxy, view)
         self.assertEqual(view.__class__, View)
         self.assertEqual(view.name, 'bar')
 
@@ -109,7 +109,7 @@ class TestPublicationTraverser(CleanUp, unittest.TestCase):
         request = TestRequest()
         proxy = t.traversePath(request, ob, 'foo/../alpha//beta/./bar')
         view = removeSecurityProxy(proxy)
-        self.assertTrue(proxy is not view)
+        self.assertIsNot(proxy, view)
         self.assertEqual(view.__class__, View)
         self.assertEqual(view.name, 'bar')
 
@@ -124,7 +124,7 @@ class TestPublicationTraverser(CleanUp, unittest.TestCase):
         request = TestRequest()
         proxy = t.traverseRelativeURL(request, ob, 'foo/bar')
         view = removeSecurityProxy(proxy)
-        self.assertTrue(proxy is not view)
+        self.assertIsNot(proxy, view)
         self.assertEqual(view.__class__, View)
         self.assertEqual(view.name, 'more')
 

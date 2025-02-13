@@ -156,7 +156,7 @@ class UnrestrictedTraverseTests(PlacelessSetup, unittest.TestCase):
         container['theclass'] = AnOldStyleClass
 
         tr = Traverser(container)
-        self.assertTrue(tr.traverse('theclass/x') is AnOldStyleClass.x)
+        self.assertIs(tr.traverse('theclass/x'), AnOldStyleClass.x)
 
     def testTraversingDictSeesDictAPI(self):
         adict = {
@@ -273,7 +273,7 @@ class DefaultTraversableTests(unittest.TestCase):
 
         further = []
         next = df.traverse('item', further)
-        self.assertTrue(next is item)
+        self.assertIs(next, item)
         self.assertEqual(further, [])
 
     def testDictionaryTraverse(self):
@@ -284,7 +284,7 @@ class DefaultTraversableTests(unittest.TestCase):
 
         further = []
         next = df.traverse('foo', further)
-        self.assertTrue(next is foo)
+        self.assertIs(next, foo)
         self.assertEqual(further, [])
 
     def testNotFound(self):

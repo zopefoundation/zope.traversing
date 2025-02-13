@@ -24,9 +24,6 @@ class IAbsoluteURL(Interface):
     for objects.
     """
 
-    def __unicode__():
-        """Return the URL as unquoted str."""
-
     def __str__():
         """Return a ASCII string with all non-ASCII characters url quoted."""
 

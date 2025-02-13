@@ -55,6 +55,6 @@ class Test(CleanUp, unittest.TestCase):
 
         ob = object()
         ob2 = lang(ob, request).traverse('ru', ())
-        self.assertTrue(ob is ob2)
+        self.assertIs(ob, ob2)
         self.assertTrue(request.shifted)
         self.assertEqual(["ru"], browser_languages.getPreferredLanguages())

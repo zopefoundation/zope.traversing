@@ -19,7 +19,6 @@ you load this package's ``configure.zcml`` with
 :mod:`zope.configuration.xmlconfig`.
 """
 from urllib.parse import quote_from_bytes as quote
-from urllib.parse import unquote_to_bytes as unquote
 
 import zope.component
 from zope.i18nmessageid import MessageFactory
@@ -45,15 +44,8 @@ def absoluteURL(ob, request):
     return zope.component.getMultiAdapter((ob, request), IAbsoluteURL)()
 
 
-class _EncodedUnicode(object):
-
-    def __unicode__(self):
-        return unquote(self.__str__()).decode('utf-8')
-
-
 @implementer(IAbsoluteURL)
-class AbsoluteURL(_EncodedUnicode,
-                  BrowserView):
+class AbsoluteURL(BrowserView):
     """
     The default implementation of
     :class:`zope.traversing.browser.interfaces.IAbsoluteURL`.
@@ -135,8 +127,7 @@ class AbsoluteURL(_EncodedUnicode,
 
 
 @implementer(IAbsoluteURL)
-class SiteAbsoluteURL(_EncodedUnicode,
-                      BrowserView):
+class SiteAbsoluteURL(BrowserView):
     """
     An implementation of
     :class:`zope.traversing.browser.interfaces.IAbsoluteURL` for site

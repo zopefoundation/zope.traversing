@@ -19,7 +19,6 @@
 """Setup for zope.traversing package
 """
 
-from setuptools import find_packages
 from setuptools import setup
 
 
@@ -41,12 +40,12 @@ TESTS_REQUIRE = [
     'zope.security[zcml]>=3.8',
     'zope.tales',
     'zope.testing',
-    'zope.testrunner'
+    'zope.testrunner >= 6.4'
 ]
 
 setup(
     name='zope.traversing',
-    version='5.2.dev0',
+    version='6.0.dev0',
     url='https://github.com/zopefoundation/zope.traversing',
     license='ZPL-2.1',
     author='Zope Foundation and Contributors',
@@ -72,9 +71,6 @@ setup(
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Software Development',
     ],
-    packages=find_packages('src'),
-    package_dir={'': 'src'},
-    namespace_packages=['zope'],
     extras_require={
         'test': TESTS_REQUIRE,
         'docs': [
